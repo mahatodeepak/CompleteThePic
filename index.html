@@ -2,2825 +2,1441 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport"
-      content="width=device-width,
-      initial-scale=1.0,
-      maximum-scale=1.0,
-      user-scalable=no">
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Complete the Pic - V1.5</title>
+<title>Complete the Pic V1.6</title>
 
 <style>
-
 *{
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:linear-gradient(#dff6ff,#ffffff);
-    color:#222;
-    text-align:center;
-    overflow-x:hidden;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(180deg,#dff6ff,#ffffff);
+  color:#222;
+  text-align:center;
+  overflow-x:hidden;
 }
 
 h1{
-    margin:12px 0 2px;
-    font-size:30px;
+  margin:14px 0 2px;
+  font-size:30px;
 }
 
 .subtitle{
-    margin:0 10px 10px;
-    color:#555;
+  margin:0 10px 12px;
+  color:#555;
+  font-size:15px;
 }
 
-#levelBar{
-    display:flex;
-    justify-content:center;
-    gap:7px;
-    flex-wrap:wrap;
-    margin:8px;
+.stats{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:8px auto 12px;
 }
 
-.levelBtn{
-    border:0;
-    padding:9px 15px;
-    border-radius:12px;
-    background:#444;
-    color:white;
-    font-weight:bold;
-    font-size:15px;
-}
-
-.levelBtn.active{
-    background:#16834d;
-}
-
-#info{
-    display:flex;
-    justify-content:center;
-    gap:7px;
-    flex-wrap:wrap;
-    margin:8px;
-}
-
-.infoBox{
-    background:white;
-    padding:8px 11px;
-    border-radius:12px;
-    box-shadow:0 2px 8px #0002;
-    font-weight:bold;
-    min-width:82px;
+.stat{
+  background:white;
+  border-radius:12px;
+  padding:8px 13px;
+  box-shadow:0 3px 10px rgba(0,0,0,.12);
+  font-weight:bold;
+  font-size:14px;
 }
 
 #gameArea{
-    width:min(96vw,1000px);
-    margin:auto;
+  width:100%;
+  max-width:950px;
+  margin:auto;
+  padding:5px 10px 30px;
 }
 
-#puzzleArea{
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    gap:15px;
-    flex-wrap:wrap;
+#boardWrap{
+  width:min(92vw,700px);
+  aspect-ratio:1/1;
+  margin:0 auto 18px;
+  position:relative;
 }
 
 #board{
-    position:relative;
-    width:min(90vw,480px);
-    aspect-ratio:1;
-    background:#111;
-    border:7px solid #000;
-    border-radius:9px;
-    overflow:hidden;
-    box-shadow:0 5px 18px #0004;
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  background:#111;
+  border:7px solid #111;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,.22);
 }
 
-#targetCanvas{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    opacity:.12;
+.target{
+  position:absolute;
+  border:1px dashed rgba(255,255,255,.32);
+  background:rgba(255,255,255,.035);
+  pointer-events:none;
 }
 
-.targetGrid{
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-}
-
-.targetCell{
-    position:absolute;
-    border:1px dashed #fff6;
+#piecesTitle{
+  font-weight:bold;
+  margin:6px 0 8px;
 }
 
 #pieces{
-    width:min(90vw,480px);
-    min-height:240px;
-    display:flex;
-    justify-content:center;
-    align-content:flex-start;
-    flex-wrap:wrap;
-    gap:4px;
-    padding:5px;
-    background:#ffffffaa;
-    border-radius:15px;
+  min-height:170px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:15px 8px;
+  background:rgba(255,255,255,.7);
+  border-radius:16px;
+  box-shadow:0 4px 14px rgba(0,0,0,.1);
 }
 
 .piece{
-    position:relative;
-    width:30%;
-    aspect-ratio:1;
-    touch-action:none;
-    user-select:none;
-    cursor:grab;
-    z-index:5;
-}
-
-.piece canvas{
-    width:100%;
-    height:100%;
-    display:block;
-    filter:drop-shadow(0 3px 4px #0004);
+  position:relative;
+  width:110px;
+  height:110px;
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  z-index:10;
+  filter:drop-shadow(0 4px 5px rgba(0,0,0,.25));
 }
 
 .piece.dragging{
-    cursor:grabbing;
-    z-index:1000;
-    transform:scale(1.07);
+  cursor:grabbing;
+  z-index:1000;
+  filter:drop-shadow(0 8px 12px rgba(0,0,0,.35));
 }
 
-.piece.correct{
-    pointer-events:none;
-    z-index:20;
+.piece.locked{
+  cursor:default;
+  z-index:5;
+  filter:none;
 }
 
-@keyframes shake{
-    0%,100%{transform:translateX(0)}
-    20%{transform:translateX(-12px)}
-    40%{transform:translateX(12px)}
-    60%{transform:translateX(-8px)}
-    80%{transform:translateX(8px)}
+.pieceCanvas{
+  width:100%;
+  height:100%;
+  display:block;
 }
 
-.wrong{
-    animation:shake .35s;
+button{
+  border:0;
+  border-radius:12px;
+  padding:11px 20px;
+  margin:10px 5px;
+  font-size:16px;
+  font-weight:bold;
+  background:#222;
+  color:white;
+  box-shadow:0 4px 10px rgba(0,0,0,.18);
 }
 
-@keyframes winPulse{
-    0%{transform:scale(1)}
-    50%{transform:scale(1.03)}
-    100%{transform:scale(1)}
-}
-
-.boardWin{
-    animation:winPulse .8s infinite;
+button:active{
+  transform:scale(.96);
 }
 
 #message{
-    min-height:38px;
-    margin:9px;
-    font-size:18px;
-    font-weight:bold;
+  min-height:28px;
+  margin:8px 0;
+  font-size:18px;
+  font-weight:bold;
 }
 
-#buttons{
-    margin:5px;
+.good{
+  color:#168a35;
 }
 
-.mainBtn{
-    border:0;
-    padding:11px 20px;
-    margin:4px;
-    border-radius:12px;
-    background:#222;
-    color:white;
-    font-size:16px;
-    font-weight:bold;
+.bad{
+  color:#d32f2f;
 }
 
 #winBox{
-    display:none;
-    background:white;
-    width:min(90vw,430px);
-    margin:12px auto;
-    padding:17px;
-    border-radius:18px;
-    box-shadow:0 5px 20px #0003;
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.62);
+  z-index:3000;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
 }
 
-#winBox h2{
-    margin:3px;
+.winCard{
+  background:white;
+  width:min(92vw,420px);
+  border-radius:22px;
+  padding:28px 20px;
+  box-shadow:0 15px 45px rgba(0,0,0,.4);
+  animation:pop .45s ease;
 }
 
-#bestBox{
-    margin:5px;
-    font-size:14px;
-    color:#666;
+.winCard h2{
+  font-size:32px;
+  margin:0 0 8px;
 }
 
-#lives{
-    letter-spacing:2px;
+.winEmoji{
+  font-size:60px;
+  animation:bounce 1s infinite alternate;
 }
 
-#confetti{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:5000;
+@keyframes pop{
+  from{transform:scale(.5);opacity:0}
+  to{transform:scale(1);opacity:1}
 }
 
-@media(max-width:700px){
-
-    h1{
-        font-size:26px;
-    }
-
-    #puzzleArea{
-        gap:9px;
-    }
-
-    #pieces{
-        min-height:210px;
-    }
-
+@keyframes bounce{
+  from{transform:translateY(0)}
+  to{transform:translateY(-12px)}
 }
 
+.shake{
+  animation:shake .35s;
+}
+
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-10px)}
+  50%{transform:translateX(10px)}
+  75%{transform:translateX(-7px)}
+  100%{transform:translateX(0)}
+}
+
+@media(max-width:500px){
+  h1{
+    font-size:25px;
+  }
+
+  .piece{
+    width:92px;
+    height:92px;
+  }
+
+  #pieces{
+    gap:7px;
+  }
+
+  button{
+    font-size:15px;
+    padding:10px 16px;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<h1>🐼 Complete the Pic</h1>
+<h1>🧩 Complete the Pic</h1>
+<div class="subtitle">Pick the pieces. Complete the picture!</div>
 
-<div class="subtitle">
-Pick the pieces. Complete the picture!
+<div class="stats">
+  <div class="stat">⏱️ Time: <span id="timer">0</span>s</div>
+  <div class="stat">🔢 Moves: <span id="moves">0</span></div>
+  <div class="stat">⭐ Score: <span id="score">100</span></div>
+  <div class="stat">🏆 Best: <span id="bestScore">—</span></div>
+  <div class="stat">⚡ Best Time: <span id="bestTime">—</span>s</div>
 </div>
-
-
-<!-- LEVELS -->
-
-<div id="levelBar">
-
-    <button
-        class="levelBtn active"
-        id="easyBtn"
-        onclick="setLevel('easy')">
-        🟢 Easy
-    </button>
-
-    <button
-        class="levelBtn"
-        id="mediumBtn"
-        onclick="setLevel('medium')">
-        🟡 Medium
-    </button>
-
-    <button
-        class="levelBtn"
-        id="hardBtn"
-        onclick="setLevel('hard')">
-        🔴 Hard
-    </button>
-
-</div>
-
-
-<!-- INFORMATION -->
-
-<div id="info">
-
-    <div class="infoBox">
-        ⏱
-        <span id="timer">00:00</span>
-    </div>
-
-    <div class="infoBox">
-        👣
-        <span id="moves">0</span>
-    </div>
-
-    <div class="infoBox">
-        ⭐
-        <span id="score">100</span>
-    </div>
-
-    <div class="infoBox">
-        ❤️
-        <span id="lives">❤️❤️❤️</span>
-    </div>
-
-</div>
-
-
-<div id="bestBox">
-    Best Score:
-    <b id="bestScore">0</b>
-    &nbsp; | &nbsp;
-    Best Time:
-    <b id="bestTime">--:--</b>
-</div>
-
 
 <div id="gameArea">
 
-    <div id="puzzleArea">
+  <div id="boardWrap">
+    <div id="board"></div>
+  </div>
 
-        <div id="board">
+  <div id="message">Drag each piece into the correct place.</div>
 
-            <canvas
-                id="targetCanvas"
-                width="900"
-                height="900">
-            </canvas>
+  <div id="piecesTitle">🧩 Puzzle Pieces</div>
+  <div id="pieces"></div>
 
-            <div
-                id="targetGrid"
-                class="targetGrid">
-            </div>
-
-        </div>
-
-
-        <div id="pieces"></div>
-
-    </div>
-
-
-    <div id="message">
-        Drag each piece into its correct place.
-    </div>
-
-
-    <div id="buttons">
-
-        <button
-            class="mainBtn"
-            onclick="newGame()">
-            🔄 New Game
-        </button>
-
-    </div>
-
-
-    <div id="winBox">
-
-        <h2>
-            🎉 Picture Completed!
-        </h2>
-
-        <p id="winText"></p>
-
-        <button
-            class="mainBtn"
-            onclick="newGame()">
-            ▶ Play Again
-        </button>
-
-    </div>
+  <button onclick="newGame()">🔄 New Game</button>
 
 </div>
 
+<div id="winBox">
+  <div class="winCard">
+    <div class="winEmoji">🎉</div>
+    <h2>Picture Complete!</h2>
 
-<canvas id="confetti"></canvas>
+    <p>
+      Great job! You completed the Panda picture.
+    </p>
 
+    <p>
+      ⏱️ Time: <b><span id="finalTime">0</span>s</b><br>
+      🔢 Moves: <b><span id="finalMoves">0</span></b><br>
+      ⭐ Score: <b><span id="finalScore">0</span></b>
+    </p>
+
+    <button onclick="closeWinAndNewGame()">🔄 Play Again</button>
+  </div>
+</div>
 
 <script>
 
-/* ==================================================
-   COMPLETE THE PIC V1.5
-================================================== */
-
-
-/* ---------- BASIC SETTINGS ---------- */
+/* =========================================================
+   COMPLETE THE PIC V1.6
+   Based on V1.3
+   3 × 3 Panda Puzzle
+   ========================================================= */
 
 const SIZE = 900;
+const ROWS = 3;
+const COLS = 3;
+const CELL = SIZE / COLS;
 
-let ROWS = 3;
-let COLS = 3;
-
-let CELL = SIZE / COLS;
+/*
+  Extra transparent space around every piece.
+  This makes the jigsaw tabs visible while keeping
+  the actual picture perfectly aligned.
+*/
+const PAD = 34;
+const PIECE_SIZE = CELL + PAD * 2;
 
 let sourceCanvas;
-
-let pieceData = [];
+let pieces = [];
 
 let moves = 0;
 let seconds = 0;
-let completed = 0;
-
-let lives = 3;
-
 let timerInterval = null;
-
-let currentLevel = "easy";
-
-
-/* ---------- DOM ---------- */
-
-const board =
-    document.getElementById("board");
-
-const targetCanvas =
-    document.getElementById("targetCanvas");
-
-const targetGrid =
-    document.getElementById("targetGrid");
-
-const piecesContainer =
-    document.getElementById("pieces");
-
-const timerEl =
-    document.getElementById("timer");
-
-const movesEl =
-    document.getElementById("moves");
-
-const scoreEl =
-    document.getElementById("score");
-
-const livesEl =
-    document.getElementById("lives");
-
-const messageEl =
-    document.getElementById("message");
-
-const winBox =
-    document.getElementById("winBox");
-
-const winText =
-    document.getElementById("winText");
-
-const bestScoreEl =
-    document.getElementById("bestScore");
-
-const bestTimeEl =
-    document.getElementById("bestTime");
-
-
-/* ==================================================
-   LEVEL
-================================================== */
-
-function setLevel(level){
-
-    currentLevel = level;
-
-    if(level === "easy"){
-
-        ROWS = 3;
-        COLS = 3;
-
-    }
-
-    if(level === "medium"){
-
-        ROWS = 4;
-        COLS = 4;
-
-    }
-
-    if(level === "hard"){
-
-        ROWS = 5;
-        COLS = 5;
-
-    }
-
-    CELL = SIZE / COLS;
-
-    document
-        .querySelectorAll(".levelBtn")
-        .forEach(btn=>{
-            btn.classList.remove("active");
-        });
-
-    if(level === "easy")
-        document
-            .getElementById("easyBtn")
-            .classList.add("active");
-
-    if(level === "medium")
-        document
-            .getElementById("mediumBtn")
-            .classList.add("active");
-
-    if(level === "hard")
-        document
-            .getElementById("hardBtn")
-            .classList.add("active");
-
-    newGame();
-}
-
-
-/* ==================================================
-   AUDIO
-================================================== */
+let gameRunning = false;
+let completedCount = 0;
 
 let audioContext = null;
 
-function getAudio(){
+const board = document.getElementById("board");
+const piecesContainer = document.getElementById("pieces");
 
-    if(!audioContext){
+/* ---------------------------------------------------------
+   BEST SCORE
+--------------------------------------------------------- */
 
-        audioContext =
-            new (
-                window.AudioContext ||
-                window.webkitAudioContext
-            )();
-
-    }
-
-    return audioContext;
+function getBestScore(){
+  const v = localStorage.getItem("completePic_v16_bestScore");
+  return v ? Number(v) : null;
 }
 
+function getBestTime(){
+  const v = localStorage.getItem("completePic_v16_bestTime");
+  return v ? Number(v) : null;
+}
 
-function playSound(type){
+function updateBestDisplay(){
+  const bestScore = getBestScore();
+  const bestTime = getBestTime();
 
+  document.getElementById("bestScore").textContent =
+    bestScore === null ? "—" : bestScore;
+
+  document.getElementById("bestTime").textContent =
+    bestTime === null ? "—" : bestTime;
+}
+
+/* ---------------------------------------------------------
+   AUDIO
+--------------------------------------------------------- */
+
+function initAudio(){
+  if(!audioContext){
     try{
-
-        const ac = getAudio();
-
-        const osc =
-            ac.createOscillator();
-
-        const gain =
-            ac.createGain();
-
-        osc.connect(gain);
-        gain.connect(ac.destination);
-
-        let frequency = 440;
-
-        if(type === "correct")
-            frequency = 680;
-
-        if(type === "wrong")
-            frequency = 180;
-
-        if(type === "win")
-            frequency = 850;
-
-        osc.frequency.value =
-            frequency;
-
-        osc.type = "sine";
-
-        gain.gain.setValueAtTime(
-            0.0001,
-            ac.currentTime
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.15,
-            ac.currentTime + .02
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001,
-            ac.currentTime + .25
-        );
-
-        osc.start();
-
-        osc.stop(
-            ac.currentTime + .27
-        );
-
+      audioContext =
+        new (window.AudioContext || window.webkitAudioContext)();
     }catch(e){}
+  }
 
+  if(audioContext && audioContext.state === "suspended"){
+    audioContext.resume();
+  }
 }
 
+function beep(frequency, duration, type="sine", volume=.06){
+  initAudio();
 
-/* ==================================================
-   VIBRATION
-================================================== */
+  if(!audioContext) return;
 
-function vibrate(pattern){
+  try{
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
 
-    try{
+    osc.type = type;
+    osc.frequency.value = frequency;
 
-        if(
-            navigator.vibrate
-        ){
+    gain.gain.setValueAtTime(volume, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      audioContext.currentTime + duration
+    );
 
-            navigator.vibrate(
-                pattern
-            );
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
 
-        }
-
-    }catch(e){}
-
+    osc.start();
+    osc.stop(audioContext.currentTime + duration);
+  }catch(e){}
 }
 
+function correctSound(){
+  beep(660,.12,"sine",.07);
 
-/* ==================================================
-   CLOUD
-================================================== */
-
-function drawCloud(
-    c,
-    x,
-    y,
-    s
-){
-
-    c.fillStyle="#ffffff";
-
-    c.beginPath();
-
-    c.arc(
-        x,
-        y,
-        45*s,
-        0,
-        Math.PI*2
-    );
-
-    c.arc(
-        x+45*s,
-        y-18*s,
-        55*s,
-        0,
-        Math.PI*2
-    );
-
-    c.arc(
-        x+100*s,
-        y,
-        42*s,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
+  setTimeout(()=>{
+    beep(880,.15,"sine",.07);
+  },100);
 }
 
+function wrongSound(){
+  beep(170,.20,"sawtooth",.05);
+}
 
-/* ==================================================
-   PANDA IMAGE
-================================================== */
+function winSound(){
+  [523,659,784,1046].forEach((f,i)=>{
+    setTimeout(()=>{
+      beep(f,.22,"sine",.07);
+    },i*130);
+  });
+}
+
+/* ---------------------------------------------------------
+   GENERATED PANDA IMAGE
+--------------------------------------------------------- */
+
+function drawCloud(ctx,x,y,s){
+  ctx.save();
+  ctx.fillStyle="rgba(255,255,255,.92)";
+
+  ctx.beginPath();
+  ctx.arc(x,y,35*s,0,Math.PI*2);
+  ctx.arc(x+40*s,y-18*s,45*s,0,Math.PI*2);
+  ctx.arc(x+85*s,y,34*s,0,Math.PI*2);
+  ctx.arc(x+45*s,y+15*s,48*s,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.restore();
+}
 
 function drawPanda(){
 
-    sourceCanvas =
-        document.createElement(
-            "canvas"
-        );
-
-    sourceCanvas.width = SIZE;
-    sourceCanvas.height = SIZE;
-
-    const c =
-        sourceCanvas.getContext("2d");
-
-
-    /* SKY */
-
-    const sky =
-        c.createLinearGradient(
-            0,
-            0,
-            0,
-            SIZE
-        );
-
-    sky.addColorStop(
-        0,
-        "#75d8ff"
-    );
-
-    sky.addColorStop(
-        1,
-        "#e5f9ff"
-    );
-
-    c.fillStyle = sky;
-
-    c.fillRect(
-        0,
-        0,
-        SIZE,
-        SIZE
-    );
-
-
-    /* CLOUDS */
-
-    drawCloud(
-        c,
-        100,
-        120,
-        .8
-    );
-
-    drawCloud(
-        c,
-        610,
-        160,
-        .65
-    );
-
-
-    /* MOUNTAINS */
-
-    c.fillStyle="#62aa68";
-
-    c.beginPath();
-
-    c.moveTo(0,650);
-
-    c.lineTo(
-        170,
-        390
-    );
-
-    c.lineTo(
-        330,
-        650
-    );
-
-    c.lineTo(
-        520,
-        350
-    );
-
-    c.lineTo(
-        760,
-        650
-    );
-
-    c.lineTo(
-        900,
-        450
-    );
-
-    c.lineTo(
-        900,
-        900
-    );
-
-    c.lineTo(
-        0,
-        900
-    );
-
-    c.closePath();
-
-    c.fill();
-
-
-    /* GROUND */
-
-    c.fillStyle="#7bc96d";
-
-    c.fillRect(
-        0,
-        650,
-        SIZE,
-        250
-    );
-
-
-    /* BAMBOO */
-
-    c.strokeStyle="#4e913b";
-
-    c.lineWidth=22;
-
-    c.beginPath();
-
-    c.moveTo(
-        760,
-        900
-    );
-
-    c.lineTo(
-        720,
-        470
-    );
-
-    c.stroke();
-
-
-    c.lineWidth=7;
-
-    for(
-        let y=550;
-        y<850;
-        y+=70
-    ){
-
-        c.beginPath();
-
-        c.moveTo(
-            700,
-            y
-        );
-
-        c.lineTo(
-            755,
-            y
-        );
-
-        c.stroke();
-
-    }
-
-
-    c.fillStyle="#4c9a38";
-
-    c.beginPath();
-
-    c.ellipse(
-        690,
-        500,
-        80,
-        25,
-        -.5,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    c.beginPath();
-
-    c.ellipse(
-        780,
-        570,
-        90,
-        25,
-        .5,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    /* BODY */
-
-    c.fillStyle="#161616";
-
-    c.beginPath();
-
-    c.ellipse(
-        450,
-        625,
-        190,
-        220,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    /* BELLY */
-
-    c.fillStyle="#fafafa";
-
-    c.beginPath();
-
-    c.ellipse(
-        450,
-        665,
-        125,
-        160,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    /* LEGS */
-
-    c.fillStyle="#111";
-
-    c.beginPath();
-
-    c.ellipse(
-        350,
-        810,
-        80,
-        50,
-        -.2,
-        0,
-        Math.PI*2
-    );
-
-    c.ellipse(
-        550,
-        810,
-        80,
-        50,
-        .2,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    /* ARMS */
-
-    c.beginPath();
-
-    c.ellipse(
-        275,
-        620,
-        70,
-        150,
-        -.35,
-        0,
-        Math.PI*2
-    );
-
-    c.ellipse(
-        625,
-        620,
-        70,
-        150,
-        .35,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    /* HEAD */
-
-    c.fillStyle="#fafafa";
-
-    c.beginPath();
-
-    c.arc(
-        450,
-        390,
-        190,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    /* EARS */
-
-    c.fillStyle="#111";
-
-    c.beginPath();
-
-    c.arc(
-        300,
-        250,
-        70,
-        0,
-        Math.PI*2
-    );
-
-    c.arc(
-        600,
-        250,
-        70,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    /* EYE PATCHES */
-
-    c.beginPath();
-
-    c.ellipse(
-        370,
-        385,
-        48,
-        70,
-        -.4,
-        0,
-        Math.PI*2
-    );
-
-    c.ellipse(
-        530,
-        385,
-        48,
-        70,
-        .4,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    /* EYES */
-
-    c.fillStyle="white";
-
-    c.beginPath();
-
-    c.arc(
-        370,
-        385,
-        18,
-        0,
-        Math.PI*2
-    );
-
-    c.arc(
-        530,
-        385,
-        18,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    c.fillStyle="#111";
-
-    c.beginPath();
-
-    c.arc(
-        370,
-        385,
-        8,
-        0,
-        Math.PI*2
-    );
-
-    c.arc(
-        530,
-        385,
-        8,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    /* NOSE */
-
-    c.beginPath();
-
-    c.ellipse(
-        450,
-        455,
-        32,
-        22,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-
-    /* MOUTH */
-
-    c.strokeStyle="#111";
-
-    c.lineWidth=7;
-
-    c.beginPath();
-
-    c.moveTo(
-        450,
-        470
-    );
-
-    c.lineTo(
-        450,
-        500
-    );
-
-    c.moveTo(
-        450,
-        500
-    );
-
-    c.quadraticCurveTo(
-        410,
-        530,
-        380,
-        505
-    );
-
-    c.moveTo(
-        450,
-        500
-    );
-
-    c.quadraticCurveTo(
-        490,
-        530,
-        520,
-        505
-    );
-
-    c.stroke();
-
-
-    /* CHEEKS */
-
-    c.fillStyle="#ffb6b6";
-
-    c.globalAlpha=.55;
-
-    c.beginPath();
-
-    c.arc(
-        330,
-        470,
-        25,
-        0,
-        Math.PI*2
-    );
-
-    c.arc(
-        570,
-        470,
-        25,
-        0,
-        Math.PI*2
-    );
-
-    c.fill();
-
-    c.globalAlpha=1;
-
-
-    /* BAMBOO IN HAND */
-
-    c.strokeStyle="#5b9e37";
-
-    c.lineWidth=18;
-
-    c.beginPath();
-
-    c.moveTo(
-        575,
-        690
-    );
-
-    c.lineTo(
-        665,
-        520
-    );
-
-    c.stroke();
-
-
-    /* TEXT */
-
-    c.fillStyle="#ffffffaa";
-
-    c.font=
-        "bold 38px Arial";
-
-    c.fillText(
-        "PANDA",
-        40,
-        850
-    );
-
-
-    /* TARGET */
-
-    const targetCtx =
-        targetCanvas.getContext(
-            "2d"
-        );
-
-    targetCtx.clearRect(
-        0,
-        0,
-        SIZE,
-        SIZE
-    );
-
-    targetCtx.drawImage(
-        sourceCanvas,
-        0,
-        0
-    );
-
+  sourceCanvas = document.createElement("canvas");
+  sourceCanvas.width = SIZE;
+  sourceCanvas.height = SIZE;
+
+  const ctx = sourceCanvas.getContext("2d");
+
+  /* SKY */
+  const sky = ctx.createLinearGradient(0,0,0,SIZE);
+  sky.addColorStop(0,"#7ed8ff");
+  sky.addColorStop(.55,"#c9f1ff");
+  sky.addColorStop(1,"#eefcff");
+
+  ctx.fillStyle = sky;
+  ctx.fillRect(0,0,SIZE,SIZE);
+
+  /* SUN */
+  ctx.fillStyle="#ffe27a";
+  ctx.beginPath();
+  ctx.arc(760,120,62,0,Math.PI*2);
+  ctx.fill();
+
+  /* CLOUDS */
+  drawCloud(ctx,120,145,1);
+  drawCloud(ctx,530,105,.75);
+
+  /* FAR MOUNTAINS */
+  ctx.fillStyle="#8ac6a0";
+
+  ctx.beginPath();
+  ctx.moveTo(0,560);
+  ctx.lineTo(170,360);
+  ctx.lineTo(310,530);
+  ctx.lineTo(460,330);
+  ctx.lineTo(650,540);
+  ctx.lineTo(790,380);
+  ctx.lineTo(900,520);
+  ctx.lineTo(900,900);
+  ctx.lineTo(0,900);
+  ctx.closePath();
+  ctx.fill();
+
+  /* SNOW CAPS */
+  ctx.fillStyle="#f4ffff";
+
+  ctx.beginPath();
+  ctx.moveTo(170,360);
+  ctx.lineTo(130,420);
+  ctx.lineTo(170,402);
+  ctx.lineTo(200,430);
+  ctx.lineTo(220,405);
+  ctx.lineTo(250,430);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(460,330);
+  ctx.lineTo(410,400);
+  ctx.lineTo(455,382);
+  ctx.lineTo(485,410);
+  ctx.lineTo(515,382);
+  ctx.lineTo(545,420);
+  ctx.closePath();
+  ctx.fill();
+
+  /* GROUND */
+  const ground = ctx.createLinearGradient(0,550,0,900);
+  ground.addColorStop(0,"#72c96f");
+  ground.addColorStop(1,"#31934e");
+
+  ctx.fillStyle=ground;
+
+  ctx.beginPath();
+  ctx.moveTo(0,610);
+  ctx.quadraticCurveTo(220,540,450,625);
+  ctx.quadraticCurveTo(690,540,900,620);
+  ctx.lineTo(900,900);
+  ctx.lineTo(0,900);
+  ctx.closePath();
+  ctx.fill();
+
+  /* BAMBOO */
+  drawBamboo(ctx,105,485,1.05);
+  drawBamboo(ctx,800,450,.85);
+
+  /* PANDA BODY */
+  ctx.save();
+
+  /* Body black */
+  ctx.fillStyle="#171717";
+
+  ctx.beginPath();
+  ctx.ellipse(470,610,185,220,0,0,Math.PI*2);
+  ctx.fill();
+
+  /* Belly */
+  ctx.fillStyle="#f5f2e9";
+
+  ctx.beginPath();
+  ctx.ellipse(470,635,125,155,0,0,Math.PI*2);
+  ctx.fill();
+
+  /* Left arm */
+  ctx.fillStyle="#171717";
+
+  ctx.beginPath();
+  ctx.ellipse(315,610,55,120,-.45,0,Math.PI*2);
+  ctx.fill();
+
+  /* Right arm */
+  ctx.beginPath();
+  ctx.ellipse(625,610,55,120,.45,0,Math.PI*2);
+  ctx.fill();
+
+  /* Feet */
+  ctx.beginPath();
+  ctx.ellipse(385,800,70,48,-.15,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.ellipse(555,800,70,48,.15,0,Math.PI*2);
+  ctx.fill();
+
+  /* HEAD */
+  ctx.fillStyle="#171717";
+
+  ctx.beginPath();
+  ctx.arc(470,380,190,0,Math.PI*2);
+  ctx.fill();
+
+  /* EARS */
+  ctx.beginPath();
+  ctx.arc(320,245,62,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(620,245,62,0,Math.PI*2);
+  ctx.fill();
+
+  /* FACE */
+  ctx.fillStyle="#f8f5ec";
+
+  ctx.beginPath();
+  ctx.arc(470,400,148,0,Math.PI*2);
+  ctx.fill();
+
+  /* Eye patches */
+  ctx.fillStyle="#181818";
+
+  ctx.save();
+  ctx.translate(405,370);
+  ctx.rotate(-.35);
+  ctx.beginPath();
+  ctx.ellipse(0,0,42,62,0,0,Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(535,370);
+  ctx.rotate(.35);
+  ctx.beginPath();
+  ctx.ellipse(0,0,42,62,0,0,Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+
+  /* Eyes */
+  ctx.fillStyle="white";
+
+  ctx.beginPath();
+  ctx.arc(414,375,18,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(526,375,18,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+  ctx.arc(414,377,9,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(526,377,9,0,Math.PI*2);
+  ctx.fill();
+
+  /* Nose */
+  ctx.beginPath();
+  ctx.ellipse(470,445,24,17,0,0,Math.PI*2);
+  ctx.fill();
+
+  /* Mouth */
+  ctx.strokeStyle="#111";
+  ctx.lineWidth=8;
+  ctx.lineCap="round";
+
+  ctx.beginPath();
+  ctx.moveTo(470,460);
+  ctx.quadraticCurveTo(450,485,430,474);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(470,460);
+  ctx.quadraticCurveTo(490,485,510,474);
+  ctx.stroke();
+
+  /* Cheeks */
+  ctx.fillStyle="rgba(255,130,130,.55)";
+
+  ctx.beginPath();
+  ctx.arc(365,455,22,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(575,455,22,0,Math.PI*2);
+  ctx.fill();
+
+  /* Bamboo in paw */
+  ctx.strokeStyle="#4c9b39";
+  ctx.lineWidth=24;
+  ctx.lineCap="round";
+
+  ctx.beginPath();
+  ctx.moveTo(570,690);
+  ctx.lineTo(700,530);
+  ctx.stroke();
+
+  ctx.strokeStyle="#2f702d";
+  ctx.lineWidth=5;
+
+  for(let i=0;i<5;i++){
+    const x=590+i*22;
+    const y=665-i*27;
+
+    ctx.beginPath();
+    ctx.moveTo(x-8,y-8);
+    ctx.lineTo(x+8,y+8);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+
+  /* Small grass */
+  ctx.strokeStyle="#217c3c";
+  ctx.lineWidth=5;
+
+  for(let x=20;x<900;x+=45){
+    const y=820+Math.sin(x)*15;
+
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(x-8,y-25);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(x+10,y-28);
+    ctx.stroke();
+  }
 }
 
+function drawBamboo(ctx,x,y,s){
 
-/* ==================================================
-   JIGSAW EDGES
-================================================== */
+  ctx.save();
 
-function createEdges(){
+  ctx.strokeStyle="#398b37";
+  ctx.lineWidth=22*s;
+  ctx.lineCap="round";
 
-    const edges=[];
+  ctx.beginPath();
+  ctx.moveTo(x,y+210*s);
+  ctx.lineTo(x+12*s,y);
+  ctx.stroke();
 
-    for(
-        let r=0;
-        r<ROWS;
-        r++
-    ){
+  ctx.strokeStyle="#276c2c";
+  ctx.lineWidth=4*s;
 
-        edges[r]=[];
+  for(let i=0;i<4;i++){
+    const yy=y+45*i*s;
 
-        for(
-            let col=0;
-            col<COLS;
-            col++
-        ){
+    ctx.beginPath();
+    ctx.moveTo(x-10*s,yy);
+    ctx.lineTo(x+18*s,yy);
+    ctx.stroke();
+  }
 
-            const top =
-                r===0
-                ? 0
-                : -edges[r-1][col].bottom;
+  ctx.fillStyle="#4eaa45";
 
-            const left =
-                col===0
-                ? 0
-                : -edges[r][col-1].right;
+  for(let i=0;i<3;i++){
+    ctx.beginPath();
+    ctx.ellipse(
+      x+25*s,
+      y+30*i*s+25,
+      42*s,
+      17*s,
+      -.45,
+      0,
+      Math.PI*2
+    );
+    ctx.fill();
+  }
 
-            const right =
-                col===COLS-1
-                ? 0
-                : (
-                    Math.random()<.5
-                    ? 1
-                    : -1
-                );
-
-            const bottom =
-                r===ROWS-1
-                ? 0
-                : (
-                    Math.random()<.5
-                    ? 1
-                    : -1
-                );
-
-            edges[r][col]={
-                top:top,
-                right:right,
-                bottom:bottom,
-                left:left
-            };
-
-        }
-
-    }
-
-    return edges;
-
+  ctx.restore();
 }
 
+/* ---------------------------------------------------------
+   JIGSAW EDGE SYSTEM
+--------------------------------------------------------- */
 
-/* ==================================================
-   TAB DRAWING
-================================================== */
+let horizontalEdges = [];
+let verticalEdges = [];
 
-function drawTab(
-    c,
-    x1,
-    y1,
-    x2,
-    y2,
-    direction,
-    horizontal
-){
+/*
+  Each internal edge gets one value:
 
-    const bulge =
-        direction===1
-        ? 38
-        : -38;
+  +1 = tab coming OUT
+  -1 = slot going IN
 
+  Neighboring pieces automatically receive
+  opposite values, creating matching shapes.
+*/
 
-    if(horizontal){
+function generateEdges(){
 
-        const midX =
-            (x1+x2)/2;
+  horizontalEdges = [];
 
-        const midY=y1;
+  for(let r=0;r<ROWS;r++){
+    horizontalEdges[r]=[];
 
-        c.bezierCurveTo(
-            x1+25,
-            midY,
-            midX-35,
-            midY+bulge,
-            midX,
-            midY+bulge
-        );
-
-        c.bezierCurveTo(
-            midX+35,
-            midY+bulge,
-            x2-25,
-            midY,
-            x2,
-            midY
-        );
-
-    }else{
-
-        const midX=x1;
-
-        const midY=
-            (y1+y2)/2;
-
-        c.bezierCurveTo(
-            midX,
-            y1+25,
-            midX+bulge,
-            midY-35,
-            midX+bulge,
-            midY
-        );
-
-        c.bezierCurveTo(
-            midX+bulge,
-            midY+35,
-            midX,
-            y2-25,
-            midX,
-            y2
-        );
-
+    for(let c=0;c<COLS-1;c++){
+      horizontalEdges[r][c] =
+        Math.random()>.5 ? 1 : -1;
     }
+  }
 
+  verticalEdges = [];
+
+  for(let r=0;r<ROWS-1;r++){
+    verticalEdges[r]=[];
+
+    for(let c=0;c<COLS;c++){
+      verticalEdges[r][c] =
+        Math.random()>.5 ? 1 : -1;
+    }
+  }
 }
 
-
-/* ==================================================
+/* ---------------------------------------------------------
    JIGSAW PATH
-================================================== */
+--------------------------------------------------------- */
 
-function addJigsawPath(
-    c,
-    x,
-    y,
-    w,
-    h,
-    edges
-){
+function addEdge(path,x1,y1,x2,y2,tab){
 
-    c.beginPath();
+  const horizontal = Math.abs(y2-y1)<1;
 
+  if(horizontal){
 
-    /* TOP */
+    const dir = x2>x1 ? 1 : -1;
 
-    c.moveTo(
-        x,
-        y
+    const sx = Math.min(x1,x2);
+    const sy = y1;
+
+    const w = Math.abs(x2-x1);
+
+    if(tab===0){
+      path.lineTo(x2,y2);
+      return;
+    }
+
+    const sign = tab;
+
+    path.lineTo(sx + w*.32*dir, sy);
+
+    path.bezierCurveTo(
+      sx + w*.36*dir, sy,
+      sx + w*.36*dir, sy + sign*32,
+      sx + w*.50*dir, sy + sign*32
     );
 
-    if(edges.top===0){
+    path.bezierCurveTo(
+      sx + w*.64*dir, sy + sign*32,
+      sx + w*.64*dir, sy,
+      sx + w*.68*dir, sy
+    );
 
-        c.lineTo(
-            x+w,
-            y
-        );
+    path.lineTo(x2,y2);
 
-    }else{
+  }else{
 
-        c.lineTo(
-            x+w*.38,
-            y
-        );
+    const dir = y2>y1 ? 1 : -1;
 
-        drawTab(
-            c,
-            x+w*.38,
-            y,
-            x+w*.62,
-            y,
-            edges.top,
-            true
-        );
+    const sx = x1;
+    const sy = Math.min(y1,y2);
 
-        c.lineTo(
-            x+w,
-            y
-        );
+    const h = Math.abs(y2-y1);
 
+    if(tab===0){
+      path.lineTo(x2,y2);
+      return;
     }
 
+    const sign = tab;
 
-    /* RIGHT */
+    path.lineTo(sx, sy+h*.32*dir);
 
-    if(edges.right===0){
+    path.bezierCurveTo(
+      sx,
+      sy+h*.36*dir,
+      sx+sign*32,
+      sy+h*.36*dir,
+      sx+sign*32,
+      sy+h*.50*dir
+    );
 
-        c.lineTo(
-            x+w,
-            y+h
-        );
+    path.bezierCurveTo(
+      sx+sign*32,
+      sy+h*.64*dir,
+      sx,
+      sy+h*.64*dir,
+      sx,
+      sy+h*.68*dir
+    );
 
-    }else{
-
-        c.lineTo(
-            x+w,
-            y+h*.38
-        );
-
-        drawTab(
-            c,
-            x+w,
-            y+h*.38,
-            x+w,
-            y+h*.62,
-            edges.right,
-            false
-        );
-
-        c.lineTo(
-            x+w,
-            y+h
-        );
-
-    }
-
-
-    /* BOTTOM */
-
-    if(edges.bottom===0){
-
-        c.lineTo(
-            x,
-            y+h
-        );
-
-    }else{
-
-        c.lineTo(
-            x+w*.62,
-            y+h
-        );
-
-        drawTab(
-            c,
-            x+w*.62,
-            y+h,
-            x+w*.38,
-            y+h,
-            edges.bottom,
-            true
-        );
-
-        c.lineTo(
-            x,
-            y+h
-        );
-
-    }
-
-
-    /* LEFT */
-
-    if(edges.left===0){
-
-        c.lineTo(
-            x,
-            y
-        );
-
-    }else{
-
-        c.lineTo(
-            x,
-            y+h*.62
-        );
-
-        drawTab(
-            c,
-            x,
-            y+h*.62,
-            x,
-            y+h*.38,
-            edges.left,
-            false
-        );
-
-        c.lineTo(
-            x,
-            y
-        );
-
-    }
-
-    c.closePath();
-
+    path.lineTo(x2,y2);
+  }
 }
 
+function piecePath(row,col){
 
-/* ==================================================
-   TARGET GRID
-================================================== */
+  const p = new Path2D();
 
-function createTargetGrid(){
+  const x0 = PAD;
+  const y0 = PAD;
 
-    targetGrid.innerHTML="";
+  const x1 = PAD + CELL;
+  const y1 = PAD + CELL;
 
-    for(
-        let r=0;
-        r<ROWS;
-        r++
-    ){
+  /* TOP */
+  p.moveTo(x0,y0);
 
-        for(
-            let col=0;
-            col<COLS;
-            col++
-        ){
+  if(row===0){
+    p.lineTo(x1,y0);
+  }else{
+    const edge = verticalEdges[row-1][col];
+    addEdge(p,x0,y0,x1,y0,-edge);
+  }
 
-            const cell =
-                document.createElement(
-                    "div"
-                );
+  /* RIGHT */
+  if(col===COLS-1){
+    p.lineTo(x1,y1);
+  }else{
+    const edge = horizontalEdges[row][col];
+    addEdge(p,x1,y0,x1,y1,edge);
+  }
 
-            cell.className=
-                "targetCell";
+  /* BOTTOM */
+  if(row===ROWS-1){
+    p.lineTo(x0,y1);
+  }else{
+    const edge = verticalEdges[row][col];
+    addEdge(p,x1,y1,x0,y1,edge);
+  }
 
-            cell.style.width=
-                (100/COLS)+"%";
+  /* LEFT */
+  if(col===0){
+    p.lineTo(x0,y0);
+  }else{
+    const edge = horizontalEdges[row][col-1];
+    addEdge(p,x0,y1,x0,y0,-edge);
+  }
 
-            cell.style.height=
-                (100/ROWS)+"%";
+  p.closePath();
 
-            cell.style.left=
-                (col*100/COLS)+"%";
-
-            cell.style.top=
-                (r*100/ROWS)+"%";
-
-            targetGrid.appendChild(
-                cell
-            );
-
-        }
-
-    }
-
+  return p;
 }
 
+/* ---------------------------------------------------------
+   CREATE ONE PUZZLE PIECE
+--------------------------------------------------------- */
 
-/* ==================================================
+function createPieceCanvas(row,col){
+
+  const canvas = document.createElement("canvas");
+
+  canvas.width = PIECE_SIZE;
+  canvas.height = PIECE_SIZE;
+
+  const ctx = canvas.getContext("2d");
+
+  const path = piecePath(row,col);
+
+  ctx.save();
+
+  ctx.clip(path);
+
+  /*
+    Important:
+    Draw the SAME source image with a shifted origin.
+
+    This ensures that when all pieces are correctly placed,
+    the Panda picture matches perfectly.
+  */
+
+  ctx.drawImage(
+    sourceCanvas,
+    PAD - col*CELL,
+    PAD - row*CELL
+  );
+
+  ctx.restore();
+
+  /* Piece outline */
+  ctx.strokeStyle="rgba(0,0,0,.55)";
+  ctx.lineWidth=3;
+  ctx.stroke(path);
+
+  return canvas;
+}
+
+/* ---------------------------------------------------------
+   TARGET CELLS
+--------------------------------------------------------- */
+
+function createTargets(){
+
+  board.innerHTML="";
+
+  for(let row=0;row<ROWS;row++){
+
+    for(let col=0;col<COLS;col++){
+
+      const target=document.createElement("div");
+
+      target.className="target";
+
+      target.style.left=(col/COLS*100)+"%";
+      target.style.top=(row/ROWS*100)+"%";
+      target.style.width=(100/COLS)+"%";
+      target.style.height=(100/ROWS)+"%";
+
+      target.dataset.row=row;
+      target.dataset.col=col;
+
+      board.appendChild(target);
+    }
+  }
+}
+
+/* ---------------------------------------------------------
    CREATE PIECES
-================================================== */
+--------------------------------------------------------- */
 
 function createPieces(){
 
-    piecesContainer.innerHTML="";
+  piecesContainer.innerHTML="";
+  pieces=[];
 
-    pieceData=[];
+  let index=0;
 
-    const edges=
-        createEdges();
+  for(let row=0;row<ROWS;row++){
 
+    for(let col=0;col<COLS;col++){
 
-    for(
-        let r=0;
-        r<ROWS;
-        r++
-    ){
+      const piece=document.createElement("div");
 
-        for(
-            let col=0;
-            col<COLS;
-            col++
-        ){
+      piece.className="piece";
 
-            const index =
-                r*COLS+col;
+      piece.dataset.row=row;
+      piece.dataset.col=col;
+      piece.dataset.index=index;
 
-            const canvas =
-                document.createElement(
-                    "canvas"
-                );
+      const canvas=createPieceCanvas(row,col);
+      canvas.className="pieceCanvas";
 
-            const pad=45;
+      piece.appendChild(canvas);
 
-            canvas.width=
-                CELL+pad*2;
+      pieces.push(piece);
 
-            canvas.height=
-                CELL+pad*2;
+      addDragEvents(piece);
 
-            const c=
-                canvas.getContext(
-                    "2d"
-                );
+      piecesContainer.appendChild(piece);
 
-
-            /* MASK */
-
-            c.save();
-
-            addJigsawPath(
-                c,
-                pad,
-                pad,
-                CELL,
-                CELL,
-                edges[r][col]
-            );
-
-            c.clip();
-
-
-            /* SAME PANDA IMAGE */
-
-            c.drawImage(
-                sourceCanvas,
-
-                pad-col*CELL,
-
-                pad-r*CELL
-            );
-
-            c.restore();
-
-
-            /* BORDER */
-
-            c.save();
-
-            addJigsawPath(
-                c,
-                pad,
-                pad,
-                CELL,
-                CELL,
-                edges[r][col]
-            );
-
-            c.strokeStyle="#111";
-
-            c.lineWidth=5;
-
-            c.stroke();
-
-            c.restore();
-
-
-            const piece =
-                document.createElement(
-                    "div"
-                );
-
-            piece.className=
-                "piece";
-
-            piece.dataset.index=
-                index;
-
-            piece.appendChild(
-                canvas
-            );
-
-            piecesContainer.appendChild(
-                piece
-            );
-
-
-            pieceData.push({
-
-                element:piece,
-
-                index:index,
-
-                row:r,
-
-                col:col,
-
-                placed:false
-
-            });
-
-
-            addDragEvents(
-                piece
-            );
-
-        }
-
+      index++;
     }
+  }
 
-
-    shufflePieces();
-
+  shufflePieces();
 }
 
-
-/* ==================================================
+/* ---------------------------------------------------------
    SHUFFLE
-================================================== */
+--------------------------------------------------------- */
 
 function shufflePieces(){
 
-    for(
-        let i=pieceData.length-1;
-        i>0;
-        i--
-    ){
+  for(let i=pieces.length-1;i>0;i--){
 
-        const j=
-            Math.floor(
-                Math.random()*
-                (i+1)
-            );
+    const j=Math.floor(Math.random()*(i+1));
 
-        [
-            pieceData[i],
-            pieceData[j]
-        ]=[
-            pieceData[j],
-            pieceData[i]
-        ];
+    const temp=pieces[i];
+    pieces[i]=pieces[j];
+    pieces[j]=temp;
+  }
 
-    }
-
-
-    pieceData.forEach(
-        p=>{
-            piecesContainer.appendChild(
-                p.element
-            );
-        }
-    );
-
+  pieces.forEach(piece=>{
+    piecesContainer.appendChild(piece);
+  });
 }
 
-
-/* ==================================================
-   DRAG EVENTS
-================================================== */
+/* ---------------------------------------------------------
+   DRAGGING
+--------------------------------------------------------- */
 
 function addDragEvents(piece){
 
-    let startX=0;
-    let startY=0;
+  let dragging=false;
+  let offsetX=0;
+  let offsetY=0;
 
-    let originalLeft=0;
-    let originalTop=0;
+  piece.addEventListener("pointerdown",function(e){
 
-    let dragging=false;
+    if(piece.classList.contains("locked")) return;
 
+    initAudio();
 
-    piece.addEventListener(
-        "pointerdown",
-        e=>{
+    e.preventDefault();
 
-            if(
-                piece.classList.contains(
-                    "correct"
-                )
-            )
-                return;
+    dragging=true;
 
+    piece.classList.add("dragging");
 
-            dragging=true;
+    const rect=piece.getBoundingClientRect();
 
+    offsetX=e.clientX-rect.left;
+    offsetY=e.clientY-rect.top;
 
-            try{
-                piece.setPointerCapture(
-                    e.pointerId
-                );
-            }catch(err){}
+    /*
+      Fixed positioning makes dragging work reliably
+      on Android screens.
+    */
 
+    piece.style.position="fixed";
+    piece.style.width=PIECE_SIZE+"px";
+    piece.style.height=PIECE_SIZE+"px";
 
-            const rect =
-                piece.getBoundingClientRect();
+    piece.style.left=(e.clientX-offsetX)+"px";
+    piece.style.top=(e.clientY-offsetY)+"px";
 
+    try{
+      piece.setPointerCapture(e.pointerId);
+    }catch(err){}
+  });
 
-            startX=e.clientX;
-            startY=e.clientY;
+  piece.addEventListener("pointermove",function(e){
 
+    if(!dragging) return;
 
-            originalLeft=
-                rect.left;
+    e.preventDefault();
 
-            originalTop=
-                rect.top;
+    piece.style.left=(e.clientX-offsetX)+"px";
+    piece.style.top=(e.clientY-offsetY)+"px";
+  });
 
+  piece.addEventListener("pointerup",function(e){
 
-            piece.classList.add(
-                "dragging"
-            );
+    if(!dragging) return;
 
+    dragging=false;
 
-            piece.style.position=
-                "fixed";
+    piece.classList.remove("dragging");
 
-            piece.style.width=
-                rect.width+"px";
+    try{
+      piece.releasePointerCapture(e.pointerId);
+    }catch(err){}
 
-            piece.style.height=
-                rect.height+"px";
+    checkDrop(piece);
+  });
 
-            piece.style.left=
-                rect.left+"px";
+  piece.addEventListener("pointercancel",function(){
 
-            piece.style.top=
-                rect.top+"px";
+    if(!dragging) return;
 
-        }
-    );
+    dragging=false;
+    piece.classList.remove("dragging");
 
-
-    piece.addEventListener(
-        "pointermove",
-        e=>{
-
-            if(!dragging)
-                return;
-
-
-            const dx=
-                e.clientX-startX;
-
-            const dy=
-                e.clientY-startY;
-
-
-            piece.style.left=
-                originalLeft+dx+"px";
-
-            piece.style.top=
-                originalTop+dy+"px";
-
-        }
-    );
-
-
-    piece.addEventListener(
-        "pointerup",
-        e=>{
-
-            if(!dragging)
-                return;
-
-
-            dragging=false;
-
-
-            piece.classList.remove(
-                "dragging"
-            );
-
-
-            checkDrop(
-                piece
-            );
-
-        }
-    );
-
-
-    piece.addEventListener(
-        "pointercancel",
-        e=>{
-
-            if(!dragging)
-                return;
-
-
-            dragging=false;
-
-
-            piece.classList.remove(
-                "dragging"
-            );
-
-
-            returnPiece(
-                piece
-            );
-
-        }
-    );
-
+    returnPiece(piece);
+  });
 }
 
-
-/* ==================================================
+/* ---------------------------------------------------------
    CHECK DROP
-================================================== */
+--------------------------------------------------------- */
 
 function checkDrop(piece){
 
-    moves++;
+  if(piece.classList.contains("locked")) return;
 
-    movesEl.textContent=
-        moves;
+  const row=Number(piece.dataset.row);
+  const col=Number(piece.dataset.col);
 
+  const boardRect=board.getBoundingClientRect();
 
-    const index=
-        Number(
-            piece.dataset.index
-        );
+  const pieceRect=piece.getBoundingClientRect();
 
+  const centerX=
+    pieceRect.left + pieceRect.width/2;
 
-    const row=
-        Math.floor(
-            index/COLS
-        );
+  const centerY=
+    pieceRect.top + pieceRect.height/2;
 
-    const col=
-        index%COLS;
+  const targetX=
+    boardRect.left +
+    (col+.5)*(boardRect.width/COLS);
 
+  const targetY=
+    boardRect.top +
+    (row+.5)*(boardRect.height/ROWS);
 
-    const boardRect=
-        board.getBoundingClientRect();
+  const dx=centerX-targetX;
+  const dy=centerY-targetY;
 
-    const pieceRect=
-        piece.getBoundingClientRect();
+  const distance=Math.sqrt(dx*dx+dy*dy);
 
+  /*
+    Forgiving snap area for Android.
+  */
 
-    const centerX=
-        pieceRect.left+
-        pieceRect.width/2;
+  const snapDistance=
+    Math.min(boardRect.width/COLS,boardRect.height/ROWS)*.48;
 
-    const centerY=
-        pieceRect.top+
-        pieceRect.height/2;
+  moves++;
 
+  updateStats();
 
-    const targetX=
-        boardRect.left+
-        (col+.5)*
-        boardRect.width/COLS;
+  if(distance<=snapDistance){
 
-    const targetY=
-        boardRect.top+
-        (row+.5)*
-        boardRect.height/ROWS;
+    placeCorrectPiece(piece,row,col);
 
+  }else{
 
-    const distance=
-        Math.hypot(
-            centerX-targetX,
-            centerY-targetY
-        );
-
-
-    if(
-        distance<
-        boardRect.width*
-        (
-            .20/COLS*3
-        )
-    ){
-
-        placeCorrect(
-            piece,
-            row,
-            col
-        );
-
-    }else{
-
-        wrongPiece(
-            piece
-        );
-
-    }
-
+    wrongPiece(piece);
+  }
 }
 
+/* ---------------------------------------------------------
+   CORRECT PLACEMENT
+--------------------------------------------------------- */
 
-/* ==================================================
-   CORRECT PIECE
-================================================== */
+function placeCorrectPiece(piece,row,col){
 
-function placeCorrect(
-    piece,
-    row,
-    col
-){
+  const boardRect=board.getBoundingClientRect();
 
-    const boardRect=
-        board.getBoundingClientRect();
+  /*
+    Convert the padded piece size from source pixels
+    into the board's displayed size.
+  */
 
+  const scale=boardRect.width/SIZE;
 
-    const cellW=
-        boardRect.width/COLS;
+  const displayedPieceSize=
+    PIECE_SIZE*scale;
 
-    const cellH=
-        boardRect.height/ROWS;
+  const left=
+    boardRect.left +
+    col*CELL*scale -
+    PAD*scale;
 
+  const top=
+    boardRect.top +
+    row*CELL*scale -
+    PAD*scale;
 
-    piece.classList.add(
-        "correct"
-    );
+  piece.style.position="fixed";
 
+  piece.style.width=displayedPieceSize+"px";
+  piece.style.height=displayedPieceSize+"px";
 
-    piece.style.position=
-        "absolute";
+  piece.style.left=left+"px";
+  piece.style.top=top+"px";
 
+  piece.classList.add("locked");
 
-    piece.style.width=
-        cellW+"px";
+  piece.style.pointerEvents="none";
 
-    piece.style.height=
-        cellH+"px";
+  completedCount++;
 
+  correctSound();
 
-    piece.style.left=
-        col*cellW+"px";
+  showMessage("🎉 Great! Correct piece!",true);
 
-    piece.style.top=
-        row*cellH+"px";
+  if(completedCount===ROWS*COLS){
 
-
-    piece.style.transform=
-        "scale(1)";
-
-
-    board.appendChild(
-        piece
-    );
-
-
-    const data=
-        pieceData.find(
-            p =>
-            p.element===piece
-        );
-
-
-    if(data)
-        data.placed=true;
-
-
-    completed++;
-
-
-    playSound(
-        "correct"
-    );
-
-    vibrate(
-        [30]
-    );
-
-
-    messageEl.textContent=
-        "🎉 Correct!";
-
-
-    updateScore();
-
-
-    if(
-        completed===
-        ROWS*COLS
-    ){
-
-        finishGame();
-
-    }
-
+    setTimeout(finishGame,350);
+  }
 }
 
-
-/* ==================================================
+/* ---------------------------------------------------------
    WRONG PIECE
-================================================== */
+--------------------------------------------------------- */
 
 function wrongPiece(piece){
 
-    playSound(
-        "wrong"
-    );
+  wrongSound();
 
-    vibrate(
-        [60,40,60]
-    );
+  showMessage("❌ Not there. Try another position.",false);
 
+  piece.classList.add("shake");
 
-    lives--;
+  setTimeout(()=>{
 
+    piece.classList.remove("shake");
 
-    updateLives();
+    returnPiece(piece);
 
-
-    messageEl.textContent=
-        "❌ Wrong place!";
-
-
-    piece.classList.add(
-        "wrong"
-    );
-
-
-    setTimeout(
-        ()=>{
-
-            piece.classList.remove(
-                "wrong"
-            );
-
-            returnPiece(
-                piece
-            );
-
-        },
-        400
-    );
-
-
-    if(
-        lives<=0
-    ){
-
-        gameOver();
-
-    }
-
+  },350);
 }
 
-
-/* ==================================================
-   RETURN
-================================================== */
+/* ---------------------------------------------------------
+   RETURN PIECE
+--------------------------------------------------------- */
 
 function returnPiece(piece){
 
-    piece.style.position=
-        "relative";
+  piece.style.position="";
+  piece.style.width="";
+  piece.style.height="";
+  piece.style.left="";
+  piece.style.top="";
+  piece.style.zIndex="";
 
-    piece.style.left="";
+  piecesContainer.appendChild(piece);
+}
 
-    piece.style.top="";
+/* ---------------------------------------------------------
+   STATS
+--------------------------------------------------------- */
 
-    piece.style.width="";
+function updateStats(){
 
-    piece.style.height="";
+  document.getElementById("moves").textContent=moves;
 
-    piecesContainer.appendChild(
-        piece
+  let currentScore=
+    Math.max(
+      0,
+      100 -
+      moves*2 -
+      Math.floor(seconds/5)
     );
 
+  document.getElementById("score").textContent=currentScore;
 }
 
+function currentScore(){
 
-/* ==================================================
-   LIVES
-================================================== */
+  return Math.max(
+    0,
+    100 -
+    moves*2 -
+    Math.floor(seconds/5)
+  );
+}
 
-function updateLives(){
+function showMessage(text,good){
 
-    let hearts="";
+  const msg=document.getElementById("message");
 
-    for(
-        let i=0;
-        i<3;
-        i++
-    ){
+  msg.textContent=text;
 
-        hearts +=
-            i<lives
-            ? "❤️"
-            : "🖤";
+  msg.className=good ? "good" : "bad";
 
+  setTimeout(()=>{
+
+    if(gameRunning){
+      msg.textContent="Drag each piece into the correct place.";
+      msg.className="";
     }
 
-    livesEl.textContent=
-        hearts;
-
+  },1200);
 }
 
-
-/* ==================================================
-   GAME OVER
-================================================== */
-
-function gameOver(){
-
-    clearInterval(
-        timerInterval
-    );
-
-
-    messageEl.textContent=
-        "💔 Game Over! Try again.";
-
-
-    setTimeout(
-        ()=>{
-            alert(
-                "💔 Game Over!\n\nTap New Game to try again."
-            );
-        },
-        100
-    );
-
-}
-
-
-/* ==================================================
-   SCORE
-================================================== */
-
-function updateScore(){
-
-    let penalty=
-        moves*2+
-        Math.floor(
-            seconds/5
-        );
-
-
-    if(
-        currentLevel==="medium"
-    ){
-
-        penalty=
-            moves*1.5+
-            Math.floor(
-                seconds/4
-            );
-
-    }
-
-
-    if(
-        currentLevel==="hard"
-    ){
-
-        penalty=
-            moves+
-            Math.floor(
-                seconds/3
-            );
-
-    }
-
-
-    let value=
-        100-
-        penalty;
-
-
-    if(value<10)
-        value=10;
-
-
-    scoreEl.textContent=
-        Math.round(value);
-
-}
-
-
-/* ==================================================
+/* ---------------------------------------------------------
    TIMER
-================================================== */
+--------------------------------------------------------- */
 
 function startTimer(){
 
-    clearInterval(
-        timerInterval
-    );
+  clearInterval(timerInterval);
 
+  timerInterval=setInterval(()=>{
 
-    timerInterval=
-        setInterval(
-            ()=>{
+    if(!gameRunning) return;
 
-                seconds++;
+    seconds++;
 
+    document.getElementById("timer").textContent=seconds;
 
-                const min=
-                    String(
-                        Math.floor(
-                            seconds/60
-                        )
-                    ).padStart(
-                        2,
-                        "0"
-                    );
+    updateStats();
 
-
-                const sec=
-                    String(
-                        seconds%60
-                    ).padStart(
-                        2,
-                        "0"
-                    );
-
-
-                timerEl.textContent=
-                    min+":"+sec;
-
-
-                updateScore();
-
-            },
-            1000
-        );
-
+  },1000);
 }
 
-
-/* ==================================================
-   BEST SCORE
-================================================== */
-
-function bestScoreKey(){
-
-    return(
-        "completePic_bestScore_"+
-        currentLevel
-    );
-
-}
-
-
-function bestTimeKey(){
-
-    return(
-        "completePic_bestTime_"+
-        currentLevel
-    );
-
-}
-
-
-function loadBest(){
-
-    const score=
-        Number(
-            localStorage.getItem(
-                bestScoreKey()
-            )||0
-        );
-
-
-    const time=
-        Number(
-            localStorage.getItem(
-                bestTimeKey()
-            )||0
-        );
-
-
-    bestScoreEl.textContent=
-        score;
-
-
-    if(time>0){
-
-        bestTimeEl.textContent=
-            formatTime(time);
-
-    }else{
-
-        bestTimeEl.textContent=
-            "--:--";
-
-    }
-
-}
-
-
-/* ==================================================
-   SAVE BEST
-================================================== */
-
-function saveBest(){
-
-    const score=
-        Number(
-            scoreEl.textContent
-        );
-
-
-    const oldScore=
-        Number(
-            localStorage.getItem(
-                bestScoreKey()
-            )||0
-        );
-
-
-    if(
-        score>oldScore
-    ){
-
-        localStorage.setItem(
-            bestScoreKey(),
-            score
-        );
-
-    }
-
-
-    const oldTime=
-        Number(
-            localStorage.getItem(
-                bestTimeKey()
-            )||0
-        );
-
-
-    if(
-        oldTime===0 ||
-        seconds<oldTime
-    ){
-
-        localStorage.setItem(
-            bestTimeKey(),
-            seconds
-        );
-
-    }
-
-
-    loadBest();
-
-}
-
-
-/* ==================================================
-   FORMAT TIME
-================================================== */
-
-function formatTime(value){
-
-    const min=
-        String(
-            Math.floor(
-                value/60
-            )
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    const sec=
-        String(
-            value%60
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    return(
-        min+":"+sec
-    );
-
-}
-
-
-/* ==================================================
-   WIN
-================================================== */
+/* ---------------------------------------------------------
+   FINISH
+--------------------------------------------------------- */
 
 function finishGame(){
 
-    clearInterval(
-        timerInterval
+  if(!gameRunning) return;
+
+  gameRunning=false;
+
+  clearInterval(timerInterval);
+
+  const finalScore=currentScore();
+
+  document.getElementById("finalTime").textContent=seconds;
+  document.getElementById("finalMoves").textContent=moves;
+  document.getElementById("finalScore").textContent=finalScore;
+
+  const oldBestScore=getBestScore();
+  const oldBestTime=getBestTime();
+
+  if(oldBestScore===null || finalScore>oldBestScore){
+
+    localStorage.setItem(
+      "completePic_v16_bestScore",
+      finalScore
     );
+  }
 
+  if(oldBestTime===null || seconds<oldBestTime){
 
-    playSound(
-        "win"
+    localStorage.setItem(
+      "completePic_v16_bestTime",
+      seconds
     );
+  }
 
+  updateBestDisplay();
 
-    vibrate(
-        [100,50,100,50,200]
-    );
+  winSound();
 
+  setTimeout(()=>{
 
-    board.classList.add(
-        "boardWin"
-    );
+    document.getElementById("winBox").style.display="flex";
 
-
-    targetCanvas.style.opacity=
-        "1";
-
-
-    const finalScore=
-        Number(
-            scoreEl.textContent
-        );
-
-
-    saveBest();
-
-
-    messageEl.textContent=
-        "🏆 Amazing! Picture completed!";
-
-
-    winText.innerHTML=
-        `
-        Level:
-        <b>
-        ${currentLevel.toUpperCase()}
-        </b>
-        <br><br>
-
-        ⏱ Time:
-        <b>
-        ${timerEl.textContent}
-        </b>
-
-        <br>
-
-        👣 Moves:
-        <b>
-        ${moves}
-        </b>
-
-        <br>
-
-        ⭐ Score:
-        <b>
-        ${finalScore}
-        </b>
-
-        <br><br>
-
-        🏆 Best score:
-        <b>
-        ${bestScoreEl.textContent}
-        </b>
-        `;
-
-
-    winBox.style.display=
-        "block";
-
-
-    createConfetti();
-
+  },300);
 }
 
-
-/* ==================================================
-   CONFETTI
-================================================== */
-
-function createConfetti(){
-
-    const canvas=
-        document.getElementById(
-            "confetti"
-        );
-
-    const c=
-        canvas.getContext(
-            "2d"
-        );
-
-
-    canvas.width=
-        window.innerWidth;
-
-    canvas.height=
-        window.innerHeight;
-
-
-    const pieces=[];
-
-
-    for(
-        let i=0;
-        i<100;
-        i++
-    ){
-
-        pieces.push({
-
-            x:
-                Math.random()*
-                canvas.width,
-
-            y:
-                -Math.random()*
-                canvas.height,
-
-            size:
-                5+
-                Math.random()*8,
-
-            speed:
-                2+
-                Math.random()*4,
-
-            angle:
-                Math.random()*
-                Math.PI*2,
-
-            spin:
-                -.1+
-                Math.random()*.2
-
-        });
-
-    }
-
-
-    let frame=0;
-
-
-    function animate(){
-
-        c.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-
-        pieces.forEach(
-            p=>{
-
-                p.y +=
-                    p.speed;
-
-                p.angle +=
-                    p.spin;
-
-
-                c.save();
-
-                c.translate(
-                    p.x,
-                    p.y
-                );
-
-                c.rotate(
-                    p.angle
-                );
-
-
-                c.fillStyle=
-                    [
-                        "#e74c3c",
-                        "#3498db",
-                        "#f1c40f",
-                        "#2ecc71",
-                        "#9b59b6"
-                    ][
-                        Math.floor(
-                            Math.random()*5
-                        )
-                    ];
-
-
-                c.fillRect(
-                    -p.size/2,
-                    -p.size/2,
-                    p.size,
-                    p.size
-                );
-
-
-                c.restore();
-
-            }
-        );
-
-
-        frame++;
-
-
-        if(
-            frame<180
-        ){
-
-            requestAnimationFrame(
-                animate
-            );
-
-        }else{
-
-            c.clearRect(
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
-
-        }
-
-    }
-
-
-    animate();
-
-}
-
-
-/* ==================================================
+/* ---------------------------------------------------------
    NEW GAME
-================================================== */
+--------------------------------------------------------- */
 
 function newGame(){
 
-    clearInterval(
-        timerInterval
-    );
+  initAudio();
 
+  clearInterval(timerInterval);
 
-    moves=0;
+  moves=0;
+  seconds=0;
+  completedCount=0;
+  gameRunning=true;
 
-    seconds=0;
+  document.getElementById("timer").textContent="0";
+  document.getElementById("moves").textContent="0";
+  document.getElementById("score").textContent="100";
 
-    completed=0;
+  document.getElementById("message").textContent=
+    "Drag each piece into the correct place.";
 
-    lives=3;
+  document.getElementById("message").className="";
 
+  document.getElementById("winBox").style.display="none";
 
-    movesEl.textContent=
-        "0";
+  drawPanda();
 
-    timerEl.textContent=
-        "00:00";
+  generateEdges();
 
-    scoreEl.textContent=
-        "100";
+  createTargets();
 
+  createPieces();
 
-    updateLives();
+  updateBestDisplay();
 
+  startTimer();
 
-    messageEl.textContent=
-        "Drag each piece into its correct place.";
-
-
-    winBox.style.display=
-        "none";
-
-
-    board.classList.remove(
-        "boardWin"
-    );
-
-
-    targetCanvas.style.opacity=
-        ".12";
-
-
-    document
-        .getElementById(
-            "confetti"
-        )
-        .getContext("2d")
-        .clearRect(
-            0,
-            0,
-            window.innerWidth,
-            window.innerHeight
-        );
-
-
-    drawPanda();
-
-    createTargetGrid();
-
-    createPieces();
-
-    loadBest();
-
-    startTimer();
-
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 }
 
+/* ---------------------------------------------------------
+   PLAY AGAIN
+--------------------------------------------------------- */
 
-/* ==================================================
-   START GAME
-================================================== */
+function closeWinAndNewGame(){
 
+  document.getElementById("winBox").style.display="none";
+
+  newGame();
+}
+
+/* ---------------------------------------------------------
+   START
+--------------------------------------------------------- */
+
+updateBestDisplay();
 newGame();
 
 </script>
 
 </body>
-      </html>
+</html>
