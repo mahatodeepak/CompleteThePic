@@ -17,25 +17,27 @@ body{
   margin:0;
   font-family:Arial,sans-serif;
   text-align:center;
-  background:linear-gradient(135deg,#dff7ff,#fff1cc);
+  background:linear-gradient(135deg,#dff7ff,#fff0c9);
   color:#222;
   overflow-x:hidden;
 }
 
 h1{
-  margin:12px 0 2px;
-  font-size:30px;
+  margin:12px 0 3px;
+  font-size:29px;
 }
 
 .subtitle{
   color:#555;
   margin-bottom:10px;
+  font-size:15px;
 }
 
 .info{
   display:flex;
   justify-content:center;
-  gap:25px;
+  gap:22px;
+  flex-wrap:wrap;
   font-weight:bold;
   margin-bottom:10px;
 }
@@ -47,175 +49,111 @@ h1{
   padding:8px;
 }
 
-/* =========================
-   PUZZLE FRAME
-========================= */
+/* ================================
+   PUZZLE BOARD
+================================ */
 
 #board{
   position:relative;
   width:min(92vw,450px);
   height:min(92vw,450px);
   margin:auto;
+
   background:#fff;
+
   border:9px solid #000;
+
   overflow:hidden;
-  box-shadow:0 6px 18px rgba(0,0,0,.28);
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,.3);
 }
 
-/* Panda background */
-#panda{
+/*
+ The target image is hidden until
+ pieces are correctly placed.
+*/
+#targetCanvas{
   position:absolute;
   inset:0;
-  background:
-    linear-gradient(#bcecff 0 58%,#8bd36d 58%);
+  width:100%;
+  height:100%;
+  opacity:.10;
+  transition:opacity .4s;
 }
 
-/* Panda ears */
-.ear{
+#targetCanvas.show{
+  opacity:1;
+}
+
+
+/* ================================
+   TARGET CELLS
+================================ */
+
+.targetCell{
   position:absolute;
-  width:17%;
-  height:17%;
-  background:#111;
-  border-radius:50%;
-  top:18%;
+
+  width:33.3333%;
+  height:33.3333%;
+
+  border:1px dashed rgba(0,0,0,.35);
+
+  z-index:2;
+
+  pointer-events:none;
 }
 
-.ear.left{left:27%}
-.ear.right{right:27%}
-
-/* Head */
-.head{
-  position:absolute;
-  width:48%;
-  height:43%;
-  left:26%;
-  top:20%;
-  background:white;
-  border:5px solid #111;
-  border-radius:48%;
+.targetCell.correct{
+  border:1px solid rgba(0,150,40,.35);
 }
 
-/* Eye patches */
-.eyePatch{
-  position:absolute;
-  width:20%;
-  height:30%;
-  background:#111;
-  border-radius:50%;
-  top:30%;
-}
+#cell0{left:0;top:0}
+#cell1{left:33.3333%;top:0}
+#cell2{left:66.6666%;top:0}
 
-.eyePatch.left{
-  left:20%;
-  transform:rotate(25deg);
-}
+#cell3{left:0;top:33.3333%}
+#cell4{left:33.3333%;top:33.3333%}
+#cell5{left:66.6666%;top:33.3333%}
 
-.eyePatch.right{
-  right:20%;
-  transform:rotate(-25deg);
-}
-
-.eye{
-  position:absolute;
-  width:34%;
-  height:34%;
-  background:white;
-  border-radius:50%;
-  left:33%;
-  top:18%;
-}
-
-.pupil{
-  position:absolute;
-  width:48%;
-  height:48%;
-  background:#111;
-  border-radius:50%;
-  left:26%;
-  top:26%;
-}
-
-/* Nose */
-.nose{
-  position:absolute;
-  width:13%;
-  height:9%;
-  background:#111;
-  border-radius:50%;
-  left:43.5%;
-  top:61%;
-}
-
-/* Mouth */
-.mouth{
-  position:absolute;
-  width:20%;
-  height:13%;
-  left:40%;
-  top:68%;
-  border-bottom:4px solid #111;
-  border-radius:50%;
-}
-
-/* Body */
-.body{
-  position:absolute;
-  width:39%;
-  height:39%;
-  left:30.5%;
-  top:57%;
-  background:#111;
-  border-radius:45% 45% 35% 35%;
-}
-
-.belly{
-  position:absolute;
-  width:58%;
-  height:58%;
-  left:21%;
-  top:22%;
-  background:white;
-  border-radius:50%;
-}
-
-/* Arms */
-.arm{
-  position:absolute;
-  width:22%;
-  height:38%;
-  top:59%;
-  background:#111;
-  border-radius:50%;
-}
-
-.arm.left{
-  left:18%;
-  transform:rotate(35deg);
-}
-
-.arm.right{
-  right:18%;
-  transform:rotate(-35deg);
-}
+#cell6{left:0;top:66.6666%}
+#cell7{left:33.3333%;top:66.6666%}
+#cell8{left:66.6666%;top:66.6666%}
 
 
-/* =========================
-   JIGSAW PIECES AREA
-========================= */
+/* ================================
+   MESSAGE
+================================ */
 
 #message{
-  min-height:30px;
-  margin:8px;
+  min-height:32px;
+  margin:9px 4px;
+
   font-size:17px;
   font-weight:bold;
 }
 
+#message.win{
+  color:#0b982f;
+  font-size:23px;
+}
+
+
+/* ================================
+   PIECES AREA
+================================ */
+
 #piecesArea{
   width:min(96vw,520px);
+
   margin:10px auto;
+
   padding:12px;
-  background:rgba(255,255,255,.8);
+
+  background:rgba(255,255,255,.82);
+
   border:3px dashed #555;
+
   border-radius:15px;
 }
 
@@ -226,50 +164,74 @@ h1{
 
 #pieces{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:9px;
+
   justify-items:center;
 }
 
-/* =========================
-   JIGSAW PIECE
-========================= */
+
+/* ================================
+   PUZZLE PIECE
+================================ */
 
 .piece{
   position:relative;
+
   width:min(28vw,135px);
   height:min(28vw,135px);
+
   cursor:grab;
+
   touch-action:none;
   user-select:none;
+
   z-index:10;
-  filter:drop-shadow(0 3px 4px rgba(0,0,0,.25));
+
+  filter:
+    drop-shadow(
+      0 3px 4px rgba(0,0,0,.25)
+    );
+
+  transition:
+    transform .12s;
 }
 
 .piece:active{
   cursor:grabbing;
-  transform:scale(1.05);
+
+  transform:
+    scale(1.06);
+
   z-index:100;
 }
 
 .pieceCanvas{
-  position:absolute;
   width:100%;
   height:100%;
+  display:block;
 }
 
 
-/* =========================
+/* ================================
    BUTTON
-========================= */
+================================ */
 
 button{
-  border:none;
+  border:0;
+
   border-radius:12px;
+
   padding:12px 24px;
+
   margin:6px;
+
   background:#222;
   color:white;
+
   font-size:16px;
   font-weight:bold;
 }
@@ -279,36 +241,32 @@ button:active{
 }
 
 
-/* =========================
-   WIN
-========================= */
-
-.win{
-  color:#0b942d;
-  font-size:23px!important;
-}
-
-@keyframes celebrate{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.08) rotate(2deg)}
-  100%{transform:scale(1)}
-}
-
-.celebrate{
-  animation:celebrate .6s infinite;
-}
-
-
-/* =========================
-   WRONG PIECE
-========================= */
+/* ================================
+   ANIMATIONS
+================================ */
 
 @keyframes shake{
-  0%{transform:translateX(0)}
-  25%{transform:translateX(-8px)}
-  50%{transform:translateX(8px)}
-  75%{transform:translateX(-8px)}
-  100%{transform:translateX(0)}
+
+  0%{
+    transform:translateX(0);
+  }
+
+  25%{
+    transform:translateX(-8px);
+  }
+
+  50%{
+    transform:translateX(8px);
+  }
+
+  75%{
+    transform:translateX(-8px);
+  }
+
+  100%{
+    transform:translateX(0);
+  }
+
 }
 
 .shake{
@@ -316,7 +274,35 @@ button:active{
 }
 
 
-/* Mobile */
+@keyframes winAnimation{
+
+  0%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:
+      scale(1.06)
+      rotate(2deg);
+  }
+
+  100%{
+    transform:scale(1);
+  }
+
+}
+
+.winBoard{
+  animation:
+    winAnimation .7s
+    infinite;
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
 @media(max-width:420px){
 
   h1{
@@ -324,12 +310,14 @@ button:active{
   }
 
   .info{
-    gap:15px;
+    gap:13px;
     font-size:14px;
   }
+
 }
 </style>
 </head>
+
 
 <body>
 
@@ -339,64 +327,102 @@ button:active{
 Pick the pieces. Complete the picture!
 </div>
 
+
 <div class="info">
-  <div>⏱️ <span id="timer">0</span>s</div>
-  <div>🎯 Moves: <span id="moves">0</span></div>
-  <div>🏆 <span id="score">100</span></div>
+
+  <div>
+    ⏱️ Time:
+    <span id="timer">0</span>s
+  </div>
+
+  <div>
+    🎯 Moves:
+    <span id="moves">0</span>
+  </div>
+
+  <div>
+    🏆 Score:
+    <span id="score">100</span>
+  </div>
+
 </div>
+
 
 <div id="game">
 
-  <!-- =====================
-       BLACK FRAME
-  ====================== -->
+
+  <!-- ==================================
+       BLACK PUZZLE FRAME
+  =================================== -->
 
   <div id="board">
 
-    <div id="panda">
+    <!--
+      This canvas contains the ONE
+      complete panda picture.
+    -->
 
-      <div class="ear left"></div>
-      <div class="ear right"></div>
+    <canvas id="targetCanvas"></canvas>
 
-      <div class="head">
 
-        <div class="eyePatch left">
-          <div class="eye">
-            <div class="pupil"></div>
-          </div>
-        </div>
+    <!-- TARGET CELLS -->
 
-        <div class="eyePatch right">
-          <div class="eye">
-            <div class="pupil"></div>
-          </div>
-        </div>
+    <div
+      class="targetCell"
+      id="cell0">
+    </div>
 
-        <div class="nose"></div>
-        <div class="mouth"></div>
+    <div
+      class="targetCell"
+      id="cell1">
+    </div>
 
-      </div>
+    <div
+      class="targetCell"
+      id="cell2">
+    </div>
 
-      <div class="body">
-        <div class="belly"></div>
-      </div>
+    <div
+      class="targetCell"
+      id="cell3">
+    </div>
 
-      <div class="arm left"></div>
-      <div class="arm right"></div>
+    <div
+      class="targetCell"
+      id="cell4">
+    </div>
 
+    <div
+      class="targetCell"
+      id="cell5">
+    </div>
+
+    <div
+      class="targetCell"
+      id="cell6">
+    </div>
+
+    <div
+      class="targetCell"
+      id="cell7">
+    </div>
+
+    <div
+      class="targetCell"
+      id="cell8">
     </div>
 
   </div>
 
 
   <div id="message">
-    Drag a puzzle piece into the black frame.
+    Drag the pieces into the black frame.
   </div>
 
 
-  <!-- =====================
+  <!-- ==================================
        PIECES
-  ====================== -->
+  =================================== -->
 
   <div id="piecesArea">
 
@@ -413,77 +439,131 @@ Pick the pieces. Complete the picture!
     🔄 New Game
   </button>
 
+
 </div>
+
 
 
 <script>
 
-/* ==================================================
-   COMPLETE THE PIC V1.2
-   ================================================== */
+/* =====================================================
+   COMPLETE THE PIC V1.3
+   SEAMLESS CANVAS PANDA PUZZLE
+===================================================== */
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
 const board =
-document.getElementById("board");
+  document.getElementById("board");
+
+const targetCanvas =
+  document.getElementById("targetCanvas");
+
+const targetCtx =
+  targetCanvas.getContext("2d");
 
 const piecesContainer =
-document.getElementById("pieces");
+  document.getElementById("pieces");
 
 const message =
-document.getElementById("message");
+  document.getElementById("message");
 
 const timerText =
-document.getElementById("timer");
+  document.getElementById("timer");
 
 const movesText =
-document.getElementById("moves");
+  document.getElementById("moves");
 
 const scoreText =
-document.getElementById("score");
+  document.getElementById("score");
 
 
-let moves=0;
-let seconds=0;
-let completed=0;
-let timer=null;
-let started=false;
+/* =====================================================
+   GAME VARIABLES
+===================================================== */
+
+let moves = 0;
+
+let seconds = 0;
+
+let completed = 0;
+
+let timer = null;
+
+let started = false;
 
 
-/* ==================================================
-   SIMPLE SOUND SYSTEM
-================================================== */
+/*
+  Board drawing resolution.
 
-let audioContext=null;
+  900 x 900 gives the generated picture
+  enough detail for mobile screens.
+*/
 
-function sound(type){
+const SIZE = 900;
+
+
+/* =====================================================
+   AUDIO
+===================================================== */
+
+let audioContext = null;
+
+
+function playSound(type){
 
   try{
 
     if(!audioContext){
-      audioContext=
-        new (window.AudioContext ||
-        window.webkitAudioContext)();
+
+      audioContext =
+        new (
+          window.AudioContext ||
+          window.webkitAudioContext
+        )();
+
     }
 
-    const oscillator=
+    const oscillator =
       audioContext.createOscillator();
 
-    const gain=
+    const gain =
       audioContext.createGain();
 
     oscillator.connect(gain);
-    gain.connect(audioContext.destination);
 
-    if(type==="correct"){
-      oscillator.frequency.value=700;
+    gain.connect(
+      audioContext.destination
+    );
+
+
+    if(type === "correct"){
+
+      oscillator.frequency.value = 700;
+
     }
 
-    if(type==="wrong"){
-      oscillator.frequency.value=180;
+    else if(type === "wrong"){
+
+      oscillator.frequency.value = 170;
+
     }
 
-    if(type==="win"){
-      oscillator.frequency.value=900;
+    else if(type === "win"){
+
+      oscillator.frequency.value = 900;
+
     }
+
+    else{
+
+      oscillator.frequency.value = 400;
+
+    }
+
 
     gain.gain.setValueAtTime(
       .08,
@@ -492,383 +572,845 @@ function sound(type){
 
     gain.gain.exponentialRampToValueAtTime(
       .001,
-      audioContext.currentTime+.25
+      audioContext.currentTime + .25
     );
+
 
     oscillator.start();
 
     oscillator.stop(
-      audioContext.currentTime+.25
+      audioContext.currentTime + .25
     );
 
-  }catch(e){}
-}
-
-
-/* ==================================================
-   CREATE SVG JIGSAW PIECE
-================================================== */
-
-function createPieceSVG(index){
-
-  const svg=
-  document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "svg"
-  );
-
-  svg.setAttribute("viewBox","0 0 100 100");
-  svg.classList.add("pieceCanvas");
-
-  /*
-    Different edge shapes make the pieces
-    look like jigsaw pieces.
-  */
-
-  let top =
-    index<3
-    ? "M0 0 H100 V18 C82 8 78 35 62 23 C45 10 55 0 38 0 Z"
-    : "M0 0 H38 C55 0 45 10 62 23 C78 35 82 8 100 18 V0 Z";
-
-  let path="";
-
-  /*
-    Main jigsaw outline.
-    Each piece remains square visually but
-    has curved tabs/holes.
-  */
-
-  const paths=[
-
-`M5 5 H95 V32
- C82 18 72 35 60 25
- C48 15 40 38 30 30
- C20 22 17 35 5 32 Z`,
-
-`M5 5 H32
- C18 18 35 28 25 40
- C15 52 38 58 30 70
- C22 82 35 88 5 95 Z`,
-
-`M95 5 V32
- C82 18 72 35 60 25
- C48 15 40 38 30 30
- C20 22 17 35 5 32 V5 Z`
-
-  ];
-
-  /*
-    Use SVG clip path so the panda artwork
-    appears inside a jigsaw shape.
-  */
-
-  const clipId="clip"+index;
-
-  const defs=
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "defs"
-    );
-
-  const clip=
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "clipPath"
-    );
-
-  clip.setAttribute("id",clipId);
-
-  const shape=
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "path"
-    );
-
-  /*
-    Slightly different tabs depending
-    on the piece position.
-  */
-
-  let d=
-`M5 5
-H35
-C25 20 48 20 45 35
-C42 48 60 45 65 35
-C70 25 88 28 95 18
-V95
-H70
-C80 82 58 78 60 65
-C62 52 42 55 40 68
-C38 80 20 75 5 85
-Z`;
-
-  shape.setAttribute("d",d);
-
-  clip.appendChild(shape);
-  defs.appendChild(clip);
-  svg.appendChild(defs);
-
-  /*
-    Panda miniature
-  */
-
-  const background=
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "rect"
-    );
-
-  background.setAttribute("x","0");
-  background.setAttribute("y","0");
-  background.setAttribute("width","100");
-  background.setAttribute("height","100");
-  background.setAttribute(
-    "fill","#bcecff"
-  );
-
-  background.setAttribute(
-    "clip-path",
-    `url(#${clipId})`
-  );
-
-  svg.appendChild(background);
-
-
-  /*
-    Green ground
-  */
-
-  const ground=
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "rect"
-    );
-
-  ground.setAttribute("x","0");
-  ground.setAttribute("y","58");
-  ground.setAttribute("width","100");
-  ground.setAttribute("height","42");
-  ground.setAttribute(
-    "fill","#8bd36d"
-  );
-
-  ground.setAttribute(
-    "clip-path",
-    `url(#${clipId})`
-  );
-
-  svg.appendChild(ground);
-
-
-  /*
-    Panda head
-  */
-
-  const head=
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "ellipse"
-    );
-
-  head.setAttribute("cx","50");
-  head.setAttribute("cy","38");
-  head.setAttribute("rx","24");
-  head.setAttribute("ry","21");
-  head.setAttribute("fill","white");
-  head.setAttribute("stroke","#111");
-  head.setAttribute("stroke-width","2");
-
-  svg.appendChild(head);
-
-
-  /*
-    Ears
-  */
-
-  function circle(cx,cy,r,fill){
-
-    const c=
-      document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "circle"
-      );
-
-    c.setAttribute("cx",cx);
-    c.setAttribute("cy",cy);
-    c.setAttribute("r",r);
-    c.setAttribute("fill",fill);
-
-    svg.appendChild(c);
   }
 
-  circle(31,22,9,"#111");
-  circle(69,22,9,"#111");
+  catch(error){
 
+    /* Audio may be blocked by browser. */
 
-  /*
-    Eyes
-  */
+  }
 
-  circle(41,36,5,"#111");
-  circle(59,36,5,"#111");
-
-  circle(40,34,1.7,"white");
-  circle(58,34,1.7,"white");
-
-
-  /*
-    Nose
-  */
-
-  const nose=
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "ellipse"
-    );
-
-  nose.setAttribute("cx","50");
-  nose.setAttribute("cy","47");
-  nose.setAttribute("rx","5");
-  nose.setAttribute("ry","3.5");
-  nose.setAttribute("fill","#111");
-
-  svg.appendChild(nose);
-
-
-  /*
-    Body
-  */
-
-  const body=
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "ellipse"
-    );
-
-  body.setAttribute("cx","50");
-  body.setAttribute("cy","76");
-  body.setAttribute("rx","20");
-  body.setAttribute("ry","20");
-  body.setAttribute("fill","#111");
-
-  svg.appendChild(body);
-
-
-  /*
-    Belly
-  */
-
-  const belly=
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "ellipse"
-    );
-
-  belly.setAttribute("cx","50");
-  belly.setAttribute("cy","78");
-  belly.setAttribute("rx","11");
-  belly.setAttribute("ry","13");
-  belly.setAttribute("fill","white");
-
-  svg.appendChild(belly);
-
-
-  /*
-    Border
-  */
-
-  const outline=
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "path"
-    );
-
-  outline.setAttribute("d",d);
-  outline.setAttribute(
-    "fill","none"
-  );
-  outline.setAttribute(
-    "stroke","#111"
-  );
-  outline.setAttribute(
-    "stroke-width","2"
-  );
-
-  svg.appendChild(outline);
-
-  return svg;
 }
 
 
-/* ==================================================
-   CREATE PIECES
-================================================== */
+/* =====================================================
+   CREATE THE COMPLETE PANDA IMAGE
+===================================================== */
 
-function createPieces(){
+function drawPanda(){
 
-  piecesContainer.innerHTML="";
+  targetCanvas.width = SIZE;
+  targetCanvas.height = SIZE;
 
-  let order=[
-    0,1,2,
-    3,4,5,
-    6,7,8
-  ];
+  const ctx = targetCtx;
+
+  ctx.clearRect(
+    0,
+    0,
+    SIZE,
+    SIZE
+  );
+
+
+  /* ===============================
+     SKY
+  =============================== */
+
+  const sky =
+    ctx.createLinearGradient(
+      0,
+      0,
+      0,
+      SIZE
+    );
+
+  sky.addColorStop(
+    0,
+    "#9ee5ff"
+  );
+
+  sky.addColorStop(
+    .58,
+    "#d9f7ff"
+  );
+
+  sky.addColorStop(
+    .58,
+    "#8bd36b"
+  );
+
+  sky.addColorStop(
+    1,
+    "#63b94e"
+  );
+
+  ctx.fillStyle = sky;
+
+  ctx.fillRect(
+    0,
+    0,
+    SIZE,
+    SIZE
+  );
+
+
+  /* ===============================
+     CLOUDS
+  =============================== */
+
+  drawCloud(
+    ctx,
+    130,
+    130,
+    1
+  );
+
+  drawCloud(
+    ctx,
+    690,
+    150,
+    .8
+  );
+
+
+  /* ===============================
+     SMALL HILLS
+  =============================== */
+
+  ctx.fillStyle =
+    "#5fb84d";
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    0,
+    650
+  );
+
+  ctx.quadraticCurveTo(
+    200,
+    540,
+    390,
+    650
+  );
+
+  ctx.quadraticCurveTo(
+    620,
+    520,
+    900,
+    640
+  );
+
+  ctx.lineTo(
+    900,
+    900
+  );
+
+  ctx.lineTo(
+    0,
+    900
+  );
+
+  ctx.closePath();
+
+  ctx.fill();
+
+
+  /* ===============================
+     PANDA EARS
+  =============================== */
+
+  ctx.fillStyle =
+    "#111";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    325,
+    255,
+    90,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    575,
+    255,
+    90,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  /* ===============================
+     PANDA BODY
+  =============================== */
+
+  ctx.fillStyle =
+    "#111";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    450,
+    690,
+    185,
+    205,
+    0,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  /* ===============================
+     BELLY
+  =============================== */
+
+  ctx.fillStyle =
+    "#fff";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    450,
+    700,
+    115,
+    135,
+    0,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  /* ===============================
+     ARMS
+  =============================== */
+
+  ctx.fillStyle =
+    "#111";
+
+  ctx.save();
+
+  ctx.translate(
+    285,
+    670
+  );
+
+  ctx.rotate(
+    .45
+  );
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    70,
+    145,
+    0,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+  ctx.restore();
+
+
+  ctx.save();
+
+  ctx.translate(
+    615,
+    670
+  );
+
+  ctx.rotate(
+    -.45
+  );
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    70,
+    145,
+    0,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+  ctx.restore();
+
+
+  /* ===============================
+     HEAD
+  =============================== */
+
+  ctx.fillStyle =
+    "#fff";
+
+  ctx.strokeStyle =
+    "#111";
+
+  ctx.lineWidth =
+    10;
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    450,
+    410,
+    245,
+    215,
+    0,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+  ctx.stroke();
+
+
+  /* ===============================
+     EYE PATCHES
+  =============================== */
+
+  ctx.fillStyle =
+    "#111";
+
+  ctx.save();
+
+  ctx.translate(
+    355,
+    390
+  );
+
+  ctx.rotate(
+    -.35
+  );
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    62,
+    90,
+    0,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+  ctx.restore();
+
+
+  ctx.save();
+
+  ctx.translate(
+    545,
+    390
+  );
+
+  ctx.rotate(
+    .35
+  );
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    62,
+    90,
+    0,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+  ctx.restore();
+
+
+  /* ===============================
+     EYES
+  =============================== */
+
+  ctx.fillStyle =
+    "#fff";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    355,
+    390,
+    28,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    545,
+    390,
+    28,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  ctx.fillStyle =
+    "#111";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    355,
+    390,
+    15,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    545,
+    390,
+    15,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  /* ===============================
+     NOSE
+  =============================== */
+
+  ctx.fillStyle =
+    "#111";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    450,
+    465,
+    35,
+    25,
+    0,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  /* ===============================
+     MOUTH
+  =============================== */
+
+  ctx.strokeStyle =
+    "#111";
+
+  ctx.lineWidth =
+    9;
+
+  ctx.beginPath();
+
+  ctx.arc(
+    450,
+    490,
+    50,
+    0,
+    Math.PI
+  );
+
+  ctx.stroke();
+
+
+  /* ===============================
+     CHEEKS
+  =============================== */
+
+  ctx.fillStyle =
+    "rgba(255,150,150,.35)";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    315,
+    475,
+    32,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    585,
+    475,
+    32,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fill();
+
+
+  /* ===============================
+     BAMBOO
+  =============================== */
+
+  ctx.strokeStyle =
+    "#347a32";
+
+  ctx.lineWidth =
+    18;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    780,
+    850
+  );
+
+  ctx.lineTo(
+    800,
+    470
+  );
+
+  ctx.stroke();
+
+
+  ctx.lineWidth =
+    8;
+
+  for(
+    let y=520;
+    y<820;
+    y+=75
+  ){
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      770,
+      y
+    );
+
+    ctx.lineTo(
+      820,
+      y
+    );
+
+    ctx.stroke();
+
+  }
+
+}
+
+
+/* =====================================================
+   CLOUD
+===================================================== */
+
+function drawCloud(
+  ctx,
+  x,
+  y,
+  scale
+){
+
+  ctx.save();
+
+  ctx.translate(
+    x,
+    y
+  );
+
+  ctx.scale(
+    scale,
+    scale
+  );
+
+  ctx.fillStyle =
+    "rgba(255,255,255,.8)";
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    20,
+    45,
+    0,
+    Math.PI*2
+  );
+
+  ctx.arc(
+    50,
+    0,
+    60,
+    0,
+    Math.PI*2
+  );
+
+  ctx.arc(
+    105,
+    20,
+    45,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.restore();
+
+}
+
+
+/* =====================================================
+   GET PUZZLE PIECE IMAGE
+===================================================== */
+
+function createPieceCanvas(index){
+
+  const canvas =
+    document.createElement("canvas");
+
+  const ctx =
+    canvas.getContext("2d");
 
   /*
-    Shuffle
+    Each piece has a square canvas.
+
+    Extra space allows the jigsaw
+    tabs to be visible.
   */
 
-  for(let i=order.length-1;i>0;i--){
+  canvas.width =
+    330;
 
-    let j=
+  canvas.height =
+    330;
+
+
+  const cell =
+    SIZE / 3;
+
+
+  const col =
+    index % 3;
+
+  const row =
+    Math.floor(index / 3);
+
+
+  /*
+    Source position.
+  */
+
+  const sx =
+    col * cell;
+
+  const sy =
+    row * cell;
+
+
+  /*
+    Draw the exact same panda
+    image into the piece.
+  */
+
+  ctx.drawImage(
+    targetCanvas,
+
+    sx,
+    sy,
+    cell,
+    cell,
+
+    0,
+    0,
+    330,
+    330
+  );
+
+
+  /*
+    Add jigsaw-style edge lines.
+
+    The picture itself remains
+    continuous when pieces are
+    placed together.
+  */
+
+  ctx.strokeStyle =
+    "#111";
+
+  ctx.lineWidth =
+    7;
+
+  ctx.strokeRect(
+    4,
+    4,
+    322,
+    322
+  );
+
+
+  /*
+    Highlight.
+  */
+
+  ctx.strokeStyle =
+    "rgba(255,255,255,.45)";
+
+  ctx.lineWidth =
+    3;
+
+  ctx.strokeRect(
+    9,
+    9,
+    312,
+    312
+  );
+
+
+  return canvas;
+}
+
+
+/* =====================================================
+   SHUFFLE
+===================================================== */
+
+function shuffle(array){
+
+  for(
+    let i=array.length-1;
+    i>0;
+    i--
+  ){
+
+    const j =
       Math.floor(
         Math.random()*(i+1)
       );
 
     [
-      order[i],
-      order[j]
+      array[i],
+      array[j]
     ]=[
-      order[j],
-      order[i]
+      array[j],
+      array[i]
     ];
+
   }
 
-
-  order.forEach(correctPosition=>{
-
-    const piece=
-      document.createElement("div");
-
-    piece.className="piece";
-
-    piece.dataset.correct=
-      correctPosition;
-
-    piece.appendChild(
-      createPieceSVG(
-        correctPosition
-      )
-    );
-
-    addDrag(piece);
-
-    piecesContainer.appendChild(piece);
-
-  });
+  return array;
 }
 
 
-/* ==================================================
-   DRAG SYSTEM
-================================================== */
+/* =====================================================
+   CREATE ALL PUZZLE PIECES
+===================================================== */
 
-function addDrag(piece){
+function createPieces(){
+
+  piecesContainer.innerHTML="";
+
+  const order =
+    shuffle([
+      0,1,2,
+      3,4,5,
+      6,7,8
+    ]);
+
+
+  order.forEach(index=>{
+
+    const piece =
+      document.createElement("div");
+
+    piece.className =
+      "piece";
+
+    piece.dataset.correct =
+      index;
+
+
+    const canvas =
+      createPieceCanvas(index);
+
+    canvas.className =
+      "pieceCanvas";
+
+
+    piece.appendChild(
+      canvas
+    );
+
+
+    addDragEvents(
+      piece
+    );
+
+
+    piecesContainer.appendChild(
+      piece
+    );
+
+  });
+
+}
+
+
+/* =====================================================
+   DRAG SYSTEM
+===================================================== */
+
+function addDragEvents(piece){
 
   let dragging=false;
 
   let startX=0;
+
   let startY=0;
+
 
   piece.addEventListener(
     "pointerdown",
@@ -876,20 +1418,34 @@ function addDrag(piece){
 
       if(
         piece.dataset.locked==="true"
-      ) return;
+      ){
+
+        return;
+
+      }
+
 
       e.preventDefault();
 
+
       dragging=true;
 
-      startX=e.clientX;
-      startY=e.clientY;
+
+      startX =
+        e.clientX;
+
+      startY =
+        e.clientY;
+
 
       piece.setPointerCapture(
         e.pointerId
       );
 
-      piece.style.zIndex=200;
+
+      piece.style.zIndex =
+        200;
+
 
       if(!started){
 
@@ -898,8 +1454,6 @@ function addDrag(piece){
         startTimer();
 
       }
-
-      sound("click");
 
     }
   );
@@ -911,15 +1465,17 @@ function addDrag(piece){
 
       if(!dragging)return;
 
-      let dx=
+
+      const dx =
         e.clientX-startX;
 
-      let dy=
+      const dy =
         e.clientY-startY;
 
-      piece.style.transform=
+
+      piece.style.transform =
         `translate(${dx}px,${dy}px)
-         scale(1.08)`;
+         scale(1.06)`;
 
     }
   );
@@ -931,158 +1487,244 @@ function addDrag(piece){
 
       if(!dragging)return;
 
+
       dragging=false;
 
-      piece.style.transform="";
 
-      piece.style.zIndex=10;
+      piece.style.transform =
+        "";
+
+
+      piece.style.zIndex =
+        10;
+
 
       moves++;
 
-      movesText.textContent=moves;
+      movesText.textContent =
+        moves;
 
-      checkPosition(piece);
+
+      checkDrop(
+        piece
+      );
 
     }
   );
+
+
+  piece.addEventListener(
+    "pointercancel",
+    ()=>{
+      dragging=false;
+      piece.style.transform="";
+      piece.style.zIndex=10;
+    }
+  );
+
 }
 
 
-/* ==================================================
-   CHECK POSITION
-================================================== */
+/* =====================================================
+   CHECK DROP POSITION
+===================================================== */
 
-function checkPosition(piece){
+function checkDrop(piece){
 
-  const boardRect=
+  const boardRect =
     board.getBoundingClientRect();
 
-  const pieceRect=
+
+  const pieceRect =
     piece.getBoundingClientRect();
 
-  const centerX=
-    pieceRect.left+
+
+  const centerX =
+    pieceRect.left +
     pieceRect.width/2;
 
-  const centerY=
-    pieceRect.top+
+
+  const centerY =
+    pieceRect.top +
     pieceRect.height/2;
 
-  const x=
-    centerX-boardRect.left;
 
-  const y=
-    centerY-boardRect.top;
+  const x =
+    centerX -
+    boardRect.left;
 
-  const cellW=
-    boardRect.width/3;
 
-  const cellH=
-    boardRect.height/3;
+  const y =
+    centerY -
+    boardRect.top;
 
-  const col=
-    Math.floor(x/cellW);
 
-  const row=
-    Math.floor(y/cellH);
+  /*
+    Require the piece center
+    to be inside the board.
+  */
 
   if(
-    col<0 ||
-    col>2 ||
-    row<0 ||
-    row>2
+    x<0 ||
+    y<0 ||
+    x>boardRect.width ||
+    y>boardRect.height
   ){
 
-    wrong(piece);
+    wrongPiece(piece);
+
     return;
+
   }
 
-  const target=
+
+  const col =
+    Math.floor(
+      x /
+      (boardRect.width/3)
+    );
+
+
+  const row =
+    Math.floor(
+      y /
+      (boardRect.height/3)
+    );
+
+
+  const target =
     row*3+col;
 
-  const correct=
-    Number(piece.dataset.correct);
+
+  const correct =
+    Number(
+      piece.dataset.correct
+    );
+
 
   if(target===correct){
 
-    placePiece(
+    placeCorrectPiece(
       piece,
       target
     );
 
-  }else{
+  }
 
-    wrong(piece);
+  else{
+
+    wrongPiece(
+      piece
+    );
 
   }
+
 }
 
 
-/* ==================================================
+/* =====================================================
    PLACE CORRECT PIECE
-================================================== */
+===================================================== */
 
-function placePiece(piece,target){
-
-  const boardRect=
-    board.getBoundingClientRect();
+function placeCorrectPiece(
+  piece,
+  target
+){
 
   /*
-    Move piece to board.
+    The piece is moved into
+    the exact target cell.
   */
 
-  piece.dataset.locked="true";
+  const cellSize =
+    100/3;
 
-  piece.style.position="absolute";
 
-  piece.style.width=
-    (100/3)+"%";
+  piece.dataset.locked =
+    "true";
 
-  piece.style.height=
-    (100/3)+"%";
 
-  piece.style.left=
-    ((target%3)*100/3)+"%";
+  piece.style.position =
+    "absolute";
 
-  piece.style.top=
-    (Math.floor(target/3)*100/3)+"%";
 
-  piece.style.margin="0";
+  piece.style.width =
+    cellSize+"%";
 
-  piece.style.transform="";
 
-  piece.style.zIndex=5;
+  piece.style.height =
+    cellSize+"%";
 
-  piece.style.cursor="default";
 
-  board.appendChild(piece);
+  piece.style.left =
+    ((target%3)*cellSize)+"%";
+
+
+  piece.style.top =
+    (Math.floor(target/3)*cellSize)+"%";
+
+
+  piece.style.margin =
+    "0";
+
+
+  piece.style.transform =
+    "scale(1)";
+
+
+  piece.style.cursor =
+    "default";
+
+
+  piece.style.zIndex =
+    5;
+
+
+  board.appendChild(
+    piece
+  );
+
+
+  /*
+    Mark target.
+  */
+
+  const cell =
+    document.getElementById(
+      "cell"+target
+    );
+
+  cell.classList.add(
+    "correct"
+  );
+
 
   completed++;
 
-  sound("correct");
 
-  message.textContent=
-    "✅ Correct!";
+  playSound(
+    "correct"
+  );
+
+
+  message.textContent =
+    "✅ Correct piece!";
+
 
   /*
     Update score.
   */
 
-  let score=
-    Math.max(
-      10,
-      100-
-      moves*2-
-      Math.floor(seconds/5)
-    );
+  updateScore();
 
-  scoreText.textContent=score;
 
   /*
     Finished?
   */
 
-  if(completed===9){
+  if(
+    completed===9
+  ){
 
     finishGame();
 
@@ -1091,148 +1733,239 @@ function placePiece(piece,target){
 }
 
 
-/* ==================================================
-   WRONG
-================================================== */
+/* =====================================================
+   WRONG PIECE
+===================================================== */
 
-function wrong(piece){
+function wrongPiece(piece){
 
-  piece.classList.remove("shake");
+  piece.classList.remove(
+    "shake"
+  );
+
 
   void piece.offsetWidth;
 
-  piece.classList.add("shake");
 
-  sound("wrong");
+  piece.classList.add(
+    "shake"
+  );
 
-  message.textContent=
+
+  playSound(
+    "wrong"
+  );
+
+
+  message.textContent =
     "❌ Wrong place — try again!";
 
 }
 
 
-/* ==================================================
+/* =====================================================
+   SCORE
+===================================================== */
+
+function updateScore(){
+
+  const score =
+    Math.max(
+      10,
+      100 -
+      (moves*2) -
+      Math.floor(
+        seconds/5
+      )
+    );
+
+
+  scoreText.textContent =
+    score;
+
+}
+
+
+/* =====================================================
    TIMER
-================================================== */
+===================================================== */
 
 function startTimer(){
 
   if(timer)return;
 
-  timer=
+
+  timer =
     setInterval(()=>{
 
       seconds++;
 
-      timerText.textContent=
+
+      timerText.textContent =
         seconds;
 
-      /*
-        Slowly reduce score.
-      */
 
-      let score=
-        Math.max(
-          10,
-          100-
-          moves*2-
-          Math.floor(seconds/5)
-        );
+      updateScore();
 
-      scoreText.textContent=
-        score;
 
     },1000);
+
 }
 
 
-/* ==================================================
-   WIN
-================================================== */
+/* =====================================================
+   FINISH
+===================================================== */
 
 function finishGame(){
 
-  clearInterval(timer);
+  clearInterval(
+    timer
+  );
 
   timer=null;
 
   started=false;
 
-  let finalScore=
+
+  targetCanvas.classList.add(
+    "show"
+  );
+
+
+  board.classList.add(
+    "winBoard"
+  );
+
+
+  const finalScore =
     Math.max(
       10,
-      100-
-      moves*2-
-      Math.floor(seconds/5)
+      100 -
+      (moves*2) -
+      Math.floor(
+        seconds/5
+      )
     );
 
-  scoreText.textContent=
+
+  scoreText.textContent =
     finalScore;
 
-  message.innerHTML=
+
+  message.innerHTML =
     `🎉 AMAZING!<br>
      🐼 Picture Complete!<br>
      <span style="font-size:16px">
-     Time: ${seconds}s |
-     Moves: ${moves} |
+     Time: ${seconds}s
+     &nbsp; | &nbsp;
+     Moves: ${moves}
+     &nbsp; | &nbsp;
      Score: ${finalScore}
      </span>`;
 
-  message.classList.add("win");
 
-  board.classList.add("celebrate");
+  message.classList.add(
+    "win"
+  );
 
-  sound("win");
+
+  playSound(
+    "win"
+  );
 
 }
 
 
-/* ==================================================
+/* =====================================================
    NEW GAME
-================================================== */
+===================================================== */
 
 function newGame(){
 
-  clearInterval(timer);
+  clearInterval(
+    timer
+  );
 
   timer=null;
 
+
   moves=0;
+
   seconds=0;
+
   completed=0;
+
   started=false;
 
-  timerText.textContent="0";
-  movesText.textContent="0";
-  scoreText.textContent="100";
+
+  timerText.textContent =
+    "0";
+
+  movesText.textContent =
+    "0";
+
+  scoreText.textContent =
+    "100";
+
 
   message.className="";
-  message.textContent=
-    "Drag a puzzle piece into the black frame.";
+
+  message.textContent =
+    "Drag the pieces into the black frame.";
+
 
   board.classList.remove(
-    "celebrate"
+    "winBoard"
   );
 
+
+  targetCanvas.classList.remove(
+    "show"
+  );
+
+
   /*
-    Remove pieces currently
-    inside the board.
+    Remove pieces that were
+    already placed on board.
   */
 
   document
     .querySelectorAll(
       "#board .piece"
     )
-    .forEach(p=>p.remove());
+    .forEach(
+      p=>p.remove()
+    );
+
+
+  /*
+    Reset target cells.
+  */
+
+  document
+    .querySelectorAll(
+      ".targetCell"
+    )
+    .forEach(
+      cell=>{
+        cell.classList.remove(
+          "correct"
+        );
+      }
+    );
+
 
   createPieces();
 
 }
 
 
-/* ==================================================
-   START
-================================================== */
+/* =====================================================
+   START GAME
+===================================================== */
+
+drawPanda();
 
 createPieces();
 
