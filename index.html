@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete the Pic - Panda</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #dff6ff, #ffffff);
+  text-align: center;
+  color: #222;
+  user-select: none;
+  overflow-x: hidden;
+}
+
+h1 {
+  margin: 15px 0 4px;
+  font-size: 30px;
+}
+
+.subtitle {
+  margin: 0 0 10px;
+  color: #555;
+}
+
+.info {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px;
+}
+
+#game {
+  width: 95%;
+  max-width: 700px;
+  margin: auto;
+}
+
+#board {
+  position: relative;
+  width: min(90vw, 450px);
+  aspect-ratio: 1 / 1;
+  margin: 15px auto;
+  border: 8px solid #111;
+  background: #222;
+  overflow: hidden;
+}
+
+/* The panda is behind the empty puzzle spaces.
+   The 9 pieces show different cropped sections. */
+#pandaPicture {
+  position: absolute;
+  inset: 0;
+  background: white;
+}
+
+/* Panda drawing */
+.panda {
+  position: absolute;
+  width: 62%;
+  height: 72%;
+  left: 19%;
+  top: 14%;
+}
+
+.head {
+  position: absolute;
+  width: 68%;
+  height: 48%;
+  left: 16%;
+  top: 0;
+  background: white;
+  border: 5px solid #111;
+  border-radius: 50%;
+}
+
+.ear {
+  position: absolute;
+  width: 25%;
+  height: 25%;
+  background: #111;
+  border-radius: 50%;
+  top: -4%;
+}
+
+.ear.left {
+  left: 7%;
+}
+
+.ear.right {
+  right: 7%;
+}
+
+.eye {
+  position: absolute;
+  width: 23%;
+  height: 31%;
+  background: #111;
+  border-radius: 50%;
+  top: 34%;
+}
+
+.eye.left {
+  left: 19%;
+  transform: rotate(30deg);
+}
+
+.eye.right {
+  right: 19%;
+  transform: rotate(-30deg);
+}
+
+.eye::after {
+  content: "";
+  position: absolute;
+  width: 30%;
+  height: 30%;
+  background: white;
+  border-radius: 50%;
+  left: 20%;
+  top: 15%;
+}
+
+.nose {
+  position: absolute;
+  width: 13%;
+  height: 10%;
+  background: #111;
+  border-radius: 50%;
+  left: 43.5%;
+  top: 60%;
+}
+
+.mouth {
+  position: absolute;
+  width: 20%;
+  height: 15%;
+  left: 40%;
+  top: 66%;
+  border-bottom: 4px solid #111;
+  border-radius: 50%;
+}
+
+.body {
+  position: absolute;
+  width: 58%;
+  height: 50%;
+  left: 21%;
+  bottom: 0;
+  background: #111;
+  border-radius: 48% 48% 35% 35%;
+}
+
+.belly {
+  position: absolute;
+  width: 58%;
+  height: 62%;
+  left: 21%;
+  top: 18%;
+  background: white;
+  border-radius: 50%;
+}
+
+.arm {
+  position: absolute;
+  width: 22%;
+  height: 45%;
+  background: #111;
+  border-radius: 50%;
+  top: 20%;
+}
+
+.arm.left {
+  left: 7%;
+  transform: rotate(25deg);
+}
+
+.arm.right {
+  right: 7%;
+  transform: rotate(-25deg);
+}
+
+/* Puzzle pieces area */
+
+#piecesTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+#pieces {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: 650px;
+  margin: 12px auto 20px;
+  padding: 10px;
+}
+
+.piece {
+  width: 105px;
+  height: 105px;
+  border: 3px solid #111;
+  background-color: white;
+  position: relative;
+  cursor: grab;
+  touch-action: none;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.piece.dragging {
+  opacity: 0.65;
+  transform: scale(1.05);
+  z-index: 100;
+}
+
+.pieceCanvas {
+  position: absolute;
+  width: 315px;
+  height: 315px;
+  left: 0;
+  top: 0;
+}
+
+/* Destination cells */
+.slot {
+  position: absolute;
+  width: 33.3333%;
+  height: 33.3333%;
+  border: 2px dashed #777;
+  background: rgba(255,255,255,0.08);
+  z-index: 5;
+}
+
+.slot.correct {
+  border: 2px solid #16a34a;
+  background: rgba(22,163,74,0.12);
+}
+
+#slot0 { left:0; top:0; }
+#slot1 { left:33.333%; top:0; }
+#slot2 { left:66.666%; top:0; }
+#slot3 { left:0; top:33.333%; }
+#slot4 { left:33.333%; top:33.333%; }
+#slot5 { left:66.666%; top:33.333%; }
+#slot6 { left:0; top:66.666%; }
+#slot7 { left:33.333%; top:66.666%; }
+#slot8 { left:66.666%; top:66.666%; }
+
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 13px 25px;
+  font-size: 17px;
+  font-weight: bold;
+  background: #111;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+#message {
+  min-height: 30px;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 5px;
+}
+
+@media(max-width:500px) {
+  .piece {
+    width: 88px;
+    height: 88px;
+  }
+
+  .pieceCanvas {
+    width: 264px;
+    height: 264px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h1>🧩 Complete the Pic</h1>
+<p class="subtitle">🐼 Complete the Panda!</p>
+
+<div class="info">
+  <div>Moves: <span id="moves">0</span></div>
+  <div>Time: <span id="time">0</span>s</div>
+</div>
+
+<div id="game">
+
+  <div id="board">
+
+    <div id="pandaPicture">
+      <div class="panda">
+
+        <div class="ear left"></div>
+        <div class="ear right"></div>
+
+        <div class="head">
+          <div class="eye left"></div>
+          <div class="eye right"></div>
+          <div class="nose"></div>
+          <div class="mouth"></div>
+        </div>
+
+        <div class="body">
+          <div class="belly"></div>
+          <div class="arm left"></div>
+          <div class="arm right"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="slot" id="slot0"></div>
+    <div class="slot" id="slot1"></div>
+    <div class="slot" id="slot2"></div>
+    <div class="slot" id="slot3"></div>
+    <div class="slot" id="slot4"></div>
+    <div class="slot" id="slot5"></div>
+    <div class="slot" id="slot6"></div>
+    <div class="slot" id="slot7"></div>
+    <div class="slot" id="slot8"></div>
+
+  </div>
+
+  <div id="message">Drag the pieces into the black frame.</div>
+
+  <div id="piecesTitle">🐼 Picture Pieces</div>
+
+  <div id="pieces"></div>
+
+  <button onclick="newGame()">🔄 New Game</button>
+
+</div>
+
+<script>
+const piecesContainer = document.getElementById("pieces");
+const board = document.getElementById("board");
+const movesEl = document.getElementById("moves");
+const timeEl = document.getElementById("time");
+const messageEl = document.getElementById("message");
+
+let moves = 0;
+let seconds = 0;
+let completed = 0;
+let timer = null;
+let draggedPiece = null;
+
+/* Create pieces */
+function createPieces() {
+
+  piecesContainer.innerHTML = "";
+
+  let numbers = [0,1,2,3,4,5,6,7,8];
+
+  /* Shuffle */
+  numbers.sort(() => Math.random() - 0.5);
+
+  numbers.forEach(number => {
+
+    const piece = document.createElement("div");
+    piece.className = "piece";
+
+    piece.dataset.correct = number;
+
+    const canvas = document.createElement("div");
+    canvas.className = "pieceCanvas";
+
+    /*
+      Each piece shows the corresponding part
+      of the panda picture.
+    */
+    canvas.innerHTML = `
+      <div style="
+        position:absolute;
+        width:315px;
+        height:315px;
+        background:white;
+      ">
+
+        <div class="panda" style="
+          position:absolute;
+          width:195px;
+          height:227px;
+          left:60px;
+          top:44px;
+        ">
+
+          <div class="ear left"></div>
+          <div class="ear right"></div>
+
+          <div class="head">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="nose"></div>
+            <div class="mouth"></div>
+          </div>
+
+          <div class="body">
+            <div class="belly"></div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+          </div>
+
+        </div>
+      </div>
+    `;
+
+    /* Move the large picture so the selected section appears */
+    const row = Math.floor(number / 3);
+    const col = number % 3;
+
+    canvas.style.left = (-col * 105) + "px";
+    canvas.style.top = (-row * 105) + "px";
+
+    piece.appendChild(canvas);
+
+    piece.addEventListener("pointerdown", startDrag);
+
+    piecesContainer.appendChild(piece);
+  });
+}
+
+/* Drag system */
+function startDrag(e) {
+
+  draggedPiece = e.currentTarget;
+
+  draggedPiece.classList.add("dragging");
+
+  draggedPiece.setPointerCapture(e.pointerId);
+
+  draggedPiece.addEventListener("pointermove", dragMove);
+  draggedPiece.addEventListener("pointerup", endDrag);
+  draggedPiece.addEventListener("pointercancel", endDrag);
+}
+
+function dragMove(e) {
+
+  if (!draggedPiece) return;
+
+  const rect = piecesContainer.getBoundingClientRect();
+
+  draggedPiece.style.position = "fixed";
+  draggedPiece.style.left = (e.clientX - draggedPiece.offsetWidth / 2) + "px";
+  draggedPiece.style.top = (e.clientY - draggedPiece.offsetHeight / 2) + "px";
+  draggedPiece.style.zIndex = "999";
+}
+
+function endDrag(e) {
+
+  if (!draggedPiece) return;
+
+  const piece = draggedPiece;
+
+  piece.removeEventListener("pointermove", dragMove);
+  piece.removeEventListener("pointerup", endDrag);
+
+  const boardRect = board.getBoundingClientRect();
+
+  const x = e.clientX - boardRect.left;
+  const y = e.clientY - boardRect.top;
+
+  const col = Math.floor(x / (boardRect.width / 3));
+  const row = Math.floor(y / (boardRect.height / 3));
+
+  const target = row * 3 + col;
+
+  moves++;
+  movesEl.textContent = moves;
+
+  if (target == piece.dataset.correct &&
+      target >= 0 &&
+      target < 9) {
+
+    const slot = document.getElementById("slot" + target);
+
+    /* Move the piece into the board */
+    piece.style.position = "absolute";
+    piece.style.left = "0";
+    piece.style.top = "0";
+    piece.style.width = "100%";
+    piece.style.height = "100%";
+    piece.style.margin = "0";
+    piece.style.border = "none";
+    piece.style.borderRadius = "0";
+    piece.style.zIndex = "20";
+
+    slot.appendChild(piece);
+
+    slot.classList.add("correct");
+
+    piece.classList.remove("dragging");
+
+    completed++;
+
+    messageEl.textContent = "✅ Correct!";
+
+    if (completed === 9) {
+      clearInterval(timer);
+
+      messageEl.textContent =
+        "🎉 Amazing! You completed the Panda!";
+
+      setTimeout(() => {
+        alert(
+          "🐼 Picture Complete!\n\n" +
+          "Moves: " + moves +
+          "\nTime: " + seconds + " seconds"
+        );
+      }, 300);
+    }
+
+  } else {
+
+    piece.style.position = "relative";
+    piece.style.left = "";
+    piece.style.top = "";
+    piece.style.zIndex = "";
+    piece.classList.remove("dragging");
+
+    messageEl.textContent = "❌ Try another place!";
+  }
+
+  draggedPiece = null;
+}
+
+/* Timer */
+function startTimer() {
+
+  clearInterval(timer);
+
+  timer = setInterval(() => {
+
+    seconds++;
+
+    timeEl.textContent = seconds;
+
+  }, 1000);
+}
+
+/* New game */
+function newGame() {
+
+  moves = 0;
+  seconds = 0;
+  completed = 0;
+
+  movesEl.textContent = "0";
+  timeEl.textContent = "0";
+
+  messageEl.textContent =
+    "Drag the pieces into the black frame.";
+
+  document.querySelectorAll(".slot").forEach(slot => {
+    slot.classList.remove("correct");
+  });
+
+  createPieces();
+  startTimer();
+}
+
+/* Start */
+newGame();
+</script>
+
+</body>
+</html>
