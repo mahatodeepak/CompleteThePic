@@ -2,1438 +2,2541 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Complete the Pic V1.6</title>
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
+
+<title>Complete the Pic V1.7</title>
 
 <style>
+
 *{
   box-sizing:border-box;
   -webkit-tap-highlight-color:transparent;
 }
 
-body{
+html,body{
   margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
   font-family:Arial,sans-serif;
-  background:linear-gradient(180deg,#dff6ff,#ffffff);
+  background:linear-gradient(#dff6ff,#ffffff);
   color:#222;
+}
+
+body{
   text-align:center;
   overflow-x:hidden;
 }
 
 h1{
-  margin:14px 0 2px;
-  font-size:30px;
+  margin:14px 0 3px;
+  font-size:29px;
 }
 
 .subtitle{
-  margin:0 10px 12px;
   color:#555;
   font-size:15px;
+  margin-bottom:12px;
 }
 
 .stats{
   display:flex;
   justify-content:center;
-  gap:8px;
+  align-items:center;
   flex-wrap:wrap;
-  margin:8px auto 12px;
+  gap:7px;
+  padding:0 7px;
 }
 
 .stat{
   background:white;
-  border-radius:12px;
-  padding:8px 13px;
-  box-shadow:0 3px 10px rgba(0,0,0,.12);
+  padding:8px 11px;
+  border-radius:11px;
+  box-shadow:0 3px 9px rgba(0,0,0,.12);
+  font-size:13px;
   font-weight:bold;
-  font-size:14px;
 }
 
-#gameArea{
+#game{
   width:100%;
-  max-width:950px;
+  max-width:800px;
   margin:auto;
-  padding:5px 10px 30px;
+  padding:10px;
 }
 
-#boardWrap{
-  width:min(92vw,700px);
-  aspect-ratio:1/1;
-  margin:0 auto 18px;
-  position:relative;
-}
+/* =========================
+   PUZZLE BOARD
+========================= */
 
 #board{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+  position:relative;
+  width:min(92vw,650px);
+  aspect-ratio:1/1;
+  margin:12px auto 15px;
+
   background:#111;
+
   border:7px solid #111;
   border-radius:12px;
+
   overflow:hidden;
-  box-shadow:0 6px 18px rgba(0,0,0,.22);
+
+  box-shadow:
+  0 7px 18px rgba(0,0,0,.25);
 }
 
-.target{
+#boardCanvas{
   position:absolute;
-  border:1px dashed rgba(255,255,255,.32);
-  background:rgba(255,255,255,.035);
-  pointer-events:none;
-}
-
-#piecesTitle{
-  font-weight:bold;
-  margin:6px 0 8px;
-}
-
-#pieces{
-  min-height:170px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  padding:15px 8px;
-  background:rgba(255,255,255,.7);
-  border-radius:16px;
-  box-shadow:0 4px 14px rgba(0,0,0,.1);
-}
-
-.piece{
-  position:relative;
-  width:110px;
-  height:110px;
-  cursor:grab;
-  touch-action:none;
-  user-select:none;
-  -webkit-user-select:none;
-  z-index:10;
-  filter:drop-shadow(0 4px 5px rgba(0,0,0,.25));
-}
-
-.piece.dragging{
-  cursor:grabbing;
-  z-index:1000;
-  filter:drop-shadow(0 8px 12px rgba(0,0,0,.35));
-}
-
-.piece.locked{
-  cursor:default;
-  z-index:5;
-  filter:none;
-}
-
-.pieceCanvas{
+  left:0;
+  top:0;
   width:100%;
   height:100%;
   display:block;
 }
 
+.targetGrid{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.target{
+  position:absolute;
+  border:1px dashed rgba(255,255,255,.35);
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+#message{
+  min-height:27px;
+  font-size:17px;
+  font-weight:bold;
+  margin:5px auto 8px;
+}
+
+.good{
+  color:#159447;
+}
+
+.bad{
+  color:#d62828;
+}
+
+/* =========================
+   PIECES AREA
+========================= */
+
+#pieceTitle{
+  font-weight:bold;
+  margin:7px 0;
+}
+
+#pieces{
+  min-height:145px;
+
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+
+  gap:9px;
+
+  padding:13px;
+
+  background:rgba(255,255,255,.82);
+
+  border-radius:16px;
+
+  box-shadow:
+  0 4px 13px rgba(0,0,0,.12);
+}
+
+/* =========================
+   PIECE
+========================= */
+
+.piece{
+  position:relative;
+
+  width:100px;
+  height:100px;
+
+  cursor:grab;
+
+  touch-action:none;
+
+  user-select:none;
+  -webkit-user-select:none;
+
+  z-index:10;
+
+  filter:
+  drop-shadow(0 4px 5px rgba(0,0,0,.25));
+}
+
+.piece canvas{
+  width:100%;
+  height:100%;
+  display:block;
+
+  pointer-events:none;
+}
+
+.piece.dragging{
+  cursor:grabbing;
+  z-index:2000;
+
+  filter:
+  drop-shadow(0 9px 13px rgba(0,0,0,.35));
+
+  transform:scale(1.04);
+}
+
+.piece.locked{
+  cursor:default;
+  pointer-events:none;
+  z-index:20;
+
+  filter:none;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
 button{
   border:0;
-  border-radius:12px;
-  padding:11px 20px;
-  margin:10px 5px;
-  font-size:16px;
-  font-weight:bold;
   background:#222;
   color:white;
-  box-shadow:0 4px 10px rgba(0,0,0,.18);
+
+  padding:11px 21px;
+
+  border-radius:12px;
+
+  font-size:16px;
+  font-weight:bold;
+
+  margin:12px 5px;
+
+  box-shadow:
+  0 4px 10px rgba(0,0,0,.2);
 }
 
 button:active{
   transform:scale(.96);
 }
 
-#message{
-  min-height:28px;
-  margin:8px 0;
-  font-size:18px;
-  font-weight:bold;
-}
-
-.good{
-  color:#168a35;
-}
-
-.bad{
-  color:#d32f2f;
-}
-
-#winBox{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.62);
-  z-index:3000;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-
-.winCard{
-  background:white;
-  width:min(92vw,420px);
-  border-radius:22px;
-  padding:28px 20px;
-  box-shadow:0 15px 45px rgba(0,0,0,.4);
-  animation:pop .45s ease;
-}
-
-.winCard h2{
-  font-size:32px;
-  margin:0 0 8px;
-}
-
-.winEmoji{
-  font-size:60px;
-  animation:bounce 1s infinite alternate;
-}
-
-@keyframes pop{
-  from{transform:scale(.5);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
-
-@keyframes bounce{
-  from{transform:translateY(0)}
-  to{transform:translateY(-12px)}
-}
+/* =========================
+   WRONG ANIMATION
+========================= */
 
 .shake{
   animation:shake .35s;
 }
 
 @keyframes shake{
-  0%{transform:translateX(0)}
-  25%{transform:translateX(-10px)}
-  50%{transform:translateX(10px)}
-  75%{transform:translateX(-7px)}
-  100%{transform:translateX(0)}
+
+  0%{
+    transform:translateX(0);
+  }
+
+  25%{
+    transform:translateX(-9px);
+  }
+
+  50%{
+    transform:translateX(9px);
+  }
+
+  75%{
+    transform:translateX(-6px);
+  }
+
+  100%{
+    transform:translateX(0);
+  }
+
 }
 
+/* =========================
+   WIN SCREEN
+========================= */
+
+#winScreen{
+
+  position:fixed;
+
+  inset:0;
+
+  background:rgba(0,0,0,.65);
+
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  z-index:5000;
+
+  padding:20px;
+}
+
+.winCard{
+
+  width:min(92vw,420px);
+
+  background:white;
+
+  border-radius:22px;
+
+  padding:25px 18px;
+
+  box-shadow:
+  0 15px 45px rgba(0,0,0,.4);
+
+  animation:winPop .45s ease;
+}
+
+@keyframes winPop{
+
+  from{
+    transform:scale(.5);
+    opacity:0;
+  }
+
+  to{
+    transform:scale(1);
+    opacity:1;
+  }
+
+}
+
+.winEmoji{
+  font-size:65px;
+
+  animation:bounce 1s infinite alternate;
+}
+
+@keyframes bounce{
+
+  from{
+    transform:translateY(0);
+  }
+
+  to{
+    transform:translateY(-10px);
+  }
+
+}
+
+.winCard h2{
+  font-size:30px;
+  margin:5px 0 10px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
 @media(max-width:500px){
+
   h1{
     font-size:25px;
   }
 
+  .subtitle{
+    font-size:14px;
+  }
+
   .piece{
-    width:92px;
-    height:92px;
+    width:82px;
+    height:82px;
   }
 
   #pieces{
-    gap:7px;
+    gap:6px;
+  }
+
+  .stat{
+    font-size:12px;
+    padding:7px 9px;
   }
 
   button{
     font-size:15px;
-    padding:10px 16px;
   }
+
 }
+
 </style>
 </head>
 
 <body>
 
 <h1>🧩 Complete the Pic</h1>
-<div class="subtitle">Pick the pieces. Complete the picture!</div>
+
+<div class="subtitle">
+Pick the pieces. Complete the picture!
+</div>
 
 <div class="stats">
-  <div class="stat">⏱️ Time: <span id="timer">0</span>s</div>
-  <div class="stat">🔢 Moves: <span id="moves">0</span></div>
-  <div class="stat">⭐ Score: <span id="score">100</span></div>
-  <div class="stat">🏆 Best: <span id="bestScore">—</span></div>
-  <div class="stat">⚡ Best Time: <span id="bestTime">—</span>s</div>
-</div>
 
-<div id="gameArea">
-
-  <div id="boardWrap">
-    <div id="board"></div>
+  <div class="stat">
+    ⏱️ Time:
+    <span id="time">0</span>s
   </div>
 
-  <div id="message">Drag each piece into the correct place.</div>
+  <div class="stat">
+    🔢 Moves:
+    <span id="moves">0</span>
+  </div>
 
-  <div id="piecesTitle">🧩 Puzzle Pieces</div>
+  <div class="stat">
+    ⭐ Score:
+    <span id="score">100</span>
+  </div>
+
+  <div class="stat">
+    🏆 Best:
+    <span id="bestScore">—</span>
+  </div>
+
+  <div class="stat">
+    ⚡ Best Time:
+    <span id="bestTime">—</span>s
+  </div>
+
+</div>
+
+
+<div id="game">
+
+  <div id="board">
+
+    <canvas
+      id="boardCanvas"
+      width="900"
+      height="900">
+    </canvas>
+
+    <div
+      class="targetGrid"
+      id="targetGrid">
+    </div>
+
+  </div>
+
+
+  <div id="message">
+    Drag a piece into the picture.
+  </div>
+
+
+  <div id="pieceTitle">
+    🧩 Puzzle Pieces
+  </div>
+
+
   <div id="pieces"></div>
 
-  <button onclick="newGame()">🔄 New Game</button>
+
+  <button onclick="newGame()">
+    🔄 New Game
+  </button>
 
 </div>
 
-<div id="winBox">
+
+<!-- WIN SCREEN -->
+
+<div id="winScreen">
+
   <div class="winCard">
-    <div class="winEmoji">🎉</div>
-    <h2>Picture Complete!</h2>
+
+    <div class="winEmoji">
+      🎉
+    </div>
+
+    <h2>
+      Picture Complete!
+    </h2>
 
     <p>
-      Great job! You completed the Panda picture.
+      Great job! 🐼
     </p>
 
     <p>
-      ⏱️ Time: <b><span id="finalTime">0</span>s</b><br>
-      🔢 Moves: <b><span id="finalMoves">0</span></b><br>
-      ⭐ Score: <b><span id="finalScore">0</span></b>
+
+      ⏱️ Time:
+      <b>
+        <span id="finalTime">0</span>s
+      </b>
+
+      <br>
+
+      🔢 Moves:
+      <b>
+        <span id="finalMoves">0</span>
+      </b>
+
+      <br>
+
+      ⭐ Score:
+      <b>
+        <span id="finalScore">0</span>
+      </b>
+
     </p>
 
-    <button onclick="closeWinAndNewGame()">🔄 Play Again</button>
+    <button onclick="newGame()">
+      🔄 Play Again
+    </button>
+
   </div>
+
 </div>
+
 
 <script>
 
 /* =========================================================
-   COMPLETE THE PIC V1.6
-   Based on V1.3
-   3 × 3 Panda Puzzle
-   ========================================================= */
+   COMPLETE THE PIC V1.7
+   SIMPLE + RELIABLE VERSION
+========================================================= */
+
+
+/* =========================
+   BASIC SETTINGS
+========================= */
 
 const SIZE = 900;
+
 const ROWS = 3;
 const COLS = 3;
+
 const CELL = SIZE / COLS;
 
-/*
-  Extra transparent space around every piece.
-  This makes the jigsaw tabs visible while keeping
-  the actual picture perfectly aligned.
-*/
-const PAD = 34;
-const PIECE_SIZE = CELL + PAD * 2;
+
+/* =========================
+   VARIABLES
+========================= */
 
 let sourceCanvas;
+
 let pieces = [];
 
 let moves = 0;
+
 let seconds = 0;
-let timerInterval = null;
-let gameRunning = false;
-let completedCount = 0;
 
-let audioContext = null;
+let completed = 0;
 
-const board = document.getElementById("board");
-const piecesContainer = document.getElementById("pieces");
+let timer = null;
 
-/* ---------------------------------------------------------
-   BEST SCORE
---------------------------------------------------------- */
+let running = false;
 
-function getBestScore(){
-  const v = localStorage.getItem("completePic_v16_bestScore");
-  return v ? Number(v) : null;
-}
+let audio = null;
 
-function getBestTime(){
-  const v = localStorage.getItem("completePic_v16_bestTime");
-  return v ? Number(v) : null;
-}
 
-function updateBestDisplay(){
-  const bestScore = getBestScore();
-  const bestTime = getBestTime();
+/* =========================
+   ELEMENTS
+========================= */
 
-  document.getElementById("bestScore").textContent =
-    bestScore === null ? "—" : bestScore;
+const board =
+document.getElementById("board");
 
-  document.getElementById("bestTime").textContent =
-    bestTime === null ? "—" : bestTime;
-}
+const boardCanvas =
+document.getElementById("boardCanvas");
 
-/* ---------------------------------------------------------
+const boardCtx =
+boardCanvas.getContext("2d");
+
+const piecesArea =
+document.getElementById("pieces");
+
+const targetGrid =
+document.getElementById("targetGrid");
+
+
+/* =========================================================
    AUDIO
---------------------------------------------------------- */
+========================================================= */
 
-function initAudio(){
-  if(!audioContext){
+function startAudio(){
+
+  if(!audio){
+
     try{
-      audioContext =
-        new (window.AudioContext || window.webkitAudioContext)();
+
+      audio =
+      new(
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
+
     }catch(e){}
+
   }
 
-  if(audioContext && audioContext.state === "suspended"){
-    audioContext.resume();
+  if(audio &&
+     audio.state==="suspended"){
+
+    audio.resume();
+
   }
+
 }
 
-function beep(frequency, duration, type="sine", volume=.06){
-  initAudio();
 
-  if(!audioContext) return;
+function tone(freq,duration,type="sine"){
+
+  startAudio();
+
+  if(!audio) return;
 
   try{
-    const osc = audioContext.createOscillator();
-    const gain = audioContext.createGain();
 
-    osc.type = type;
-    osc.frequency.value = frequency;
+    const osc =
+    audio.createOscillator();
 
-    gain.gain.setValueAtTime(volume, audioContext.currentTime);
+    const gain =
+    audio.createGain();
+
+    osc.type=type;
+
+    osc.frequency.value=freq;
+
+    gain.gain.setValueAtTime(
+      .06,
+      audio.currentTime
+    );
+
     gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      audioContext.currentTime + duration
+      .001,
+      audio.currentTime+duration
     );
 
     osc.connect(gain);
-    gain.connect(audioContext.destination);
+
+    gain.connect(
+      audio.destination
+    );
 
     osc.start();
-    osc.stop(audioContext.currentTime + duration);
+
+    osc.stop(
+      audio.currentTime+duration
+    );
+
   }catch(e){}
+
 }
+
 
 function correctSound(){
-  beep(660,.12,"sine",.07);
 
-  setTimeout(()=>{
-    beep(880,.15,"sine",.07);
-  },100);
+  tone(650,.12);
+
+  setTimeout(
+    ()=>tone(850,.14),
+    100
+  );
+
 }
+
 
 function wrongSound(){
-  beep(170,.20,"sawtooth",.05);
+
+  tone(
+    180,
+    .2,
+    "sawtooth"
+  );
+
 }
+
 
 function winSound(){
-  [523,659,784,1046].forEach((f,i)=>{
-    setTimeout(()=>{
-      beep(f,.22,"sine",.07);
-    },i*130);
-  });
+
+  const notes=[
+    523,
+    659,
+    784,
+    1046
+  ];
+
+  notes.forEach(
+    (n,i)=>{
+
+      setTimeout(
+        ()=>tone(n,.22),
+        i*120
+      );
+
+    }
+  );
+
 }
 
-/* ---------------------------------------------------------
-   GENERATED PANDA IMAGE
---------------------------------------------------------- */
 
-function drawCloud(ctx,x,y,s){
-  ctx.save();
-  ctx.fillStyle="rgba(255,255,255,.92)";
+/* =========================================================
+   PANDA DRAWING
+========================================================= */
+
+function cloud(ctx,x,y,s){
+
+  ctx.fillStyle=
+  "rgba(255,255,255,.92)";
 
   ctx.beginPath();
-  ctx.arc(x,y,35*s,0,Math.PI*2);
-  ctx.arc(x+40*s,y-18*s,45*s,0,Math.PI*2);
-  ctx.arc(x+85*s,y,34*s,0,Math.PI*2);
-  ctx.arc(x+45*s,y+15*s,48*s,0,Math.PI*2);
+
+  ctx.arc(
+    x,
+    y,
+    35*s,
+    0,
+    Math.PI*2
+  );
+
+  ctx.arc(
+    x+40*s,
+    y-18*s,
+    45*s,
+    0,
+    Math.PI*2
+  );
+
+  ctx.arc(
+    x+85*s,
+    y,
+    34*s,
+    0,
+    Math.PI*2
+  );
+
+  ctx.arc(
+    x+45*s,
+    y+15*s,
+    48*s,
+    0,
+    Math.PI*2
+  );
+
   ctx.fill();
 
-  ctx.restore();
 }
 
-function drawPanda(){
 
-  sourceCanvas = document.createElement("canvas");
-  sourceCanvas.width = SIZE;
-  sourceCanvas.height = SIZE;
-
-  const ctx = sourceCanvas.getContext("2d");
-
-  /* SKY */
-  const sky = ctx.createLinearGradient(0,0,0,SIZE);
-  sky.addColorStop(0,"#7ed8ff");
-  sky.addColorStop(.55,"#c9f1ff");
-  sky.addColorStop(1,"#eefcff");
-
-  ctx.fillStyle = sky;
-  ctx.fillRect(0,0,SIZE,SIZE);
-
-  /* SUN */
-  ctx.fillStyle="#ffe27a";
-  ctx.beginPath();
-  ctx.arc(760,120,62,0,Math.PI*2);
-  ctx.fill();
-
-  /* CLOUDS */
-  drawCloud(ctx,120,145,1);
-  drawCloud(ctx,530,105,.75);
-
-  /* FAR MOUNTAINS */
-  ctx.fillStyle="#8ac6a0";
-
-  ctx.beginPath();
-  ctx.moveTo(0,560);
-  ctx.lineTo(170,360);
-  ctx.lineTo(310,530);
-  ctx.lineTo(460,330);
-  ctx.lineTo(650,540);
-  ctx.lineTo(790,380);
-  ctx.lineTo(900,520);
-  ctx.lineTo(900,900);
-  ctx.lineTo(0,900);
-  ctx.closePath();
-  ctx.fill();
-
-  /* SNOW CAPS */
-  ctx.fillStyle="#f4ffff";
-
-  ctx.beginPath();
-  ctx.moveTo(170,360);
-  ctx.lineTo(130,420);
-  ctx.lineTo(170,402);
-  ctx.lineTo(200,430);
-  ctx.lineTo(220,405);
-  ctx.lineTo(250,430);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.moveTo(460,330);
-  ctx.lineTo(410,400);
-  ctx.lineTo(455,382);
-  ctx.lineTo(485,410);
-  ctx.lineTo(515,382);
-  ctx.lineTo(545,420);
-  ctx.closePath();
-  ctx.fill();
-
-  /* GROUND */
-  const ground = ctx.createLinearGradient(0,550,0,900);
-  ground.addColorStop(0,"#72c96f");
-  ground.addColorStop(1,"#31934e");
-
-  ctx.fillStyle=ground;
-
-  ctx.beginPath();
-  ctx.moveTo(0,610);
-  ctx.quadraticCurveTo(220,540,450,625);
-  ctx.quadraticCurveTo(690,540,900,620);
-  ctx.lineTo(900,900);
-  ctx.lineTo(0,900);
-  ctx.closePath();
-  ctx.fill();
-
-  /* BAMBOO */
-  drawBamboo(ctx,105,485,1.05);
-  drawBamboo(ctx,800,450,.85);
-
-  /* PANDA BODY */
-  ctx.save();
-
-  /* Body black */
-  ctx.fillStyle="#171717";
-
-  ctx.beginPath();
-  ctx.ellipse(470,610,185,220,0,0,Math.PI*2);
-  ctx.fill();
-
-  /* Belly */
-  ctx.fillStyle="#f5f2e9";
-
-  ctx.beginPath();
-  ctx.ellipse(470,635,125,155,0,0,Math.PI*2);
-  ctx.fill();
-
-  /* Left arm */
-  ctx.fillStyle="#171717";
-
-  ctx.beginPath();
-  ctx.ellipse(315,610,55,120,-.45,0,Math.PI*2);
-  ctx.fill();
-
-  /* Right arm */
-  ctx.beginPath();
-  ctx.ellipse(625,610,55,120,.45,0,Math.PI*2);
-  ctx.fill();
-
-  /* Feet */
-  ctx.beginPath();
-  ctx.ellipse(385,800,70,48,-.15,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.ellipse(555,800,70,48,.15,0,Math.PI*2);
-  ctx.fill();
-
-  /* HEAD */
-  ctx.fillStyle="#171717";
-
-  ctx.beginPath();
-  ctx.arc(470,380,190,0,Math.PI*2);
-  ctx.fill();
-
-  /* EARS */
-  ctx.beginPath();
-  ctx.arc(320,245,62,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(620,245,62,0,Math.PI*2);
-  ctx.fill();
-
-  /* FACE */
-  ctx.fillStyle="#f8f5ec";
-
-  ctx.beginPath();
-  ctx.arc(470,400,148,0,Math.PI*2);
-  ctx.fill();
-
-  /* Eye patches */
-  ctx.fillStyle="#181818";
-
-  ctx.save();
-  ctx.translate(405,370);
-  ctx.rotate(-.35);
-  ctx.beginPath();
-  ctx.ellipse(0,0,42,62,0,0,Math.PI*2);
-  ctx.fill();
-  ctx.restore();
-
-  ctx.save();
-  ctx.translate(535,370);
-  ctx.rotate(.35);
-  ctx.beginPath();
-  ctx.ellipse(0,0,42,62,0,0,Math.PI*2);
-  ctx.fill();
-  ctx.restore();
-
-  /* Eyes */
-  ctx.fillStyle="white";
-
-  ctx.beginPath();
-  ctx.arc(414,375,18,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(526,375,18,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.fillStyle="#111";
-
-  ctx.beginPath();
-  ctx.arc(414,377,9,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(526,377,9,0,Math.PI*2);
-  ctx.fill();
-
-  /* Nose */
-  ctx.beginPath();
-  ctx.ellipse(470,445,24,17,0,0,Math.PI*2);
-  ctx.fill();
-
-  /* Mouth */
-  ctx.strokeStyle="#111";
-  ctx.lineWidth=8;
-  ctx.lineCap="round";
-
-  ctx.beginPath();
-  ctx.moveTo(470,460);
-  ctx.quadraticCurveTo(450,485,430,474);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(470,460);
-  ctx.quadraticCurveTo(490,485,510,474);
-  ctx.stroke();
-
-  /* Cheeks */
-  ctx.fillStyle="rgba(255,130,130,.55)";
-
-  ctx.beginPath();
-  ctx.arc(365,455,22,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(575,455,22,0,Math.PI*2);
-  ctx.fill();
-
-  /* Bamboo in paw */
-  ctx.strokeStyle="#4c9b39";
-  ctx.lineWidth=24;
-  ctx.lineCap="round";
-
-  ctx.beginPath();
-  ctx.moveTo(570,690);
-  ctx.lineTo(700,530);
-  ctx.stroke();
-
-  ctx.strokeStyle="#2f702d";
-  ctx.lineWidth=5;
-
-  for(let i=0;i<5;i++){
-    const x=590+i*22;
-    const y=665-i*27;
-
-    ctx.beginPath();
-    ctx.moveTo(x-8,y-8);
-    ctx.lineTo(x+8,y+8);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-
-  /* Small grass */
-  ctx.strokeStyle="#217c3c";
-  ctx.lineWidth=5;
-
-  for(let x=20;x<900;x+=45){
-    const y=820+Math.sin(x)*15;
-
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-    ctx.lineTo(x-8,y-25);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-    ctx.lineTo(x+10,y-28);
-    ctx.stroke();
-  }
-}
-
-function drawBamboo(ctx,x,y,s){
+function bamboo(ctx,x,y,s){
 
   ctx.save();
 
   ctx.strokeStyle="#398b37";
-  ctx.lineWidth=22*s;
+
+  ctx.lineWidth=
+  22*s;
+
   ctx.lineCap="round";
 
   ctx.beginPath();
-  ctx.moveTo(x,y+210*s);
-  ctx.lineTo(x+12*s,y);
+
+  ctx.moveTo(
+    x,
+    y+210*s
+  );
+
+  ctx.lineTo(
+    x+12*s,
+    y
+  );
+
   ctx.stroke();
 
-  ctx.strokeStyle="#276c2c";
-  ctx.lineWidth=4*s;
 
-  for(let i=0;i<4;i++){
-    const yy=y+45*i*s;
+  ctx.strokeStyle="#276c2c";
+
+  ctx.lineWidth=
+  4*s;
+
+  for(
+    let i=0;
+    i<4;
+    i++
+  ){
+
+    const yy=
+    y+45*i*s;
 
     ctx.beginPath();
-    ctx.moveTo(x-10*s,yy);
-    ctx.lineTo(x+18*s,yy);
+
+    ctx.moveTo(
+      x-10*s,
+      yy
+    );
+
+    ctx.lineTo(
+      x+18*s,
+      yy
+    );
+
     ctx.stroke();
+
   }
+
 
   ctx.fillStyle="#4eaa45";
 
-  for(let i=0;i<3;i++){
+  for(
+    let i=0;
+    i<3;
+    i++
+  ){
+
     ctx.beginPath();
+
     ctx.ellipse(
       x+25*s,
-      y+30*i*s+25,
+      y+25+30*i*s,
       42*s,
       17*s,
       -.45,
       0,
       Math.PI*2
     );
+
     ctx.fill();
+
   }
 
   ctx.restore();
+
 }
 
-/* ---------------------------------------------------------
-   JIGSAW EDGE SYSTEM
---------------------------------------------------------- */
 
-let horizontalEdges = [];
-let verticalEdges = [];
+function drawPanda(){
 
-/*
-  Each internal edge gets one value:
+  sourceCanvas=
+  document.createElement("canvas");
 
-  +1 = tab coming OUT
-  -1 = slot going IN
+  sourceCanvas.width=SIZE;
+  sourceCanvas.height=SIZE;
 
-  Neighboring pieces automatically receive
-  opposite values, creating matching shapes.
-*/
+  const ctx=
+  sourceCanvas.getContext("2d");
 
-function generateEdges(){
 
-  horizontalEdges = [];
+  /* SKY */
 
-  for(let r=0;r<ROWS;r++){
-    horizontalEdges[r]=[];
+  const sky=
+  ctx.createLinearGradient(
+    0,
+    0,
+    0,
+    SIZE
+  );
 
-    for(let c=0;c<COLS-1;c++){
-      horizontalEdges[r][c] =
-        Math.random()>.5 ? 1 : -1;
-    }
-  }
+  sky.addColorStop(
+    0,
+    "#75d7ff"
+  );
 
-  verticalEdges = [];
+  sky.addColorStop(
+    .55,
+    "#c8f1ff"
+  );
 
-  for(let r=0;r<ROWS-1;r++){
-    verticalEdges[r]=[];
+  sky.addColorStop(
+    1,
+    "#effcff"
+  );
 
-    for(let c=0;c<COLS;c++){
-      verticalEdges[r][c] =
-        Math.random()>.5 ? 1 : -1;
-    }
-  }
-}
+  ctx.fillStyle=sky;
 
-/* ---------------------------------------------------------
-   JIGSAW PATH
---------------------------------------------------------- */
+  ctx.fillRect(
+    0,
+    0,
+    SIZE,
+    SIZE
+  );
 
-function addEdge(path,x1,y1,x2,y2,tab){
 
-  const horizontal = Math.abs(y2-y1)<1;
+  /* SUN */
 
-  if(horizontal){
+  ctx.fillStyle="#ffe17a";
 
-    const dir = x2>x1 ? 1 : -1;
+  ctx.beginPath();
 
-    const sx = Math.min(x1,x2);
-    const sy = y1;
+  ctx.arc(
+    770,
+    120,
+    62,
+    0,
+    Math.PI*2
+  );
 
-    const w = Math.abs(x2-x1);
+  ctx.fill();
 
-    if(tab===0){
-      path.lineTo(x2,y2);
-      return;
-    }
 
-    const sign = tab;
+  /* CLOUDS */
 
-    path.lineTo(sx + w*.32*dir, sy);
+  cloud(
+    ctx,
+    120,
+    145,
+    1
+  );
 
-    path.bezierCurveTo(
-      sx + w*.36*dir, sy,
-      sx + w*.36*dir, sy + sign*32,
-      sx + w*.50*dir, sy + sign*32
-    );
+  cloud(
+    ctx,
+    540,
+    100,
+    .75
+  );
 
-    path.bezierCurveTo(
-      sx + w*.64*dir, sy + sign*32,
-      sx + w*.64*dir, sy,
-      sx + w*.68*dir, sy
-    );
 
-    path.lineTo(x2,y2);
+  /* MOUNTAINS */
 
-  }else{
+  ctx.fillStyle="#8bc6a1";
 
-    const dir = y2>y1 ? 1 : -1;
+  ctx.beginPath();
 
-    const sx = x1;
-    const sy = Math.min(y1,y2);
+  ctx.moveTo(0,560);
 
-    const h = Math.abs(y2-y1);
+  ctx.lineTo(
+    170,
+    360
+  );
 
-    if(tab===0){
-      path.lineTo(x2,y2);
-      return;
-    }
+  ctx.lineTo(
+    310,
+    530
+  );
 
-    const sign = tab;
+  ctx.lineTo(
+    460,
+    330
+  );
 
-    path.lineTo(sx, sy+h*.32*dir);
+  ctx.lineTo(
+    650,
+    540
+  );
 
-    path.bezierCurveTo(
-      sx,
-      sy+h*.36*dir,
-      sx+sign*32,
-      sy+h*.36*dir,
-      sx+sign*32,
-      sy+h*.50*dir
-    );
+  ctx.lineTo(
+    790,
+    380
+  );
 
-    path.bezierCurveTo(
-      sx+sign*32,
-      sy+h*.64*dir,
-      sx,
-      sy+h*.64*dir,
-      sx,
-      sy+h*.68*dir
-    );
+  ctx.lineTo(
+    900,
+    520
+  );
 
-    path.lineTo(x2,y2);
-  }
-}
+  ctx.lineTo(
+    900,
+    900
+  );
 
-function piecePath(row,col){
+  ctx.lineTo(
+    0,
+    900
+  );
 
-  const p = new Path2D();
+  ctx.closePath();
 
-  const x0 = PAD;
-  const y0 = PAD;
+  ctx.fill();
 
-  const x1 = PAD + CELL;
-  const y1 = PAD + CELL;
 
-  /* TOP */
-  p.moveTo(x0,y0);
+  /* SNOW */
 
-  if(row===0){
-    p.lineTo(x1,y0);
-  }else{
-    const edge = verticalEdges[row-1][col];
-    addEdge(p,x0,y0,x1,y0,-edge);
-  }
+  ctx.fillStyle="#f6ffff";
 
-  /* RIGHT */
-  if(col===COLS-1){
-    p.lineTo(x1,y1);
-  }else{
-    const edge = horizontalEdges[row][col];
-    addEdge(p,x1,y0,x1,y1,edge);
-  }
+  ctx.beginPath();
 
-  /* BOTTOM */
-  if(row===ROWS-1){
-    p.lineTo(x0,y1);
-  }else{
-    const edge = verticalEdges[row][col];
-    addEdge(p,x1,y1,x0,y1,edge);
-  }
+  ctx.moveTo(
+    170,
+    360
+  );
 
-  /* LEFT */
-  if(col===0){
-    p.lineTo(x0,y0);
-  }else{
-    const edge = horizontalEdges[row][col-1];
-    addEdge(p,x0,y1,x0,y0,-edge);
-  }
+  ctx.lineTo(
+    130,
+    420
+  );
 
-  p.closePath();
+  ctx.lineTo(
+    170,
+    402
+  );
 
-  return p;
-}
+  ctx.lineTo(
+    200,
+    430
+  );
 
-/* ---------------------------------------------------------
-   CREATE ONE PUZZLE PIECE
---------------------------------------------------------- */
+  ctx.lineTo(
+    220,
+    405
+  );
 
-function createPieceCanvas(row,col){
+  ctx.lineTo(
+    250,
+    430
+  );
 
-  const canvas = document.createElement("canvas");
+  ctx.closePath();
 
-  canvas.width = PIECE_SIZE;
-  canvas.height = PIECE_SIZE;
+  ctx.fill();
 
-  const ctx = canvas.getContext("2d");
 
-  const path = piecePath(row,col);
+  ctx.beginPath();
+
+  ctx.moveTo(
+    460,
+    330
+  );
+
+  ctx.lineTo(
+    410,
+    400
+  );
+
+  ctx.lineTo(
+    455,
+    382
+  );
+
+  ctx.lineTo(
+    485,
+    410
+  );
+
+  ctx.lineTo(
+    515,
+    382
+  );
+
+  ctx.lineTo(
+    545,
+    420
+  );
+
+  ctx.closePath();
+
+  ctx.fill();
+
+
+  /* GROUND */
+
+  const ground=
+  ctx.createLinearGradient(
+    0,
+    560,
+    0,
+    900
+  );
+
+  ground.addColorStop(
+    0,
+    "#74cb70"
+  );
+
+  ground.addColorStop(
+    1,
+    "#31924e"
+  );
+
+  ctx.fillStyle=ground;
+
+  ctx.beginPath();
+
+  ctx.moveTo(0,610);
+
+  ctx.quadraticCurveTo(
+    220,
+    540,
+    450,
+    625
+  );
+
+  ctx.quadraticCurveTo(
+    690,
+    540,
+    900,
+    620
+  );
+
+  ctx.lineTo(
+    900,
+    900
+  );
+
+  ctx.lineTo(
+    0,
+    900
+  );
+
+  ctx.closePath();
+
+  ctx.fill();
+
+
+  /* BAMBOO */
+
+  bamboo(
+    ctx,
+    105,
+    485,
+    1
+  );
+
+  bamboo(
+    ctx,
+    800,
+    450,
+    .85
+  );
+
+
+  /* =====================
+     PANDA BODY
+  ===================== */
+
+  ctx.fillStyle="#171717";
+
+  /* body */
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    470,
+    610,
+    185,
+    220,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* belly */
+
+  ctx.fillStyle="#f6f3eb";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    470,
+    635,
+    125,
+    155,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* arms */
+
+  ctx.fillStyle="#171717";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    315,
+    610,
+    55,
+    120,
+    -.45,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    625,
+    610,
+    55,
+    120,
+    .45,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* feet */
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    385,
+    800,
+    70,
+    48,
+    -.15,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    555,
+    800,
+    70,
+    48,
+    .15,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* HEAD */
+
+  ctx.beginPath();
+
+  ctx.arc(
+    470,
+    380,
+    190,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* EARS */
+
+  ctx.beginPath();
+
+  ctx.arc(
+    320,
+    245,
+    62,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    620,
+    245,
+    62,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* FACE */
+
+  ctx.fillStyle="#f8f5ec";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    470,
+    400,
+    148,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* EYE PATCHES */
+
+  ctx.fillStyle="#181818";
 
   ctx.save();
 
-  ctx.clip(path);
+  ctx.translate(
+    405,
+    370
+  );
+
+  ctx.rotate(-.35);
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    42,
+    62,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.restore();
+
+
+  ctx.save();
+
+  ctx.translate(
+    535,
+    370
+  );
+
+  ctx.rotate(.35);
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    0,
+    42,
+    62,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.restore();
+
+
+  /* EYES */
+
+  ctx.fillStyle="white";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    414,
+    375,
+    18,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    526,
+    375,
+    18,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    414,
+    377,
+    9,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    526,
+    377,
+    9,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* NOSE */
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    470,
+    445,
+    24,
+    17,
+    0,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* MOUTH */
+
+  ctx.strokeStyle="#111";
+
+  ctx.lineWidth=8;
+
+  ctx.lineCap="round";
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    470,
+    460
+  );
+
+  ctx.quadraticCurveTo(
+    450,
+    485,
+    430,
+    474
+  );
+
+  ctx.stroke();
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    470,
+    460
+  );
+
+  ctx.quadraticCurveTo(
+    490,
+    485,
+    510,
+    474
+  );
+
+  ctx.stroke();
+
+
+  /* CHEEKS */
+
+  ctx.fillStyle=
+  "rgba(255,130,130,.55)";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    365,
+    455,
+    22,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  ctx.beginPath();
+
+  ctx.arc(
+    575,
+    455,
+    22,
+    0,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /* BAMBOO IN PAW */
+
+  ctx.strokeStyle="#4b9b39";
+
+  ctx.lineWidth=24;
+
+  ctx.lineCap="round";
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    570,
+    690
+  );
+
+  ctx.lineTo(
+    700,
+    530
+  );
+
+  ctx.stroke();
+
+
+  ctx.strokeStyle="#2f702d";
+
+  ctx.lineWidth=5;
+
+  for(
+    let i=0;
+    i<5;
+    i++
+  ){
+
+    const x=
+    590+i*22;
+
+    const y=
+    665-i*27;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      x-8,
+      y-8
+    );
+
+    ctx.lineTo(
+      x+8,
+      y+8
+    );
+
+    ctx.stroke();
+
+  }
+
+
+  /* GRASS */
+
+  ctx.strokeStyle="#217c3c";
+
+  ctx.lineWidth=5;
+
+  for(
+    let x=20;
+    x<900;
+    x+=45
+  ){
+
+    const y=
+    820+Math.sin(x)*15;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      x,
+      y
+    );
+
+    ctx.lineTo(
+      x-8,
+      y-25
+    );
+
+    ctx.stroke();
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      x,
+      y
+    );
+
+    ctx.lineTo(
+      x+10,
+      y-28
+    );
+
+    ctx.stroke();
+
+  }
+
+}
+
+
+/* =========================================================
+   TARGET GRID
+========================================================= */
+
+function createTargetGrid(){
+
+  targetGrid.innerHTML="";
+
+  for(
+    let r=0;
+    r<ROWS;
+    r++
+  ){
+
+    for(
+      let c=0;
+      c<COLS;
+      c++
+    ){
+
+      const target=
+      document.createElement("div");
+
+      target.className="target";
+
+      target.style.left=
+      (c*100/COLS)+"%";
+
+      target.style.top=
+      (r*100/ROWS)+"%";
+
+      target.style.width=
+      (100/COLS)+"%";
+
+      target.style.height=
+      (100/ROWS)+"%";
+
+      targetGrid.appendChild(
+        target
+      );
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   CREATE PUZZLE PIECES
+========================================================= */
+
+function createPiece(row,col){
+
+  const piece=
+  document.createElement("div");
+
+  piece.className="piece";
+
+  piece.dataset.row=row;
+  piece.dataset.col=col;
+
+
+  const canvas=
+  document.createElement("canvas");
+
+  canvas.width=CELL;
+  canvas.height=CELL;
+
+
+  const ctx=
+  canvas.getContext("2d");
+
 
   /*
-    Important:
-    Draw the SAME source image with a shifted origin.
-
-    This ensures that when all pieces are correctly placed,
-    the Panda picture matches perfectly.
+     Draw EXACTLY the matching
+     part of the original Panda.
   */
 
   ctx.drawImage(
     sourceCanvas,
-    PAD - col*CELL,
-    PAD - row*CELL
+
+    col*CELL,
+    row*CELL,
+    CELL,
+    CELL,
+
+    0,
+    0,
+    CELL,
+    CELL
   );
 
-  ctx.restore();
 
-  /* Piece outline */
-  ctx.strokeStyle="rgba(0,0,0,.55)";
-  ctx.lineWidth=3;
-  ctx.stroke(path);
+  /*
+     Add a subtle puzzle-style border.
+     The actual image itself remains
+     perfectly aligned.
+  */
 
-  return canvas;
+  ctx.strokeStyle=
+  "rgba(0,0,0,.65)";
+
+  ctx.lineWidth=5;
+
+  ctx.strokeRect(
+    2,
+    2,
+    CELL-4,
+    CELL-4
+  );
+
+
+  piece.appendChild(canvas);
+
+  return piece;
+
 }
 
-/* ---------------------------------------------------------
-   TARGET CELLS
---------------------------------------------------------- */
 
-function createTargets(){
+/* =========================================================
+   SHUFFLE
+========================================================= */
 
-  board.innerHTML="";
+function shuffle(array){
 
-  for(let row=0;row<ROWS;row++){
+  for(
+    let i=array.length-1;
+    i>0;
+    i--
+  ){
 
-    for(let col=0;col<COLS;col++){
+    const j=
+    Math.floor(
+      Math.random()*(i+1)
+    );
 
-      const target=document.createElement("div");
+    [
+      array[i],
+      array[j]
+    ]=[
+      array[j],
+      array[i]
+    ];
 
-      target.className="target";
-
-      target.style.left=(col/COLS*100)+"%";
-      target.style.top=(row/ROWS*100)+"%";
-      target.style.width=(100/COLS)+"%";
-      target.style.height=(100/ROWS)+"%";
-
-      target.dataset.row=row;
-      target.dataset.col=col;
-
-      board.appendChild(target);
-    }
   }
+
 }
 
-/* ---------------------------------------------------------
-   CREATE PIECES
---------------------------------------------------------- */
+
+/* =========================================================
+   CREATE ALL PIECES
+========================================================= */
 
 function createPieces(){
 
-  piecesContainer.innerHTML="";
+  piecesArea.innerHTML="";
+
   pieces=[];
 
-  let index=0;
 
-  for(let row=0;row<ROWS;row++){
+  for(
+    let r=0;
+    r<ROWS;
+    r++
+  ){
 
-    for(let col=0;col<COLS;col++){
+    for(
+      let c=0;
+      c<COLS;
+      c++
+    ){
 
-      const piece=document.createElement("div");
-
-      piece.className="piece";
-
-      piece.dataset.row=row;
-      piece.dataset.col=col;
-      piece.dataset.index=index;
-
-      const canvas=createPieceCanvas(row,col);
-      canvas.className="pieceCanvas";
-
-      piece.appendChild(canvas);
+      const piece=
+      createPiece(r,c);
 
       pieces.push(piece);
 
-      addDragEvents(piece);
-
-      piecesContainer.appendChild(piece);
-
-      index++;
     }
+
   }
 
-  shufflePieces();
+
+  shuffle(pieces);
+
+
+  pieces.forEach(
+    piece=>{
+
+      piecesArea.appendChild(
+        piece
+      );
+
+      enableDrag(piece);
+
+    }
+  );
+
 }
 
-/* ---------------------------------------------------------
-   SHUFFLE
---------------------------------------------------------- */
 
-function shufflePieces(){
+/* =========================================================
+   DRAG SYSTEM
+========================================================= */
 
-  for(let i=pieces.length-1;i>0;i--){
-
-    const j=Math.floor(Math.random()*(i+1));
-
-    const temp=pieces[i];
-    pieces[i]=pieces[j];
-    pieces[j]=temp;
-  }
-
-  pieces.forEach(piece=>{
-    piecesContainer.appendChild(piece);
-  });
-}
-
-/* ---------------------------------------------------------
-   DRAGGING
---------------------------------------------------------- */
-
-function addDragEvents(piece){
+function enableDrag(piece){
 
   let dragging=false;
+
   let offsetX=0;
   let offsetY=0;
 
-  piece.addEventListener("pointerdown",function(e){
+  let pointerId=null;
 
-    if(piece.classList.contains("locked")) return;
 
-    initAudio();
+  piece.addEventListener(
+    "pointerdown",
+    function(e){
 
-    e.preventDefault();
+      if(
+        piece.classList.contains(
+          "locked"
+        )
+      ){
+        return;
+      }
 
-    dragging=true;
 
-    piece.classList.add("dragging");
+      e.preventDefault();
 
-    const rect=piece.getBoundingClientRect();
+      startAudio();
 
-    offsetX=e.clientX-rect.left;
-    offsetY=e.clientY-rect.top;
 
-    /*
-      Fixed positioning makes dragging work reliably
-      on Android screens.
-    */
+      dragging=true;
 
-    piece.style.position="fixed";
-    piece.style.width=PIECE_SIZE+"px";
-    piece.style.height=PIECE_SIZE+"px";
+      pointerId=e.pointerId;
 
-    piece.style.left=(e.clientX-offsetX)+"px";
-    piece.style.top=(e.clientY-offsetY)+"px";
 
-    try{
-      piece.setPointerCapture(e.pointerId);
-    }catch(err){}
-  });
+      const rect=
+      piece.getBoundingClientRect();
 
-  piece.addEventListener("pointermove",function(e){
 
-    if(!dragging) return;
+      offsetX=
+      e.clientX-rect.left;
 
-    e.preventDefault();
+      offsetY=
+      e.clientY-rect.top;
 
-    piece.style.left=(e.clientX-offsetX)+"px";
-    piece.style.top=(e.clientY-offsetY)+"px";
-  });
 
-  piece.addEventListener("pointerup",function(e){
+      /*
+        Important:
+        Change to fixed position
+        ONLY after getting the
+        original position.
+      */
 
-    if(!dragging) return;
+      piece.style.position=
+      "fixed";
 
-    dragging=false;
+      piece.style.margin="0";
 
-    piece.classList.remove("dragging");
+      piece.style.left=
+      (e.clientX-offsetX)+"px";
 
-    try{
-      piece.releasePointerCapture(e.pointerId);
-    }catch(err){}
+      piece.style.top=
+      (e.clientY-offsetY)+"px";
 
-    checkDrop(piece);
-  });
 
-  piece.addEventListener("pointercancel",function(){
+      piece.classList.add(
+        "dragging"
+      );
 
-    if(!dragging) return;
 
-    dragging=false;
-    piece.classList.remove("dragging");
+      try{
 
-    returnPiece(piece);
-  });
+        piece.setPointerCapture(
+          pointerId
+        );
+
+      }catch(err){}
+
+    },
+    {passive:false}
+  );
+
+
+  piece.addEventListener(
+    "pointermove",
+    function(e){
+
+      if(!dragging) return;
+
+      e.preventDefault();
+
+
+      piece.style.left=
+      (e.clientX-offsetX)+"px";
+
+      piece.style.top=
+      (e.clientY-offsetY)+"px";
+
+    },
+    {passive:false}
+  );
+
+
+  piece.addEventListener(
+    "pointerup",
+    function(e){
+
+      if(!dragging) return;
+
+      e.preventDefault();
+
+      dragging=false;
+
+      piece.classList.remove(
+        "dragging"
+      );
+
+
+      try{
+
+        piece.releasePointerCapture(
+          pointerId
+        );
+
+      }catch(err){}
+
+
+      checkDrop(piece);
+
+    },
+    {passive:false}
+  );
+
+
+  piece.addEventListener(
+    "pointercancel",
+    function(){
+
+      if(!dragging) return;
+
+      dragging=false;
+
+      piece.classList.remove(
+        "dragging"
+      );
+
+      returnPiece(piece);
+
+    }
+  );
+
 }
 
-/* ---------------------------------------------------------
+
+/* =========================================================
    CHECK DROP
---------------------------------------------------------- */
+========================================================= */
 
 function checkDrop(piece){
 
-  if(piece.classList.contains("locked")) return;
+  if(
+    piece.classList.contains(
+      "locked"
+    )
+  ){
+    return;
+  }
 
-  const row=Number(piece.dataset.row);
-  const col=Number(piece.dataset.col);
 
-  const boardRect=board.getBoundingClientRect();
+  const row=
+  Number(piece.dataset.row);
 
-  const pieceRect=piece.getBoundingClientRect();
+  const col=
+  Number(piece.dataset.col);
+
+
+  const boardRect=
+  board.getBoundingClientRect();
+
+  const pieceRect=
+  piece.getBoundingClientRect();
+
 
   const centerX=
-    pieceRect.left + pieceRect.width/2;
+  pieceRect.left+
+  pieceRect.width/2;
 
   const centerY=
-    pieceRect.top + pieceRect.height/2;
+  pieceRect.top+
+  pieceRect.height/2;
 
-  const targetX=
-    boardRect.left +
-    (col+.5)*(boardRect.width/COLS);
 
-  const targetY=
-    boardRect.top +
-    (row+.5)*(boardRect.height/ROWS);
+  const cellW=
+  boardRect.width/COLS;
 
-  const dx=centerX-targetX;
-  const dy=centerY-targetY;
+  const cellH=
+  boardRect.height/ROWS;
 
-  const distance=Math.sqrt(dx*dx+dy*dy);
 
   /*
-    Forgiving snap area for Android.
+     Find the nearest cell.
+  */
+
+  let nearestCol=
+  Math.floor(
+    (centerX-boardRect.left)/
+    cellW
+  );
+
+  let nearestRow=
+  Math.floor(
+    (centerY-boardRect.top)/
+    cellH
+  );
+
+
+  /*
+     Keep values inside board.
+  */
+
+  nearestCol=
+  Math.max(
+    0,
+    Math.min(
+      COLS-1,
+      nearestCol
+    )
+  );
+
+
+  nearestRow=
+  Math.max(
+    0,
+    Math.min(
+      ROWS-1,
+      nearestRow
+    )
+  );
+
+
+  const targetCenterX=
+  boardRect.left+
+  (nearestCol+.5)*cellW;
+
+  const targetCenterY=
+  boardRect.top+
+  (nearestRow+.5)*cellH;
+
+
+  const dx=
+  centerX-targetCenterX;
+
+  const dy=
+  centerY-targetCenterY;
+
+
+  const distance=
+  Math.sqrt(
+    dx*dx+
+    dy*dy
+  );
+
+
+  /*
+     V1.7 uses a large,
+     forgiving snap area.
   */
 
   const snapDistance=
-    Math.min(boardRect.width/COLS,boardRect.height/ROWS)*.48;
+  Math.min(
+    cellW,
+    cellH
+  )*.62;
+
 
   moves++;
 
   updateStats();
 
-  if(distance<=snapDistance){
 
-    placeCorrectPiece(piece,row,col);
+  if(
+    nearestRow===row &&
+    nearestCol===col &&
+    distance<=snapDistance
+  ){
+
+    lockPiece(
+      piece,
+      row,
+      col
+    );
 
   }else{
 
     wrongPiece(piece);
+
   }
+
 }
 
-/* ---------------------------------------------------------
-   CORRECT PLACEMENT
---------------------------------------------------------- */
 
-function placeCorrectPiece(piece,row,col){
+/* =========================================================
+   LOCK CORRECT PIECE
+========================================================= */
 
-  const boardRect=board.getBoundingClientRect();
+function lockPiece(
+  piece,
+  row,
+  col
+){
+
+  const boardRect=
+  board.getBoundingClientRect();
+
+
+  const cellW=
+  boardRect.width/COLS;
+
+  const cellH=
+  boardRect.height/ROWS;
+
 
   /*
-    Convert the padded piece size from source pixels
-    into the board's displayed size.
+     Position piece exactly
+     over its target cell.
   */
 
-  const scale=boardRect.width/SIZE;
+  piece.style.position=
+  "fixed";
 
-  const displayedPieceSize=
-    PIECE_SIZE*scale;
+  piece.style.width=
+  cellW+"px";
 
-  const left=
-    boardRect.left +
-    col*CELL*scale -
-    PAD*scale;
+  piece.style.height=
+  cellH+"px";
 
-  const top=
-    boardRect.top +
-    row*CELL*scale -
-    PAD*scale;
 
-  piece.style.position="fixed";
+  piece.style.left=
+  (
+    boardRect.left+
+    col*cellW
+  )+"px";
 
-  piece.style.width=displayedPieceSize+"px";
-  piece.style.height=displayedPieceSize+"px";
 
-  piece.style.left=left+"px";
-  piece.style.top=top+"px";
+  piece.style.top=
+  (
+    boardRect.top+
+    row*cellH
+  )+"px";
 
-  piece.classList.add("locked");
 
-  piece.style.pointerEvents="none";
+  piece.classList.add(
+    "locked"
+  );
 
-  completedCount++;
+
+  completed++;
+
 
   correctSound();
 
-  showMessage("🎉 Great! Correct piece!",true);
 
-  if(completedCount===ROWS*COLS){
+  showMessage(
+    "🎉 Correct!",
+    true
+  );
 
-    setTimeout(finishGame,350);
+
+  if(
+    completed===
+    ROWS*COLS
+  ){
+
+    setTimeout(
+      finishGame,
+      400
+    );
+
   }
+
 }
 
-/* ---------------------------------------------------------
+
+/* =========================================================
    WRONG PIECE
---------------------------------------------------------- */
+========================================================= */
 
 function wrongPiece(piece){
 
   wrongSound();
 
-  showMessage("❌ Not there. Try another position.",false);
 
-  piece.classList.add("shake");
+  showMessage(
+    "❌ Wrong place!",
+    false
+  );
 
-  setTimeout(()=>{
 
-    piece.classList.remove("shake");
+  piece.classList.add(
+    "shake"
+  );
 
-    returnPiece(piece);
 
-  },350);
+  setTimeout(
+    function(){
+
+      piece.classList.remove(
+        "shake"
+      );
+
+      returnPiece(
+        piece
+      );
+
+    },
+    350
+  );
+
 }
 
-/* ---------------------------------------------------------
+
+/* =========================================================
    RETURN PIECE
---------------------------------------------------------- */
+========================================================= */
 
 function returnPiece(piece){
 
   piece.style.position="";
-  piece.style.width="";
-  piece.style.height="";
   piece.style.left="";
   piece.style.top="";
-  piece.style.zIndex="";
+  piece.style.width="";
+  piece.style.height="";
+  piece.style.margin="";
 
-  piecesContainer.appendChild(piece);
+
+  piecesArea.appendChild(
+    piece
+  );
+
 }
 
-/* ---------------------------------------------------------
-   STATS
---------------------------------------------------------- */
 
-function updateStats(){
+/* =========================================================
+   MESSAGE
+========================================================= */
 
-  document.getElementById("moves").textContent=moves;
+function showMessage(
+  text,
+  good
+){
 
-  let currentScore=
-    Math.max(
-      0,
-      100 -
-      moves*2 -
-      Math.floor(seconds/5)
-    );
+  const message=
+  document.getElementById(
+    "message"
+  );
 
-  document.getElementById("score").textContent=currentScore;
+  message.textContent=text;
+
+  message.className=
+  good ? "good" : "bad";
+
+
+  setTimeout(
+    function(){
+
+      if(running){
+
+        message.textContent=
+        "Drag a piece into the picture.";
+
+        message.className="";
+
+      }
+
+    },
+    1000
+  );
+
 }
 
-function currentScore(){
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+function getScore(){
 
   return Math.max(
     0,
-    100 -
-    moves*2 -
+    100-
+    moves*2-
     Math.floor(seconds/5)
   );
+
 }
 
-function showMessage(text,good){
 
-  const msg=document.getElementById("message");
+function updateStats(){
 
-  msg.textContent=text;
+  document.getElementById(
+    "moves"
+  ).textContent=moves;
 
-  msg.className=good ? "good" : "bad";
 
-  setTimeout(()=>{
+  document.getElementById(
+    "score"
+  ).textContent=getScore();
 
-    if(gameRunning){
-      msg.textContent="Drag each piece into the correct place.";
-      msg.className="";
-    }
-
-  },1200);
 }
 
-/* ---------------------------------------------------------
+
+/* =========================================================
    TIMER
---------------------------------------------------------- */
+========================================================= */
 
 function startTimer(){
 
-  clearInterval(timerInterval);
+  clearInterval(timer);
 
-  timerInterval=setInterval(()=>{
+  timer=
+  setInterval(
+    function(){
 
-    if(!gameRunning) return;
+      if(!running) return;
 
-    seconds++;
+      seconds++;
 
-    document.getElementById("timer").textContent=seconds;
+      document.getElementById(
+        "time"
+      ).textContent=seconds;
 
-    updateStats();
+      updateStats();
 
-  },1000);
+    },
+    1000
+  );
+
 }
 
-/* ---------------------------------------------------------
-   FINISH
---------------------------------------------------------- */
+
+/* =========================================================
+   BEST SCORE
+========================================================= */
+
+function updateBest(){
+
+  const bestScore=
+  localStorage.getItem(
+    "completePic_v17_bestScore"
+  );
+
+  const bestTime=
+  localStorage.getItem(
+    "completePic_v17_bestTime"
+  );
+
+
+  document.getElementById(
+    "bestScore"
+  ).textContent=
+  bestScore===null
+  ? "—"
+  : bestScore;
+
+
+  document.getElementById(
+    "bestTime"
+  ).textContent=
+  bestTime===null
+  ? "—"
+  : bestTime;
+
+}
+
+
+/* =========================================================
+   FINISH GAME
+========================================================= */
 
 function finishGame(){
 
-  if(!gameRunning) return;
+  if(!running) return;
 
-  gameRunning=false;
 
-  clearInterval(timerInterval);
+  running=false;
 
-  const finalScore=currentScore();
+  clearInterval(timer);
 
-  document.getElementById("finalTime").textContent=seconds;
-  document.getElementById("finalMoves").textContent=moves;
-  document.getElementById("finalScore").textContent=finalScore;
 
-  const oldBestScore=getBestScore();
-  const oldBestTime=getBestTime();
+  const finalScore=
+  getScore();
 
-  if(oldBestScore===null || finalScore>oldBestScore){
+
+  document.getElementById(
+    "finalTime"
+  ).textContent=seconds;
+
+
+  document.getElementById(
+    "finalMoves"
+  ).textContent=moves;
+
+
+  document.getElementById(
+    "finalScore"
+  ).textContent=finalScore;
+
+
+  const oldScore=
+  localStorage.getItem(
+    "completePic_v17_bestScore"
+  );
+
+  const oldTime=
+  localStorage.getItem(
+    "completePic_v17_bestTime"
+  );
+
+
+  if(
+    oldScore===null ||
+    finalScore>Number(oldScore)
+  ){
 
     localStorage.setItem(
-      "completePic_v16_bestScore",
+      "completePic_v17_bestScore",
       finalScore
     );
+
   }
 
-  if(oldBestTime===null || seconds<oldBestTime){
+
+  if(
+    oldTime===null ||
+    seconds<Number(oldTime)
+  ){
 
     localStorage.setItem(
-      "completePic_v16_bestTime",
+      "completePic_v17_bestTime",
       seconds
     );
+
   }
 
-  updateBestDisplay();
+
+  updateBest();
 
   winSound();
 
-  setTimeout(()=>{
 
-    document.getElementById("winBox").style.display="flex";
+  document.getElementById(
+    "winScreen"
+  ).style.display="flex";
 
-  },300);
 }
 
-/* ---------------------------------------------------------
+
+/* =========================================================
    NEW GAME
---------------------------------------------------------- */
+========================================================= */
 
 function newGame(){
 
-  initAudio();
+  startAudio();
 
-  clearInterval(timerInterval);
+
+  clearInterval(timer);
+
 
   moves=0;
   seconds=0;
-  completedCount=0;
-  gameRunning=true;
+  completed=0;
 
-  document.getElementById("timer").textContent="0";
-  document.getElementById("moves").textContent="0";
-  document.getElementById("score").textContent="100";
+  running=true;
 
-  document.getElementById("message").textContent=
-    "Drag each piece into the correct place.";
 
-  document.getElementById("message").className="";
+  document.getElementById(
+    "time"
+  ).textContent="0";
 
-  document.getElementById("winBox").style.display="none";
+
+  document.getElementById(
+    "moves"
+  ).textContent="0";
+
+
+  document.getElementById(
+    "score"
+  ).textContent="100";
+
+
+  document.getElementById(
+    "message"
+  ).textContent=
+  "Drag a piece into the picture.";
+
+
+  document.getElementById(
+    "message"
+  ).className="";
+
+
+  document.getElementById(
+    "winScreen"
+  ).style.display="none";
+
+
+  /*
+     Create the Panda again.
+  */
 
   drawPanda();
 
-  generateEdges();
 
-  createTargets();
+  /*
+     Show the complete picture
+     inside the black frame.
+  */
+
+  boardCtx.clearRect(
+    0,
+    0,
+    SIZE,
+    SIZE
+  );
+
+
+  boardCtx.drawImage(
+    sourceCanvas,
+    0,
+    0
+  );
+
+
+  createTargetGrid();
+
 
   createPieces();
 
-  updateBestDisplay();
+
+  updateBest();
+
 
   startTimer();
 
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
 }
 
-/* ---------------------------------------------------------
-   PLAY AGAIN
---------------------------------------------------------- */
 
-function closeWinAndNewGame(){
+/* =========================================================
+   START GAME
+========================================================= */
 
-  document.getElementById("winBox").style.display="none";
+updateBest();
 
-  newGame();
-}
-
-/* ---------------------------------------------------------
-   START
---------------------------------------------------------- */
-
-updateBestDisplay();
 newGame();
 
 </script>
