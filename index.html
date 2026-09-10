@@ -2,12 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Complete the Pic V2.1</title>
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
+
+<title>Complete the Pic V2.2</title>
 
 <style>
+
 *{
   box-sizing:border-box;
   -webkit-tap-highlight-color:transparent;
@@ -19,7 +24,11 @@ html,body{
   width:100%;
   min-height:100%;
   font-family:Arial,sans-serif;
-  background:linear-gradient(180deg,#eef8ff,#ffffff);
+  background:linear-gradient(
+    180deg,
+    #eef8ff,
+    #ffffff
+  );
   color:#222;
   overflow-x:hidden;
 }
@@ -31,7 +40,6 @@ body{
 h1{
   margin:15px 0 3px;
   font-size:28px;
-  color:#222;
 }
 
 .subtitle{
@@ -43,17 +51,17 @@ h1{
 #info{
   display:flex;
   justify-content:center;
-  gap:10px;
+  gap:8px;
   flex-wrap:wrap;
   margin:8px auto 14px;
 }
 
 .infoBox{
-  background:white;
+  background:#fff;
   border:1px solid #ddd;
   border-radius:12px;
   padding:8px 14px;
-  min-width:85px;
+  min-width:82px;
   box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
 
@@ -76,7 +84,7 @@ h1{
 }
 
 /* =========================
-   PUZZLE FRAME
+   FRAME
 ========================= */
 
 #frameTitle{
@@ -86,44 +94,67 @@ h1{
 }
 
 #boardWrap{
+
   width:min(92vw,500px);
+
   aspect-ratio:1/1;
+
   margin:auto;
+
+  position:relative;
 
   background:#fff;
 
   /* LIGHT FRAME */
-  border:4px solid #bfc5ca;
+  border:4px solid #b8bec4;
+
   border-radius:10px;
 
-  box-shadow:
-    0 3px 12px rgba(0,0,0,.08),
-    inset 0 0 0 1px #f4f4f4;
-
-  position:relative;
   overflow:visible;
+
+  box-shadow:
+    0 3px 12px rgba(0,0,0,.08);
 }
 
 #board{
+
   width:100%;
   height:100%;
+
   display:block;
+
   border-radius:5px;
+
+  background:#fff;
 }
 
-/* Very light target grid */
+/* Target grid */
+
 .targetGrid{
+
   position:absolute;
+
   inset:0;
+
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  grid-template-rows:repeat(3,1fr);
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  grid-template-rows:
+    repeat(3,1fr);
+
   pointer-events:none;
 }
 
 .targetCell{
-  border:1px dashed rgba(120,130,140,.25);
-  background:rgba(255,255,255,.06);
+
+  border:
+    1px dashed
+    rgba(100,110,120,.22);
+
+  background:
+    rgba(255,255,255,.04);
 }
 
 /* =========================
@@ -131,53 +162,78 @@ h1{
 ========================= */
 
 #instruction{
+
   margin:12px auto 8px;
+
   width:min(92vw,500px);
+
   padding:10px;
+
   border-radius:10px;
-  background:#ffffff;
+
+  background:#fff;
+
   border:1px solid #e1e1e1;
+
   color:#666;
+
   font-size:14px;
 }
 
 /* =========================
-   PIECES AREA
+   PIECES
 ========================= */
 
 #piecesTitle{
+
   margin:16px 0 8px;
+
   font-size:16px;
+
   font-weight:bold;
 }
 
 #piecesArea{
+
   width:min(94vw,600px);
+
   min-height:230px;
+
   margin:auto;
+
   padding:12px;
 
-  background:rgba(255,255,255,.9);
+  background:rgba(255,255,255,.95);
+
   border:1px solid #ddd;
+
   border-radius:14px;
 
   display:flex;
+
   flex-wrap:wrap;
+
   justify-content:center;
+
   align-items:center;
+
   gap:10px;
 
   position:relative;
 }
 
-/* Puzzle pieces */
+/* Individual piece */
+
 .piece{
+
   position:relative;
 
   width:92px;
   height:92px;
 
-  border:2px solid #aaa;
+  border:
+    2px solid #999;
+
   border-radius:6px;
 
   background:#fff;
@@ -186,66 +242,101 @@ h1{
     0 3px 8px rgba(0,0,0,.16);
 
   touch-action:none;
+
   user-select:none;
+
   -webkit-user-select:none;
 
   cursor:grab;
 
   z-index:10;
 
-  transition:
-    transform .12s ease,
-    box-shadow .12s ease;
+  flex-shrink:0;
 }
 
 .piece canvas{
+
   width:100%;
   height:100%;
+
   display:block;
+
   border-radius:4px;
+
   pointer-events:none;
 }
 
+/* While dragging */
+
 .piece.dragging{
+
   cursor:grabbing;
 
   transform:scale(1.06);
 
   box-shadow:
-    0 12px 28px rgba(0,0,0,.30);
+    0 12px 28px
+    rgba(0,0,0,.30);
 
   z-index:99999;
 }
 
-/* Wrong answer */
+/* Wrong piece */
+
 .piece.wrong{
-  animation:shake .35s ease;
+
+  animation:
+    shake .35s ease;
 }
 
 @keyframes shake{
-  0%{transform:translateX(0);}
-  20%{transform:translateX(-10px);}
-  40%{transform:translateX(10px);}
-  60%{transform:translateX(-8px);}
-  80%{transform:translateX(8px);}
-  100%{transform:translateX(0);}
+
+  0%{
+    transform:translateX(0);
+  }
+
+  20%{
+    transform:translateX(-10px);
+  }
+
+  40%{
+    transform:translateX(10px);
+  }
+
+  60%{
+    transform:translateX(-8px);
+  }
+
+  80%{
+    transform:translateX(8px);
+  }
+
+  100%{
+    transform:translateX(0);
+  }
 }
 
-/* Locked pieces */
+/* Locked piece */
+
 .piece.locked{
+
   position:fixed !important;
+
   margin:0;
+
   padding:0;
 
-  border:1px solid rgba(0,0,0,.12);
+  border:
+    1px solid
+    rgba(0,0,0,.12);
 
   box-shadow:none;
-
-  z-index:500;
 
   cursor:default;
 
   pointer-events:none;
+
+  z-index:500;
 }
 
 /* =========================
@@ -253,60 +344,80 @@ h1{
 ========================= */
 
 button{
+
   border:0;
+
   border-radius:12px;
+
   padding:12px 22px;
 
   background:#222;
+
   color:white;
 
   font-size:16px;
+
   font-weight:bold;
 
   cursor:pointer;
 
-  box-shadow:0 3px 8px rgba(0,0,0,.15);
+  box-shadow:
+    0 3px 8px
+    rgba(0,0,0,.15);
 }
 
 button:active{
+
   transform:scale(.96);
 }
 
 #newGameBtn{
+
   margin-top:14px;
 }
 
 /* =========================
-   WIN MODAL
+   WIN SCREEN
 ========================= */
 
 #winScreen{
+
   position:fixed;
+
   inset:0;
 
-  background:rgba(0,0,0,.55);
+  background:
+    rgba(0,0,0,.55);
 
   display:none;
+
   align-items:center;
+
   justify-content:center;
 
   z-index:100000;
 }
 
 #winBox{
+
   width:min(88vw,380px);
 
-  background:white;
+  background:#fff;
+
   border-radius:20px;
 
   padding:28px 20px;
 
-  box-shadow:0 15px 45px rgba(0,0,0,.35);
+  box-shadow:
+    0 15px 45px
+    rgba(0,0,0,.35);
 
-  animation:pop .35s ease;
+  animation:
+    pop .35s ease;
 }
 
 @keyframes pop{
+
   0%{
     transform:scale(.6);
     opacity:0;
@@ -319,48 +430,78 @@ button:active{
 }
 
 #winEmoji{
+
   font-size:55px;
 }
 
 #winBox h2{
+
   margin:8px 0;
+
   font-size:27px;
 }
 
 #winMessage{
+
   color:#666;
+
   line-height:1.5;
 }
 
 #finalScore{
+
   font-size:22px;
+
   font-weight:bold;
+
   margin:12px 0;
 }
 
-/* Confetti */
+/* =========================
+   CONFETTI
+========================= */
+
 .confetti{
+
   position:fixed;
+
   width:9px;
+
   height:14px;
+
   z-index:100001;
+
   pointer-events:none;
-  animation:fall 2s linear forwards;
+
+  animation:
+    fall 2s linear forwards;
 }
 
 @keyframes fall{
+
   from{
-    transform:translateY(-20px) rotate(0deg);
+
+    transform:
+      translateY(-20px)
+      rotate(0deg);
+
     opacity:1;
   }
 
   to{
-    transform:translateY(100vh) rotate(720deg);
+
+    transform:
+      translateY(100vh)
+      rotate(720deg);
+
     opacity:0;
   }
 }
 
-/* Small screens */
+/* =========================
+   MOBILE
+========================= */
+
 @media(max-width:400px){
 
   h1{
@@ -368,18 +509,24 @@ button:active{
   }
 
   .piece{
-    width:82px;
-    height:82px;
+
+    width:80px;
+    height:80px;
   }
 
   #piecesArea{
-    min-height:215px;
+
+    min-height:210px;
+
     gap:7px;
+
     padding:8px;
   }
 }
+
 </style>
 </head>
+
 
 <body>
 
@@ -389,77 +536,146 @@ button:active{
   Pick the pieces. Complete the picture!
 </div>
 
+
+<!-- =========================
+     GAME INFORMATION
+========================= -->
+
 <div id="info">
 
   <div class="infoBox">
-    <div class="infoTitle">TIME</div>
-    <div class="infoValue" id="timer">00:00</div>
+
+    <div class="infoTitle">
+      TIME
+    </div>
+
+    <div
+      class="infoValue"
+      id="timer">
+      00:00
+    </div>
+
   </div>
 
-  <div class="infoBox">
-    <div class="infoTitle">MOVES</div>
-    <div class="infoValue" id="moves">0</div>
-  </div>
 
   <div class="infoBox">
-    <div class="infoTitle">SCORE</div>
-    <div class="infoValue" id="score">100</div>
+
+    <div class="infoTitle">
+      MOVES
+    </div>
+
+    <div
+      class="infoValue"
+      id="moves">
+      0
+    </div>
+
+  </div>
+
+
+  <div class="infoBox">
+
+    <div class="infoTitle">
+      SCORE
+    </div>
+
+    <div
+      class="infoValue"
+      id="score">
+      100
+    </div>
+
   </div>
 
 </div>
 
+
 <div id="gameArea">
+
+
+  <!-- =========================
+       PANDA FRAME
+  ========================= -->
 
   <div id="frameTitle">
     🐼 Complete the Panda
   </div>
 
+
   <div id="boardWrap">
 
     <canvas id="board"></canvas>
 
+
     <div class="targetGrid">
+
       <div class="targetCell"></div>
       <div class="targetCell"></div>
       <div class="targetCell"></div>
+
       <div class="targetCell"></div>
       <div class="targetCell"></div>
       <div class="targetCell"></div>
+
       <div class="targetCell"></div>
       <div class="targetCell"></div>
       <div class="targetCell"></div>
+
     </div>
 
   </div>
 
+
   <div id="instruction">
-    👆 Drag a piece <b>across the frame</b> and place it near its matching position.
+
+    👆 Drag any piece
+    <b>across the frame</b>
+    and drop it near its matching position.
+
   </div>
+
+
+  <!-- =========================
+       PIECES
+  ========================= -->
 
   <div id="piecesTitle">
-    🧩 Pieces
+    🧩 Puzzle Pieces
   </div>
 
+
   <div id="piecesArea"></div>
+
 
   <button id="newGameBtn">
     🔄 New Game
   </button>
 
+
 </div>
 
-<!-- WIN SCREEN -->
+
+<!-- =========================
+     WIN SCREEN
+========================= -->
 
 <div id="winScreen">
 
   <div id="winBox">
 
-    <div id="winEmoji">🎉🐼🎉</div>
+    <div id="winEmoji">
+      🎉🐼🎉
+    </div>
 
-    <h2>Picture Complete!</h2>
+    <h2>
+      Picture Complete!
+    </h2>
 
     <div id="winMessage">
-      Great job! You completed the Panda.
+
+      Great job!
+      You completed the Panda.
+
     </div>
 
     <div id="finalScore">
@@ -474,77 +690,89 @@ button:active{
 
 </div>
 
+
 <script>
 
 /* =====================================================
-   COMPLETE THE PIC V2.1
+   COMPLETE THE PIC V2.2
    ===================================================== */
 
-/* ---------- IMAGE ---------- */
 
-const pandaImage = new Image();
+/* =========================
+   PANDA IMAGE
+========================= */
 
-pandaImage.src = "panda.png";
+const pandaImage =
+  new Image();
 
-let imageReady = false;
+pandaImage.src =
+  "panda.png";
 
-pandaImage.onload = function(){
-
-  imageReady = true;
-
-  drawBoard();
-
-  newGame();
-
-};
-
-pandaImage.onerror = function(){
-
-  alert(
-    "panda.png could not be loaded. " +
-    "Please make sure panda.png is in the same folder as index.html."
-  );
-
-};
+let imageReady =
+  false;
 
 
-/* ---------- ELEMENTS ---------- */
+/* =========================
+   HTML ELEMENTS
+========================= */
 
 const board =
-  document.getElementById("board");
+  document.getElementById(
+    "board"
+  );
 
 const boardWrap =
-  document.getElementById("boardWrap");
+  document.getElementById(
+    "boardWrap"
+  );
 
 const piecesArea =
-  document.getElementById("piecesArea");
+  document.getElementById(
+    "piecesArea"
+  );
 
 const timerElement =
-  document.getElementById("timer");
+  document.getElementById(
+    "timer"
+  );
 
 const movesElement =
-  document.getElementById("moves");
+  document.getElementById(
+    "moves"
+  );
 
 const scoreElement =
-  document.getElementById("score");
+  document.getElementById(
+    "score"
+  );
 
 const winScreen =
-  document.getElementById("winScreen");
+  document.getElementById(
+    "winScreen"
+  );
 
 const finalScore =
-  document.getElementById("finalScore");
-
-const playAgainBtn =
-  document.getElementById("playAgainBtn");
+  document.getElementById(
+    "finalScore"
+  );
 
 const newGameBtn =
-  document.getElementById("newGameBtn");
+  document.getElementById(
+    "newGameBtn"
+  );
+
+const playAgainBtn =
+  document.getElementById(
+    "playAgainBtn"
+  );
 
 const boardCtx =
   board.getContext("2d");
 
 
-/* ---------- GAME SETTINGS ---------- */
+/* =========================
+   GAME VARIABLES
+========================= */
 
 const GRID = 3;
 
@@ -566,129 +794,39 @@ let dragOffsetX = 0;
 
 let dragOffsetY = 0;
 
-let originalParent = null;
 
-let originalLeft = "";
+/* =========================
+   IMAGE LOADED
+========================= */
 
-let originalTop = "";
+pandaImage.onload =
+  function(){
 
-let originalPosition = "";
+    imageReady = true;
 
-let originalZIndex = "";
+    drawBoard();
 
+    createNewPuzzle();
 
-/* ---------- AUDIO ---------- */
-
-let audioContext = null;
-
-function getAudio(){
-
-  if(!audioContext){
-
-    try{
-
-      audioContext =
-        new (window.AudioContext ||
-             window.webkitAudioContext)();
-
-    }catch(e){}
-
-  }
-
-  return audioContext;
-
-}
+  };
 
 
-function beep(
-  frequency,
-  duration,
-  type="sine"
-){
+pandaImage.onerror =
+  function(){
 
-  const ctx = getAudio();
-
-  if(!ctx) return;
-
-  try{
-
-    const oscillator =
-      ctx.createOscillator();
-
-    const gain =
-      ctx.createGain();
-
-    oscillator.type = type;
-
-    oscillator.frequency.value =
-      frequency;
-
-    gain.gain.setValueAtTime(
-      .0001,
-      ctx.currentTime
+    alert(
+      "panda.png was not found.\n\n" +
+      "Please make sure panda.png " +
+      "is uploaded in the SAME folder " +
+      "as index.html."
     );
 
-    gain.gain.exponentialRampToValueAtTime(
-      .12,
-      ctx.currentTime + .02
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-      .0001,
-      ctx.currentTime + duration
-    );
-
-    oscillator.connect(gain);
-
-    gain.connect(ctx.destination);
-
-    oscillator.start();
-
-    oscillator.stop(
-      ctx.currentTime + duration
-    );
-
-  }catch(e){}
-
-}
-
-
-function correctSound(){
-
-  beep(700,.12,"sine");
-
-  setTimeout(()=>{
-    beep(950,.16,"sine");
-  },100);
-
-}
-
-
-function wrongSound(){
-
-  beep(170,.18,"sawtooth");
-
-}
-
-
-/* ---------- VIBRATION ---------- */
-
-function vibrate(ms){
-
-  if(
-    navigator.vibrate
-  ){
-
-    navigator.vibrate(ms);
-
-  }
-
-}
+  };
 
 
 /* =====================================================
    BOARD
-   ===================================================== */
+===================================================== */
 
 function resizeBoard(){
 
@@ -699,10 +837,14 @@ function resizeBoard(){
     window.devicePixelRatio || 1;
 
   board.width =
-    Math.round(rect.width * dpr);
+    Math.round(
+      rect.width * dpr
+    );
 
   board.height =
-    Math.round(rect.height * dpr);
+    Math.round(
+      rect.height * dpr
+    );
 
   boardCtx.setTransform(
     dpr,
@@ -716,20 +858,29 @@ function resizeBoard(){
 }
 
 
-/* ---------- DRAW BOARD ---------- */
-
 function drawBoard(){
 
-  if(!imageReady) return;
+  if(!imageReady)
+    return;
+
 
   resizeBoard();
+
 
   const rect =
     board.getBoundingClientRect();
 
-  const w = rect.width;
+  const w =
+    rect.width;
 
-  const h = rect.height;
+  const h =
+    rect.height;
+
+
+  /*
+    IMPORTANT:
+    Clear the entire canvas first.
+  */
 
   boardCtx.clearRect(
     0,
@@ -738,7 +889,10 @@ function drawBoard(){
     h
   );
 
-  /* White background */
+
+  /*
+    WHITE BACKGROUND
+  */
 
   boardCtx.fillStyle =
     "#ffffff";
@@ -750,10 +904,13 @@ function drawBoard(){
     h
   );
 
-  /* Very faint Panda guide */
+
+  /*
+    FAINT PANDA GUIDE
+  */
 
   boardCtx.globalAlpha =
-    0.10;
+    0.12;
 
   boardCtx.drawImage(
     pandaImage,
@@ -770,22 +927,120 @@ function drawBoard(){
 
 
 /* =====================================================
-   CREATE PUZZLE PIECES
-   ===================================================== */
+   CREATE NEW PUZZLE
+===================================================== */
+
+function createNewPuzzle(){
+
+  /*
+    Stop old timer
+  */
+
+  stopTimer();
+
+
+  /*
+    Reset game values
+  */
+
+  seconds = 0;
+
+  moves = 0;
+
+  lockedCount = 0;
+
+  gameStarted = false;
+
+  draggingPiece = null;
+
+
+  /*
+    Hide winning screen
+  */
+
+  winScreen.style.display =
+    "none";
+
+
+  /*
+    IMPORTANT:
+    Remove ALL old pieces,
+    including pieces that were
+    locked and moved to BODY.
+  */
+
+  document
+    .querySelectorAll(".piece")
+    .forEach(
+      function(piece){
+
+        piece.remove();
+
+      }
+    );
+
+
+  /*
+    Empty the pieces area.
+  */
+
+  piecesArea.innerHTML =
+    "";
+
+
+  /*
+    Reset information.
+  */
+
+  updateTimer();
+
+  updateStats();
+
+
+  /*
+    Redraw Panda background.
+  */
+
+  drawBoard();
+
+
+  /*
+    Create 9 fresh pieces.
+  */
+
+  createPieces();
+
+}
+
+
+/* =====================================================
+   CREATE 9 PIECES
+===================================================== */
 
 function createPieces(){
 
-  piecesArea.innerHTML = "";
+  if(!imageReady)
+    return;
+
+
+  /*
+    Make absolutely sure
+    pieces area is empty.
+  */
+
+  piecesArea.innerHTML =
+    "";
+
 
   pieces = [];
 
-  lockedCount = 0;
 
   const sourceW =
     pandaImage.naturalWidth;
 
   const sourceH =
     pandaImage.naturalHeight;
+
 
   const cropW =
     sourceW / GRID;
@@ -794,18 +1049,34 @@ function createPieces(){
     sourceH / GRID;
 
 
-  /* Create positions 0 → 8 */
+  /*
+    Create positions.
+  */
 
-  const positions = [];
+  let positions = [];
 
-  for(let r=0;r<GRID;r++){
 
-    for(let c=0;c<GRID;c++){
+  for(
+    let row = 0;
+    row < GRID;
+    row++
+  ){
+
+    for(
+      let col = 0;
+      col < GRID;
+      col++
+    ){
 
       positions.push({
-        row:r,
-        col:c,
-        index:r*GRID+c
+
+        row:row,
+
+        col:col,
+
+        index:
+          row * GRID + col
+
       });
 
     }
@@ -813,14 +1084,25 @@ function createPieces(){
   }
 
 
-  /* Shuffle */
+  /*
+    Shuffle pieces.
+  */
 
-  for(let i=positions.length-1;i>0;i--){
+  for(
+    let i =
+      positions.length - 1;
+
+    i > 0;
+
+    i--
+  ){
 
     const j =
       Math.floor(
-        Math.random()*(i+1)
+        Math.random() *
+        (i + 1)
       );
+
 
     [
       positions[i],
@@ -834,63 +1116,112 @@ function createPieces(){
   }
 
 
+  /*
+    Create each piece.
+  */
+
   positions.forEach(
-    (pos,index)=>{
+    function(pos){
 
       const piece =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       piece.className =
         "piece";
 
+
       piece.dataset.row =
         pos.row;
 
+
       piece.dataset.col =
         pos.col;
+
 
       piece.dataset.index =
         pos.index;
 
 
+      /*
+        Create canvas for piece.
+      */
+
       const canvas =
-        document.createElement("canvas");
+        document.createElement(
+          "canvas"
+        );
 
-      canvas.width = 300;
 
-      canvas.height = 300;
+      canvas.width =
+        300;
+
+      canvas.height =
+        300;
+
 
       const ctx =
-        canvas.getContext("2d");
+        canvas.getContext(
+          "2d"
+        );
+
 
       /*
-        IMPORTANT:
-        Every piece is cropped from
-        the SAME panda.png.
+        Crop EXACTLY from
+        panda.png.
       */
 
       ctx.drawImage(
+
         pandaImage,
 
         pos.col * cropW,
+
         pos.row * cropH,
+
         cropW,
+
         cropH,
 
         0,
+
         0,
+
         300,
+
         300
+
       );
 
 
-      piece.appendChild(canvas);
+      piece.appendChild(
+        canvas
+      );
 
-      piecesArea.appendChild(piece);
 
-      setupDragging(piece);
+      /*
+        Put piece into pieces area.
+      */
 
-      pieces.push(piece);
+      piecesArea.appendChild(
+        piece
+      );
+
+
+      /*
+        Enable dragging.
+      */
+
+      setupDragging(
+        piece
+      );
+
+
+      pieces.push(
+        piece
+      );
 
     }
   );
@@ -900,7 +1231,7 @@ function createPieces(){
 
 /* =====================================================
    DRAGGING
-   ===================================================== */
+===================================================== */
 
 function setupDragging(piece){
 
@@ -917,12 +1248,20 @@ function startDrag(e){
   e.preventDefault();
 
   if(
-    this.classList.contains("locked")
+    this.classList.contains(
+      "locked"
+    )
   ){
 
     return;
 
   }
+
+
+  /*
+    Start timer with
+    first touch.
+  */
 
   if(!gameStarted){
 
@@ -931,70 +1270,78 @@ function startDrag(e){
   }
 
 
-  const piece = this;
+  const piece =
+    this;
 
-  draggingPiece = piece;
 
-  originalParent =
-    piece.parentElement;
-
-  originalLeft =
-    piece.style.left;
-
-  originalTop =
-    piece.style.top;
-
-  originalPosition =
-    piece.style.position;
-
-  originalZIndex =
-    piece.style.zIndex;
+  draggingPiece =
+    piece;
 
 
   /*
-    VERY IMPORTANT FIX:
-
-    Remove the piece from the pieces area
-    while dragging.
-
-    It is placed directly on BODY.
-
-    Therefore it CAN cross the frame boundary.
+    Get original screen position.
   */
 
   const rect =
     piece.getBoundingClientRect();
 
+
   dragOffsetX =
-    e.clientX - rect.left;
+    e.clientX -
+    rect.left;
+
 
   dragOffsetY =
-    e.clientY - rect.top;
+    e.clientY -
+    rect.top;
 
 
-  document.body.appendChild(piece);
+  /*
+    =================================================
+    MAIN FIX
+    =================================================
+
+    Move piece to BODY.
+
+    It is NO LONGER trapped
+    inside piecesArea.
+
+    Therefore it can cross
+    the frame boundary.
+    */
+
+  document.body.appendChild(
+    piece
+  );
 
 
   piece.style.position =
     "fixed";
 
+
   piece.style.width =
     rect.width + "px";
+
 
   piece.style.height =
     rect.height + "px";
 
+
   piece.style.left =
     rect.left + "px";
+
 
   piece.style.top =
     rect.top + "px";
 
+
   piece.style.margin =
     "0";
 
+
   piece.style.zIndex =
     "99999";
+
 
   piece.classList.add(
     "dragging"
@@ -1007,7 +1354,7 @@ function startDrag(e){
       e.pointerId
     );
 
-  }catch(err){}
+  }catch(error){}
 
 
   piece.addEventListener(
@@ -1015,10 +1362,12 @@ function startDrag(e){
     dragMove
   );
 
+
   piece.addEventListener(
     "pointerup",
     endDrag
   );
+
 
   piece.addEventListener(
     "pointercancel",
@@ -1028,20 +1377,24 @@ function startDrag(e){
 }
 
 
+/* =====================================================
+   MOVE PIECE
+===================================================== */
+
 function dragMove(e){
 
   e.preventDefault();
 
-  if(
-    !draggingPiece
-  ) return;
+
+  if(!draggingPiece)
+    return;
 
 
   /*
-    NO CLAMPING HERE.
+    NO BOUNDARY LIMIT.
 
-    The piece is allowed to move
-    over the ENTIRE SCREEN.
+    The piece can move
+    anywhere on the screen.
   */
 
   draggingPiece.style.left =
@@ -1049,6 +1402,7 @@ function dragMove(e){
       e.clientX -
       dragOffsetX
     ) + "px";
+
 
   draggingPiece.style.top =
     (
@@ -1059,13 +1413,17 @@ function dragMove(e){
 }
 
 
+/* =====================================================
+   DROP
+===================================================== */
+
 function endDrag(e){
 
   e.preventDefault();
 
-  if(
-    !draggingPiece
-  ) return;
+
+  if(!draggingPiece)
+    return;
 
 
   const piece =
@@ -1077,10 +1435,12 @@ function endDrag(e){
     dragMove
   );
 
+
   piece.removeEventListener(
     "pointerup",
     endDrag
   );
+
 
   piece.removeEventListener(
     "pointercancel",
@@ -1089,26 +1449,9 @@ function endDrag(e){
 
 
   checkDrop(
-    piece,
-    e.clientX,
-    e.clientY
+    piece
   );
 
-
-  draggingPiece =
-    null;
-
-}
-
-
-function cancelDrag(){
-
-  if(!draggingPiece)
-    return;
-
-  returnPiece(
-    draggingPiece
-  );
 
   draggingPiece =
     null;
@@ -1117,14 +1460,31 @@ function cancelDrag(){
 
 
 /* =====================================================
-   DROP CHECK
-   ===================================================== */
+   CANCEL
+===================================================== */
 
-function checkDrop(
-  piece,
-  pointerX,
-  pointerY
-){
+function cancelDrag(){
+
+  if(!draggingPiece)
+    return;
+
+
+  returnPiece(
+    draggingPiece
+  );
+
+
+  draggingPiece =
+    null;
+
+}
+
+
+/* =====================================================
+   CHECK DROP
+===================================================== */
+
+function checkDrop(piece){
 
   const boardRect =
     board.getBoundingClientRect();
@@ -1134,11 +1494,14 @@ function checkDrop(
     piece.getBoundingClientRect();
 
 
-  /* Center of the piece */
+  /*
+    Piece center.
+  */
 
   const pieceCenterX =
     pieceRect.left +
     pieceRect.width / 2;
+
 
   const pieceCenterY =
     pieceRect.top +
@@ -1146,8 +1509,7 @@ function checkDrop(
 
 
   /*
-    Determine nearest puzzle cell
-    using the piece CENTER.
+    Cell size.
   */
 
   const cellW =
@@ -1157,88 +1519,64 @@ function checkDrop(
     boardRect.height / GRID;
 
 
-  let col =
-    Math.floor(
-      (pieceCenterX -
-       boardRect.left) /
-      cellW
-    );
-
-  let row =
-    Math.floor(
-      (pieceCenterY -
-       boardRect.top) /
-      cellH
-    );
-
-
   /*
-    If center is exactly on an edge,
-    keep it within the board.
+    Correct location.
   */
-
-  col =
-    Math.max(
-      0,
-      Math.min(
-        GRID-1,
-        col
-      )
-    );
-
-  row =
-    Math.max(
-      0,
-      Math.min(
-        GRID-1,
-        row
-      )
-    );
-
 
   const correctRow =
-    Number(piece.dataset.row);
+    Number(
+      piece.dataset.row
+    );
+
 
   const correctCol =
-    Number(piece.dataset.col);
+    Number(
+      piece.dataset.col
+    );
 
 
   /*
-    Distance from piece center
-    to correct cell center.
+    Correct cell center.
   */
 
-  const targetCenterX =
+  const targetX =
     boardRect.left +
     correctCol * cellW +
     cellW / 2;
 
-  const targetCenterY =
+
+  const targetY =
     boardRect.top +
     correctRow * cellH +
     cellH / 2;
 
 
+  /*
+    Distance.
+  */
+
   const dx =
     pieceCenterX -
-    targetCenterX;
+    targetX;
+
 
   const dy =
     pieceCenterY -
-    targetCenterY;
+    targetY;
 
 
   const distance =
     Math.sqrt(
-      dx*dx +
-      dy*dy
+      dx * dx +
+      dy * dy
     );
 
 
   /*
-    VERY GENEROUS DROP RANGE.
+    VERY EASY DROP.
 
-    User does NOT have to be exact.
+    User can drop quite far
+    from exact center.
   */
 
   const tolerance =
@@ -1248,9 +1586,32 @@ function checkDrop(
     ) * 0.95;
 
 
+  /*
+    Also make sure piece is
+    reasonably over the frame.
+  */
+
+  const insideFrame =
+
+    pieceCenterX >=
+      boardRect.left -
+      cellW * 0.35 &&
+
+    pieceCenterX <=
+      boardRect.right +
+      cellW * 0.35 &&
+
+    pieceCenterY >=
+      boardRect.top -
+      cellH * 0.35 &&
+
+    pieceCenterY <=
+      boardRect.bottom +
+      cellH * 0.35;
+
+
   if(
-    row === correctRow &&
-    col === correctCol &&
+    insideFrame &&
     distance <= tolerance
   ){
 
@@ -1262,29 +1623,9 @@ function checkDrop(
 
   }else{
 
-    /*
-      Also allow an easier
-      "near the correct cell" drop.
-    */
-
-    if(
-      distance <=
-      Math.min(cellW,cellH) * 1.05
-    ){
-
-      lockPiece(
-        piece,
-        correctRow,
-        correctCol
-      );
-
-    }else{
-
-      wrongPlacement(
-        piece
-      );
-
-    }
+    wrongPlacement(
+      piece
+    );
 
   }
 
@@ -1292,8 +1633,8 @@ function checkDrop(
 
 
 /* =====================================================
-   LOCK CORRECT PIECE
-   ===================================================== */
+   LOCK PIECE
+===================================================== */
 
 function lockPiece(
   piece,
@@ -1316,6 +1657,7 @@ function lockPiece(
     "dragging"
   );
 
+
   piece.classList.add(
     "locked"
   );
@@ -1324,8 +1666,10 @@ function lockPiece(
   piece.style.position =
     "fixed";
 
+
   piece.style.width =
     cellW + "px";
+
 
   piece.style.height =
     cellH + "px";
@@ -1353,15 +1697,22 @@ function lockPiece(
 
   moves++;
 
+
   updateStats();
+
 
   correctSound();
 
   vibrate(40);
 
 
+  /*
+    Check completed picture.
+  */
+
   if(
-    lockedCount === GRID * GRID
+    lockedCount ===
+    GRID * GRID
   ){
 
     finishGame();
@@ -1373,13 +1724,14 @@ function lockPiece(
 
 /* =====================================================
    WRONG PIECE
-   ===================================================== */
+===================================================== */
 
 function wrongPlacement(piece){
 
   moves++;
 
   updateStats();
+
 
   wrongSound();
 
@@ -1390,34 +1742,41 @@ function wrongPlacement(piece){
     "dragging"
   );
 
+
   piece.classList.add(
     "wrong"
   );
 
 
-  setTimeout(()=>{
+  setTimeout(
+    function(){
 
-    piece.classList.remove(
-      "wrong"
-    );
+      piece.classList.remove(
+        "wrong"
+      );
 
-    returnPiece(
-      piece
-    );
 
-  },350);
+      returnPiece(
+        piece
+      );
+
+    },
+    350
+  );
 
 }
 
 
 /* =====================================================
-   RETURN PIECE TO PIECES AREA
-   ===================================================== */
+   RETURN PIECE
+===================================================== */
 
 function returnPiece(piece){
 
   if(
-    piece.classList.contains("locked")
+    piece.classList.contains(
+      "locked"
+    )
   ){
 
     return;
@@ -1426,8 +1785,8 @@ function returnPiece(piece){
 
 
   /*
-    Put the piece back into the
-    pieces area.
+    Put piece back into
+    puzzle pieces area.
   */
 
   piecesArea.appendChild(
@@ -1438,26 +1797,34 @@ function returnPiece(piece){
   piece.style.position =
     "relative";
 
+
   piece.style.left =
     "";
+
 
   piece.style.top =
     "";
 
+
   piece.style.width =
     "";
+
 
   piece.style.height =
     "";
 
+
   piece.style.margin =
     "";
+
 
   piece.style.zIndex =
     "10";
 
+
   piece.style.transform =
     "";
+
 
   piece.classList.remove(
     "dragging"
@@ -1468,34 +1835,47 @@ function returnPiece(piece){
 
 /* =====================================================
    TIMER
-   ===================================================== */
+===================================================== */
 
 function startTimer(){
 
   if(gameStarted)
     return;
 
-  gameStarted = true;
+
+  gameStarted =
+    true;
+
 
   timerInterval =
-    setInterval(()=>{
+    setInterval(
+      function(){
 
-      seconds++;
+        seconds++;
 
-      updateTimer();
+        updateTimer();
 
-      updateScore();
+        updateScore();
 
-    },1000);
+      },
+      1000
+    );
 
 }
 
 
 function stopTimer(){
 
-  clearInterval(
+  if(
     timerInterval
-  );
+  ){
+
+    clearInterval(
+      timerInterval
+    );
+
+  }
+
 
   timerInterval =
     null;
@@ -1510,36 +1890,48 @@ function updateTimer(){
       seconds / 60
     );
 
+
   const secs =
     seconds % 60;
 
 
   timerElement.textContent =
-    String(minutes).padStart(2,"0")
-    + ":" +
-    String(secs).padStart(2,"0");
+
+    String(
+      minutes
+    ).padStart(2,"0")
+
+    +
+
+    ":"
+
+    +
+
+    String(
+      secs
+    ).padStart(2,"0");
 
 }
 
 
 /* =====================================================
    SCORE
-   ===================================================== */
+===================================================== */
 
 function calculateScore(){
 
-  /*
-    Base score = 100
-
-    - 2 points per move
-    - 1 point every 5 seconds
-  */
-
   return Math.max(
+
     0,
+
     100 -
+
     moves * 2 -
-    Math.floor(seconds / 5)
+
+    Math.floor(
+      seconds / 5
+    )
+
   );
 
 }
@@ -1564,51 +1956,15 @@ function updateStats(){
 
 
 /* =====================================================
-   NEW GAME
-   ===================================================== */
-
-function newGame(){
-
-  stopTimer();
-
-  seconds = 0;
-  moves = 0;
-  lockedCount = 0;
-  gameStarted = false;
-  draggingPiece = null;
-
-  /* Remove EVERY old puzzle piece */
-  document.querySelectorAll(".piece").forEach(piece => {
-    piece.remove();
-  });
-
-  /* Clear the pieces array */
-  pieces = [];
-
-  /* Hide win screen */
-  winScreen.style.display = "none";
-
-  /* Reset statistics */
-  updateTimer();
-  updateStats();
-
-  /* Redraw clean Panda frame */
-  drawBoard();
-
-  /* Create completely new pieces */
-  createPieces();
-}
-
-
-/* =====================================================
-   FINISH
-   ===================================================== */
+   WIN
+===================================================== */
 
 function finishGame(){
 
   stopTimer();
 
-  gameStarted = false;
+  gameStarted =
+    false;
 
 
   const final =
@@ -1625,21 +1981,24 @@ function finishGame(){
   );
 
 
-  setTimeout(()=>{
+  setTimeout(
+    function(){
 
-    winScreen.style.display =
-      "flex";
+      winScreen.style.display =
+        "flex";
 
-    confetti();
+      confetti();
 
-  },400);
+    },
+    400
+  );
 
 }
 
 
 /* =====================================================
    BEST SCORE
-   ===================================================== */
+===================================================== */
 
 function saveBest(
   score,
@@ -1649,14 +2008,15 @@ function saveBest(
   const oldScore =
     Number(
       localStorage.getItem(
-        "completePic_v21_bestScore"
+        "completePic_v22_bestScore"
       ) || 0
     );
+
 
   const oldTime =
     Number(
       localStorage.getItem(
-        "completePic_v21_bestTime"
+        "completePic_v22_bestTime"
       ) || 999999
     );
 
@@ -1666,7 +2026,7 @@ function saveBest(
   ){
 
     localStorage.setItem(
-      "completePic_v21_bestScore",
+      "completePic_v22_bestScore",
       score
     );
 
@@ -1678,7 +2038,7 @@ function saveBest(
   ){
 
     localStorage.setItem(
-      "completePic_v21_bestTime",
+      "completePic_v22_bestTime",
       time
     );
 
@@ -1688,13 +2048,176 @@ function saveBest(
 
 
 /* =====================================================
+   SOUND
+===================================================== */
+
+let audioContext =
+  null;
+
+
+function getAudio(){
+
+  if(!audioContext){
+
+    try{
+
+      audioContext =
+        new (
+          window.AudioContext ||
+          window.webkitAudioContext
+        )();
+
+    }catch(error){}
+
+  }
+
+  return audioContext;
+
+}
+
+
+function beep(
+  frequency,
+  duration,
+  type="sine"
+){
+
+  const ctx =
+    getAudio();
+
+
+  if(!ctx)
+    return;
+
+
+  try{
+
+    const oscillator =
+      ctx.createOscillator();
+
+
+    const gain =
+      ctx.createGain();
+
+
+    oscillator.type =
+      type;
+
+
+    oscillator.frequency.value =
+      frequency;
+
+
+    gain.gain.setValueAtTime(
+      .0001,
+      ctx.currentTime
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+      .12,
+      ctx.currentTime + .02
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+      .0001,
+      ctx.currentTime + duration
+    );
+
+
+    oscillator.connect(
+      gain
+    );
+
+
+    gain.connect(
+      ctx.destination
+    );
+
+
+    oscillator.start();
+
+
+    oscillator.stop(
+      ctx.currentTime +
+      duration
+    );
+
+  }catch(error){}
+
+}
+
+
+function correctSound(){
+
+  beep(
+    700,
+    .12,
+    "sine"
+  );
+
+
+  setTimeout(
+    function(){
+
+      beep(
+        950,
+        .16,
+        "sine"
+      );
+
+    },
+    100
+  );
+
+}
+
+
+function wrongSound(){
+
+  beep(
+    170,
+    .18,
+    "sawtooth"
+  );
+
+}
+
+
+/* =====================================================
+   VIBRATION
+===================================================== */
+
+function vibrate(ms){
+
+  if(
+    navigator.vibrate
+  ){
+
+    navigator.vibrate(ms);
+
+  }
+
+}
+
+
+/* =====================================================
    CONFETTI
-   ===================================================== */
+===================================================== */
 
 function confetti(){
 
   const symbols =
-    ["🎉","⭐","✨","🐼","💚","🎊"];
+    [
+      "🎉",
+      "⭐",
+      "✨",
+      "🐼",
+      "💚",
+      "🎊"
+    ];
+
 
   for(
     let i=0;
@@ -1703,10 +2226,14 @@ function confetti(){
   ){
 
     const c =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     c.className =
       "confetti";
+
 
     c.textContent =
       symbols[
@@ -1718,7 +2245,8 @@ function confetti(){
 
 
     c.style.left =
-      Math.random()*100 +
+      Math.random() *
+      100 +
       "vw";
 
 
@@ -1729,25 +2257,34 @@ function confetti(){
     c.style.fontSize =
       (
         12 +
-        Math.random()*14
-      ) + "px";
+        Math.random() *
+        14
+      ) +
+      "px";
 
 
     c.style.animationDuration =
       (
         1.5 +
-        Math.random()*1.5
-      ) + "s";
+        Math.random() *
+        1.5
+      ) +
+      "s";
 
 
-    document.body.appendChild(c);
+    document.body.appendChild(
+      c
+    );
 
 
-    setTimeout(()=>{
+    setTimeout(
+      function(){
 
-      c.remove();
+        c.remove();
 
-    },3500);
+      },
+      3500
+    );
 
   }
 
@@ -1756,13 +2293,13 @@ function confetti(){
 
 /* =====================================================
    BUTTONS
-   ===================================================== */
+===================================================== */
 
 newGameBtn.addEventListener(
   "click",
   function(){
 
-    newGame();
+    createNewPuzzle();
 
   }
 );
@@ -1772,7 +2309,7 @@ playAgainBtn.addEventListener(
   "click",
   function(){
 
-    newGame();
+    createNewPuzzle();
 
   }
 );
@@ -1780,7 +2317,7 @@ playAgainBtn.addEventListener(
 
 /* =====================================================
    RESIZE
-   ===================================================== */
+===================================================== */
 
 window.addEventListener(
   "resize",
@@ -1789,53 +2326,74 @@ window.addEventListener(
     if(!imageReady)
       return;
 
+
     drawBoard();
 
+
     /*
-      Reposition already locked pieces
-      if screen orientation changes.
+      Reposition locked pieces
+      after screen rotation/resize.
     */
 
     pieces
-      .filter(p =>
-        p.classList.contains("locked")
+      .filter(
+        function(piece){
+
+          return piece.classList
+            .contains("locked");
+
+        }
       )
-      .forEach(p => {
+      .forEach(
+        function(piece){
 
-        const row =
-          Number(p.dataset.row);
+          const row =
+            Number(
+              piece.dataset.row
+            );
 
-        const col =
-          Number(p.dataset.col);
 
-        const rect =
-          board.getBoundingClientRect();
+          const col =
+            Number(
+              piece.dataset.col
+            );
 
-        const cellW =
-          rect.width / GRID;
 
-        const cellH =
-          rect.height / GRID;
+          const rect =
+            board.getBoundingClientRect();
 
-        p.style.width =
-          cellW + "px";
 
-        p.style.height =
-          cellH + "px";
+          const cellW =
+            rect.width / GRID;
 
-        p.style.left =
-          (
-            rect.left +
-            col * cellW
-          ) + "px";
 
-        p.style.top =
-          (
-            rect.top +
-            row * cellH
-          ) + "px";
+          const cellH =
+            rect.height / GRID;
 
-      });
+
+          piece.style.width =
+            cellW + "px";
+
+
+          piece.style.height =
+            cellH + "px";
+
+
+          piece.style.left =
+            (
+              rect.left +
+              col * cellW
+            ) + "px";
+
+
+          piece.style.top =
+            (
+              rect.top +
+              row * cellH
+            ) + "px";
+
+        }
+      );
 
   }
 );
@@ -1843,18 +2401,19 @@ window.addEventListener(
 
 /* =====================================================
    START
-   ===================================================== */
+===================================================== */
 
 if(
   pandaImage.complete &&
   pandaImage.naturalWidth > 0
 ){
 
-  imageReady = true;
+  imageReady =
+    true;
 
   drawBoard();
 
-  newGame();
+  createNewPuzzle();
 
 }
 
