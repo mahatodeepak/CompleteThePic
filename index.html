@@ -2,17 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport"
-content="width=device-width,
-initial-scale=1.0,
-maximum-scale=1.0,
-user-scalable=no">
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Complete the Pic V1.7</title>
+<title>Complete the Pic - Beautiful Panda</title>
 
 <style>
-
 *{
   box-sizing:border-box;
   -webkit-tap-highlight-color:transparent;
@@ -23,71 +18,66 @@ html,body{
   padding:0;
   width:100%;
   min-height:100%;
-  font-family:Arial,sans-serif;
-  background:linear-gradient(#dff6ff,#ffffff);
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(180deg,#dff6ff,#f8fff5);
   color:#222;
-}
-
-body{
-  text-align:center;
   overflow-x:hidden;
 }
 
+body{
+  display:flex;
+  justify-content:center;
+}
+
+.game{
+  width:100%;
+  max-width:700px;
+  padding:12px;
+  text-align:center;
+}
+
 h1{
-  margin:14px 0 3px;
-  font-size:29px;
+  margin:5px 0 2px;
+  font-size:30px;
+  font-weight:900;
+  color:#202020;
 }
 
 .subtitle{
+  margin-bottom:10px;
   color:#555;
-  font-size:15px;
-  margin-bottom:12px;
+  font-size:14px;
 }
 
 .stats{
   display:flex;
   justify-content:center;
-  align-items:center;
+  gap:8px;
   flex-wrap:wrap;
-  gap:7px;
-  padding:0 7px;
+  margin-bottom:10px;
 }
 
 .stat{
   background:white;
-  padding:8px 11px;
-  border-radius:11px;
-  box-shadow:0 3px 9px rgba(0,0,0,.12);
-  font-size:13px;
+  padding:7px 13px;
+  border-radius:15px;
+  box-shadow:0 3px 10px rgba(0,0,0,.12);
   font-weight:bold;
+  font-size:14px;
 }
-
-#game{
-  width:100%;
-  max-width:800px;
-  margin:auto;
-  padding:10px;
-}
-
-/* =========================
-   PUZZLE BOARD
-========================= */
 
 #board{
   position:relative;
-  width:min(92vw,650px);
+  width:min(92vw,560px);
   aspect-ratio:1/1;
-  margin:12px auto 15px;
-
-  background:#111;
-
-  border:7px solid #111;
-  border-radius:12px;
-
+  margin:10px auto 15px;
+  border:8px solid #111;
+  border-radius:15px;
   overflow:hidden;
-
+  background:#000;
   box-shadow:
-  0 7px 18px rgba(0,0,0,.25);
+    0 8px 22px rgba(0,0,0,.25),
+    inset 0 0 0 2px #444;
 }
 
 #boardCanvas{
@@ -97,252 +87,183 @@ h1{
   width:100%;
   height:100%;
   display:block;
+  opacity:.23;
 }
 
-.targetGrid{
+#targetGrid{
   position:absolute;
   inset:0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
   pointer-events:none;
 }
 
 .target{
-  position:absolute;
-  border:1px dashed rgba(255,255,255,.35);
+  border:1px dashed rgba(0,0,0,.15);
 }
 
-/* =========================
-   MESSAGE
-========================= */
+#piecesArea{
+  width:100%;
+  min-height:210px;
+  position:relative;
+  margin-top:5px;
+  padding:10px;
+  border-radius:18px;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 4px 15px rgba(0,0,0,.12);
+  touch-action:none;
+}
 
-#message{
-  min-height:27px;
-  font-size:17px;
+#piecesTitle{
   font-weight:bold;
-  margin:5px auto 8px;
+  margin-bottom:8px;
+  color:#444;
 }
-
-.good{
-  color:#159447;
-}
-
-.bad{
-  color:#d62828;
-}
-
-/* =========================
-   PIECES AREA
-========================= */
-
-#pieceTitle{
-  font-weight:bold;
-  margin:7px 0;
-}
-
-#pieces{
-  min-height:145px;
-
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-
-  gap:9px;
-
-  padding:13px;
-
-  background:rgba(255,255,255,.82);
-
-  border-radius:16px;
-
-  box-shadow:
-  0 4px 13px rgba(0,0,0,.12);
-}
-
-/* =========================
-   PIECE
-========================= */
 
 .piece{
-  position:relative;
-
+  position:absolute;
   width:100px;
   height:100px;
-
-  cursor:grab;
-
+  border-radius:8px;
+  border:3px solid #222;
+  background:white;
+  box-shadow:0 5px 12px rgba(0,0,0,.25);
   touch-action:none;
-
   user-select:none;
   -webkit-user-select:none;
-
-  z-index:10;
-
-  filter:
-  drop-shadow(0 4px 5px rgba(0,0,0,.25));
+  cursor:grab;
+  z-index:5;
+  overflow:hidden;
 }
 
 .piece canvas{
   width:100%;
   height:100%;
   display:block;
-
   pointer-events:none;
 }
 
 .piece.dragging{
+  z-index:100;
   cursor:grabbing;
-  z-index:2000;
-
-  filter:
-  drop-shadow(0 9px 13px rgba(0,0,0,.35));
-
-  transform:scale(1.04);
+  transform:scale(1.06);
+  box-shadow:0 12px 25px rgba(0,0,0,.35);
 }
 
 .piece.locked{
-  cursor:default;
-  pointer-events:none;
+  position:absolute;
   z-index:20;
-
-  filter:none;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  transform:none;
+  cursor:default;
 }
-
-/* =========================
-   BUTTON
-========================= */
 
 button{
   border:0;
+  padding:12px 22px;
+  border-radius:25px;
   background:#222;
   color:white;
-
-  padding:11px 21px;
-
-  border-radius:12px;
-
   font-size:16px;
   font-weight:bold;
-
-  margin:12px 5px;
-
-  box-shadow:
-  0 4px 10px rgba(0,0,0,.2);
+  box-shadow:0 4px 10px rgba(0,0,0,.2);
+  cursor:pointer;
 }
 
 button:active{
   transform:scale(.96);
 }
 
-/* =========================
-   WRONG ANIMATION
-========================= */
+#message{
+  min-height:28px;
+  font-size:17px;
+  font-weight:bold;
+  margin:7px 0;
+}
+
+.good{
+  color:#149447;
+}
+
+.bad{
+  color:#d62929;
+}
+
+.win{
+  color:#8b5cf6;
+}
 
 .shake{
   animation:shake .35s;
 }
 
 @keyframes shake{
-
-  0%{
-    transform:translateX(0);
-  }
-
-  25%{
-    transform:translateX(-9px);
-  }
-
-  50%{
-    transform:translateX(9px);
-  }
-
-  75%{
-    transform:translateX(-6px);
-  }
-
-  100%{
-    transform:translateX(0);
-  }
-
+  0%{transform:translateX(0)}
+  20%{transform:translateX(-10px)}
+  40%{transform:translateX(10px)}
+  60%{transform:translateX(-8px)}
+  80%{transform:translateX(8px)}
+  100%{transform:translateX(0)}
 }
 
-/* =========================
-   WIN SCREEN
-========================= */
-
-#winScreen{
-
-  position:fixed;
-
-  inset:0;
-
-  background:rgba(0,0,0,.65);
-
+#winBox{
   display:none;
-
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.68);
+  z-index:500;
   align-items:center;
   justify-content:center;
-
-  z-index:5000;
-
   padding:20px;
 }
 
 .winCard{
-
-  width:min(92vw,420px);
-
   background:white;
-
-  border-radius:22px;
-
-  padding:25px 18px;
-
-  box-shadow:
-  0 15px 45px rgba(0,0,0,.4);
-
-  animation:winPop .45s ease;
+  width:min(90vw,400px);
+  padding:28px 20px;
+  border-radius:25px;
+  box-shadow:0 15px 45px rgba(0,0,0,.4);
+  animation:pop .35s;
 }
 
-@keyframes winPop{
-
+@keyframes pop{
   from{
-    transform:scale(.5);
+    transform:scale(.6);
     opacity:0;
   }
-
   to{
     transform:scale(1);
     opacity:1;
   }
-
-}
-
-.winEmoji{
-  font-size:65px;
-
-  animation:bounce 1s infinite alternate;
-}
-
-@keyframes bounce{
-
-  from{
-    transform:translateY(0);
-  }
-
-  to{
-    transform:translateY(-10px);
-  }
-
 }
 
 .winCard h2{
+  margin:0 0 8px;
   font-size:30px;
-  margin:5px 0 10px;
 }
 
-/* =========================
-   MOBILE
-========================= */
+.winCard p{
+  margin:7px;
+  font-size:17px;
+}
+
+.confetti{
+  position:fixed;
+  width:8px;
+  height:14px;
+  top:-20px;
+  z-index:600;
+  animation:fall 2.8s linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(720deg);
+  }
+}
 
 @media(max-width:500px){
 
@@ -351,461 +272,678 @@ button:active{
   }
 
   .subtitle{
-    font-size:14px;
-  }
-
-  .piece{
-    width:82px;
-    height:82px;
-  }
-
-  #pieces{
-    gap:6px;
+    font-size:13px;
   }
 
   .stat{
-    font-size:12px;
-    padding:7px 9px;
+    font-size:13px;
+    padding:6px 10px;
+  }
+
+  #piecesArea{
+    min-height:185px;
+  }
+
+  .piece{
+    width:78px;
+    height:78px;
   }
 
   button{
-    font-size:15px;
+    padding:11px 20px;
   }
-
 }
 
+@media(min-width:501px){
+  #piecesArea{
+    min-height:230px;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<h1>🧩 Complete the Pic</h1>
+<div class="game">
 
-<div class="subtitle">
-Pick the pieces. Complete the picture!
-</div>
+  <h1>🐼 Complete the Pic</h1>
 
-<div class="stats">
-
-  <div class="stat">
-    ⏱️ Time:
-    <span id="time">0</span>s
+  <div class="subtitle">
+    Pick the pieces. Complete the picture!
   </div>
 
-  <div class="stat">
-    🔢 Moves:
-    <span id="moves">0</span>
+  <div class="stats">
+    <div class="stat">⏱️ Time: <span id="timer">0</span>s</div>
+    <div class="stat">🎯 Moves: <span id="moves">0</span></div>
+    <div class="stat">⭐ Score: <span id="score">100</span></div>
+    <div class="stat">🏆 Best: <span id="bestScore">0</span></div>
   </div>
 
-  <div class="stat">
-    ⭐ Score:
-    <span id="score">100</span>
-  </div>
-
-  <div class="stat">
-    🏆 Best:
-    <span id="bestScore">—</span>
-  </div>
-
-  <div class="stat">
-    ⚡ Best Time:
-    <span id="bestTime">—</span>s
-  </div>
-
-</div>
-
-
-<div id="game">
+  <div id="message"></div>
 
   <div id="board">
+    <canvas id="boardCanvas"></canvas>
 
-    <canvas
-      id="boardCanvas"
-      width="900"
-      height="900">
-    </canvas>
-
-    <div
-      class="targetGrid"
-      id="targetGrid">
+    <div id="targetGrid">
+      <div class="target"></div>
+      <div class="target"></div>
+      <div class="target"></div>
+      <div class="target"></div>
+      <div class="target"></div>
+      <div class="target"></div>
+      <div class="target"></div>
+      <div class="target"></div>
+      <div class="target"></div>
     </div>
-
   </div>
 
-
-  <div id="message">
-    Drag a piece into the picture.
+  <div id="piecesArea">
+    <div id="piecesTitle">🧩 Drag the pieces into the picture</div>
   </div>
 
-
-  <div id="pieceTitle">
-    🧩 Puzzle Pieces
-  </div>
-
-
-  <div id="pieces"></div>
-
-
-  <button onclick="newGame()">
-    🔄 New Game
-  </button>
+  <button onclick="newGame()">🔄 New Game</button>
 
 </div>
 
 
-<!-- WIN SCREEN -->
-
-<div id="winScreen">
-
+<div id="winBox">
   <div class="winCard">
 
-    <div class="winEmoji">
-      🎉
-    </div>
+    <h2>🎉 Amazing!</h2>
 
-    <h2>
-      Picture Complete!
-    </h2>
+    <p>You completed the Panda!</p>
 
-    <p>
-      Great job! 🐼
-    </p>
+    <p>⏱️ Time: <b><span id="finalTime">0</span>s</b></p>
 
-    <p>
+    <p>🎯 Moves: <b><span id="finalMoves">0</span></b></p>
 
-      ⏱️ Time:
-      <b>
-        <span id="finalTime">0</span>s
-      </b>
+    <p>⭐ Score: <b><span id="finalScore">0</span></b></p>
 
-      <br>
+    <p>🏆 Best Score: <b><span id="finalBest">0</span></b></p>
 
-      🔢 Moves:
-      <b>
-        <span id="finalMoves">0</span>
-      </b>
+    <br>
 
-      <br>
-
-      ⭐ Score:
-      <b>
-        <span id="finalScore">0</span>
-      </b>
-
-    </p>
-
-    <button onclick="newGame()">
-      🔄 Play Again
-    </button>
+    <button onclick="newGame()">🐼 Play Again</button>
 
   </div>
-
 </div>
 
 
 <script>
 
-/* =========================================================
-   COMPLETE THE PIC V1.7
-   SIMPLE + RELIABLE VERSION
-========================================================= */
-
-
-/* =========================
-   BASIC SETTINGS
-========================= */
-
-const SIZE = 900;
+/* =========================================
+   COMPLETE THE PIC V1.9
+   BEAUTIFUL PANDA EDITION
+   ========================================= */
 
 const ROWS = 3;
 const COLS = 3;
 
-const CELL = SIZE / COLS;
+const board = document.getElementById("board");
+const boardCanvas = document.getElementById("boardCanvas");
+const boardCtx = boardCanvas.getContext("2d");
 
+const piecesArea = document.getElementById("piecesArea");
 
-/* =========================
-   VARIABLES
-========================= */
+const timerEl = document.getElementById("timer");
+const movesEl = document.getElementById("moves");
+const scoreEl = document.getElementById("score");
+const bestScoreEl = document.getElementById("bestScore");
+
+const messageEl = document.getElementById("message");
+const winBox = document.getElementById("winBox");
 
 let sourceCanvas;
+let sourceCtx;
 
 let pieces = [];
 
 let moves = 0;
-
 let seconds = 0;
-
-let completed = 0;
-
 let timer = null;
+let gameStarted = false;
+let gameFinished = false;
 
-let running = false;
+let bestScore =
+  Number(localStorage.getItem("completePic_v19_bestScore") || 0);
 
-let audio = null;
+let bestTime =
+  Number(localStorage.getItem("completePic_v19_bestTime") || 0);
 
-
-/* =========================
-   ELEMENTS
-========================= */
-
-const board =
-document.getElementById("board");
-
-const boardCanvas =
-document.getElementById("boardCanvas");
-
-const boardCtx =
-boardCanvas.getContext("2d");
-
-const piecesArea =
-document.getElementById("pieces");
-
-const targetGrid =
-document.getElementById("targetGrid");
+bestScoreEl.textContent = bestScore;
 
 
-/* =========================================================
-   AUDIO
-========================================================= */
+/* =========================================
+   SOUND
+   ========================================= */
 
-function startAudio(){
+let audioCtx = null;
 
-  if(!audio){
-
-    try{
-
-      audio =
-      new(
-        window.AudioContext ||
-        window.webkitAudioContext
-      )();
-
-    }catch(e){}
-
-  }
-
-  if(audio &&
-     audio.state==="suspended"){
-
-    audio.resume();
-
-  }
-
-}
-
-
-function tone(freq,duration,type="sine"){
-
-  startAudio();
-
-  if(!audio) return;
+function sound(freq, duration, type="sine"){
 
   try{
 
-    const osc =
-    audio.createOscillator();
+    if(!audioCtx){
+      audioCtx =
+        new (window.AudioContext ||
+             window.webkitAudioContext)();
+    }
 
-    const gain =
-    audio.createGain();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
 
-    osc.type=type;
-
-    osc.frequency.value=freq;
+    osc.type = type;
+    osc.frequency.value = freq;
 
     gain.gain.setValueAtTime(
-      .06,
-      audio.currentTime
+      0.0001,
+      audioCtx.currentTime
     );
 
     gain.gain.exponentialRampToValueAtTime(
-      .001,
-      audio.currentTime+duration
+      0.15,
+      audioCtx.currentTime + .02
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      audioCtx.currentTime + duration
     );
 
     osc.connect(gain);
-
-    gain.connect(
-      audio.destination
-    );
+    gain.connect(audioCtx.destination);
 
     osc.start();
-
-    osc.stop(
-      audio.currentTime+duration
-    );
+    osc.stop(audioCtx.currentTime + duration);
 
   }catch(e){}
 
 }
 
-
 function correctSound(){
 
-  tone(650,.12);
+  sound(650,.12,"sine");
 
-  setTimeout(
-    ()=>tone(850,.14),
-    100
-  );
+  setTimeout(()=>{
+    sound(900,.16,"sine");
+  },100);
 
 }
-
 
 function wrongSound(){
 
-  tone(
-    180,
-    .2,
-    "sawtooth"
-  );
+  sound(180,.18,"square");
 
 }
 
 
-function winSound(){
+/* =========================================
+   BEAUTIFUL PANDA DRAWING
+   ========================================= */
 
-  const notes=[
-    523,
-    659,
-    784,
-    1046
-  ];
+function createPanda(){
 
-  notes.forEach(
-    (n,i)=>{
+  sourceCanvas = document.createElement("canvas");
 
-      setTimeout(
-        ()=>tone(n,.22),
-        i*120
-      );
+  sourceCanvas.width = 900;
+  sourceCanvas.height = 900;
 
-    }
-  );
+  sourceCtx = sourceCanvas.getContext("2d");
+
+  drawPanda(sourceCtx,900,900);
 
 }
 
 
-/* =========================================================
-   PANDA DRAWING
-========================================================= */
+/* background */
 
-function cloud(ctx,x,y,s){
+function drawPanda(ctx,w,h){
 
-  ctx.fillStyle=
-  "rgba(255,255,255,.92)";
+  ctx.clearRect(0,0,w,h);
+
+  /* sky */
+
+  const sky =
+    ctx.createLinearGradient(0,0,0,h);
+
+  sky.addColorStop(0,"#8fdcff");
+  sky.addColorStop(.55,"#c8f2ff");
+  sky.addColorStop(1,"#e9fbdc");
+
+  ctx.fillStyle = sky;
+  ctx.fillRect(0,0,w,h);
+
+
+  /* sun */
 
   ctx.beginPath();
+  ctx.arc(735,145,70,0,Math.PI*2);
 
-  ctx.arc(
-    x,
-    y,
-    35*s,
-    0,
-    Math.PI*2
-  );
+  const sun =
+    ctx.createRadialGradient(
+      735,145,5,
+      735,145,70
+    );
 
-  ctx.arc(
-    x+40*s,
-    y-18*s,
-    45*s,
-    0,
-    Math.PI*2
-  );
+  sun.addColorStop(0,"#fffbd0");
+  sun.addColorStop(1,"rgba(255,238,120,0)");
 
-  ctx.arc(
-    x+85*s,
-    y,
-    34*s,
-    0,
-    Math.PI*2
-  );
+  ctx.fillStyle = sun;
+  ctx.fill();
 
-  ctx.arc(
-    x+45*s,
-    y+15*s,
-    48*s,
-    0,
-    Math.PI*2
-  );
+
+  /* clouds */
+
+  drawCloud(ctx,150,145,1);
+  drawCloud(ctx,470,100,.75);
+  drawCloud(ctx,680,255,.55);
+
+
+  /* distant mountains */
+
+  ctx.fillStyle="#9ccf9c";
+
+  ctx.beginPath();
+  ctx.moveTo(0,590);
+  ctx.lineTo(150,410);
+  ctx.lineTo(260,550);
+  ctx.lineTo(390,360);
+  ctx.lineTo(560,570);
+  ctx.lineTo(720,400);
+  ctx.lineTo(900,575);
+  ctx.lineTo(900,900);
+  ctx.lineTo(0,900);
+  ctx.closePath();
+  ctx.fill();
+
+
+  /* snow peaks */
+
+  ctx.fillStyle="rgba(255,255,255,.75)";
+
+  ctx.beginPath();
+  ctx.moveTo(390,360);
+  ctx.lineTo(350,430);
+  ctx.lineTo(390,412);
+  ctx.lineTo(425,445);
+  ctx.lineTo(450,410);
+  ctx.closePath();
+  ctx.fill();
+
+
+  /* foreground hill */
+
+  const hill =
+    ctx.createLinearGradient(0,520,0,900);
+
+  hill.addColorStop(0,"#71b96a");
+  hill.addColorStop(1,"#3d8b4b");
+
+  ctx.fillStyle=hill;
+
+  ctx.beginPath();
+  ctx.moveTo(0,650);
+
+  for(let x=0;x<=900;x+=50){
+
+    let y =
+      625 +
+      Math.sin(x*.012)*25 +
+      Math.sin(x*.025)*14;
+
+    ctx.lineTo(x,y);
+  }
+
+  ctx.lineTo(900,900);
+  ctx.lineTo(0,900);
+  ctx.closePath();
 
   ctx.fill();
 
-}
+
+  /* bamboo left */
+
+  drawBamboo(ctx,95,500,1.05);
+
+  /* bamboo right */
+
+  drawBamboo(ctx,790,470,.85);
 
 
-function bamboo(ctx,x,y,s){
+  /* Panda shadow */
+
+  ctx.fillStyle="rgba(0,0,0,.16)";
+  ctx.beginPath();
+  ctx.ellipse(450,760,225,45,0,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* Panda body */
+
+  ctx.fillStyle="#151515";
+
+  ctx.beginPath();
+  ctx.ellipse(450,610,180,210,0,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* white belly */
+
+  const belly =
+    ctx.createRadialGradient(
+      410,570,20,
+      450,630,170
+    );
+
+  belly.addColorStop(0,"#ffffff");
+  belly.addColorStop(1,"#dedede");
+
+  ctx.fillStyle=belly;
+
+  ctx.beginPath();
+  ctx.ellipse(450,625,125,155,0,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* feet */
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+  ctx.ellipse(345,790,65,42,-.25,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.ellipse(555,790,65,42,.25,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* arms */
+
+  ctx.fillStyle="#111";
 
   ctx.save();
+  ctx.translate(305,585);
+  ctx.rotate(-.35);
+  ctx.beginPath();
+  ctx.ellipse(0,0,65,135,0,0,Math.PI*2);
+  ctx.fill();
+  ctx.restore();
 
-  ctx.strokeStyle="#398b37";
+  ctx.save();
+  ctx.translate(595,585);
+  ctx.rotate(.35);
+  ctx.beginPath();
+  ctx.ellipse(0,0,65,135,0,0,Math.PI*2);
+  ctx.fill();
+  ctx.restore();
 
-  ctx.lineWidth=
-  22*s;
 
+  /* head */
+
+  const head =
+    ctx.createRadialGradient(
+      405,315,40,
+      450,400,245
+    );
+
+  head.addColorStop(0,"#ffffff");
+  head.addColorStop(.75,"#f4f4f4");
+  head.addColorStop(1,"#d7d7d7");
+
+  ctx.fillStyle=head;
+
+  ctx.beginPath();
+  ctx.arc(450,400,220,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* ears */
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+  ctx.arc(290,245,78,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(610,245,78,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* inner ears */
+
+  ctx.fillStyle="#292929";
+
+  ctx.beginPath();
+  ctx.arc(290,245,42,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(610,245,42,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* eye patches */
+
+  ctx.fillStyle="#161616";
+
+  ctx.save();
+  ctx.translate(375,390);
+  ctx.rotate(-.42);
+  ctx.beginPath();
+  ctx.ellipse(0,0,55,78,0,0,Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(525,390);
+  ctx.rotate(.42);
+  ctx.beginPath();
+  ctx.ellipse(0,0,55,78,0,0,Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+
+
+  /* eyes */
+
+  ctx.fillStyle="#fff";
+
+  ctx.beginPath();
+  ctx.arc(375,390,28,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(525,390,28,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* pupils */
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+  ctx.arc(382,395,14,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(518,395,14,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* eye shine */
+
+  ctx.fillStyle="#fff";
+
+  ctx.beginPath();
+  ctx.arc(387,389,5,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(523,389,5,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* cheeks */
+
+  ctx.fillStyle="rgba(255,145,145,.55)";
+
+  ctx.beginPath();
+  ctx.ellipse(335,455,38,22,0,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.ellipse(565,455,38,22,0,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* nose */
+
+  ctx.fillStyle="#111";
+
+  ctx.beginPath();
+  ctx.ellipse(450,455,28,20,0,0,Math.PI*2);
+  ctx.fill();
+
+
+  /* mouth */
+
+  ctx.strokeStyle="#111";
+  ctx.lineWidth=8;
   ctx.lineCap="round";
 
   ctx.beginPath();
+  ctx.moveTo(450,468);
+  ctx.quadraticCurveTo(425,495,405,480);
+  ctx.stroke();
 
-  ctx.moveTo(
-    x,
-    y+210*s
-  );
-
-  ctx.lineTo(
-    x+12*s,
-    y
-  );
-
+  ctx.beginPath();
+  ctx.moveTo(450,468);
+  ctx.quadraticCurveTo(475,495,495,480);
   ctx.stroke();
 
 
-  ctx.strokeStyle="#276c2c";
+  /* bamboo in paw */
 
-  ctx.lineWidth=
-  4*s;
+  ctx.save();
 
-  for(
-    let i=0;
-    i<4;
-    i++
-  ){
+  ctx.translate(575,610);
+  ctx.rotate(-.3);
 
-    const yy=
-    y+45*i*s;
+  ctx.fillStyle="#72ad42";
+  ctx.fillRect(-15,-120,30,260);
+
+  ctx.strokeStyle="#3e762d";
+  ctx.lineWidth=5;
+
+  for(let y=-90;y<130;y+=45){
+    ctx.beginPath();
+    ctx.moveTo(-15,y);
+    ctx.lineTo(15,y);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+
+
+  /* little flower */
+
+  drawFlower(ctx,720,650);
+
+}
+
+
+function drawCloud(ctx,x,y,s){
+
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.scale(s,s);
+
+  ctx.fillStyle="rgba(255,255,255,.75)";
+
+  ctx.beginPath();
+  ctx.arc(0,20,38,0,Math.PI*2);
+  ctx.arc(45,5,50,0,Math.PI*2);
+  ctx.arc(90,25,35,0,Math.PI*2);
+  ctx.rect(-5,20,105,40);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+
+function drawBamboo(ctx,x,y,s){
+
+  ctx.save();
+
+  ctx.translate(x,y);
+  ctx.scale(s,s);
+
+  ctx.strokeStyle="#4b8d35";
+  ctx.lineWidth=22;
+  ctx.lineCap="round";
+
+  ctx.beginPath();
+  ctx.moveTo(0,260);
+  ctx.lineTo(8,0);
+  ctx.stroke();
+
+  ctx.strokeStyle="#80bd4e";
+  ctx.lineWidth=4;
+
+  for(let i=35;i<260;i+=45){
 
     ctx.beginPath();
-
-    ctx.moveTo(
-      x-10*s,
-      yy
-    );
-
-    ctx.lineTo(
-      x+18*s,
-      yy
-    );
-
+    ctx.moveTo(-10,i);
+    ctx.lineTo(15,i);
     ctx.stroke();
 
   }
 
+  ctx.fillStyle="#4d9637";
 
-  ctx.fillStyle="#4eaa45";
+  for(let i=30;i<240;i+=55){
 
-  for(
-    let i=0;
-    i<3;
-    i++
-  ){
+    ctx.beginPath();
+    ctx.ellipse(
+      -35,
+      i,
+      38,
+      13,
+      -.5,
+      0,
+      Math.PI*2
+    );
+    ctx.fill();
+
+  }
+
+  ctx.restore();
+}
+
+
+function drawFlower(ctx,x,y){
+
+  ctx.strokeStyle="#478d3c";
+  ctx.lineWidth=6;
+
+  ctx.beginPath();
+  ctx.moveTo(x,y+30);
+  ctx.lineTo(x,y+100);
+  ctx.stroke();
+
+  ctx.fillStyle="#ffcf4a";
+
+  for(let i=0;i<5;i++){
+
+    let a=i*Math.PI*2/5;
 
     ctx.beginPath();
 
-    ctx.ellipse(
-      x+25*s,
-      y+25+30*i*s,
-      42*s,
-      17*s,
-      -.45,
+    ctx.arc(
+      x+Math.cos(a)*20,
+      y+Math.sin(a)*20,
+      15,
       0,
       Math.PI*2
     );
@@ -814,1052 +952,223 @@ function bamboo(ctx,x,y,s){
 
   }
 
-  ctx.restore();
+  ctx.fillStyle="#f28b35";
+
+  ctx.beginPath();
+  ctx.arc(x,y,10,0,Math.PI*2);
+  ctx.fill();
 
 }
 
 
-function drawPanda(){
+/* =========================================
+   DRAW BOARD GUIDE
+   ========================================= */
 
-  sourceCanvas=
-  document.createElement("canvas");
+function resizeBoardCanvas(){
 
-  sourceCanvas.width=SIZE;
-  sourceCanvas.height=SIZE;
+  const rect =
+    boardCanvas.getBoundingClientRect();
 
-  const ctx=
-  sourceCanvas.getContext("2d");
+  const dpr =
+    window.devicePixelRatio || 1;
 
+  boardCanvas.width =
+    Math.round(rect.width*dpr);
 
-  /* SKY */
+  boardCanvas.height =
+    Math.round(rect.height*dpr);
 
-  const sky=
-  ctx.createLinearGradient(
+  boardCtx.setTransform(
+    dpr,0,0,dpr,0,0
+  );
+
+  boardCtx.clearRect(
     0,
     0,
-    0,
-    SIZE
+    rect.width,
+    rect.height
   );
 
-  sky.addColorStop(
-    0,
-    "#75d7ff"
-  );
-
-  sky.addColorStop(
-    .55,
-    "#c8f1ff"
-  );
-
-  sky.addColorStop(
-    1,
-    "#effcff"
-  );
-
-  ctx.fillStyle=sky;
-
-  ctx.fillRect(
+  boardCtx.drawImage(
+    sourceCanvas,
     0,
     0,
-    SIZE,
-    SIZE
+    rect.width,
+    rect.height
   );
-
-
-  /* SUN */
-
-  ctx.fillStyle="#ffe17a";
-
-  ctx.beginPath();
-
-  ctx.arc(
-    770,
-    120,
-    62,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* CLOUDS */
-
-  cloud(
-    ctx,
-    120,
-    145,
-    1
-  );
-
-  cloud(
-    ctx,
-    540,
-    100,
-    .75
-  );
-
-
-  /* MOUNTAINS */
-
-  ctx.fillStyle="#8bc6a1";
-
-  ctx.beginPath();
-
-  ctx.moveTo(0,560);
-
-  ctx.lineTo(
-    170,
-    360
-  );
-
-  ctx.lineTo(
-    310,
-    530
-  );
-
-  ctx.lineTo(
-    460,
-    330
-  );
-
-  ctx.lineTo(
-    650,
-    540
-  );
-
-  ctx.lineTo(
-    790,
-    380
-  );
-
-  ctx.lineTo(
-    900,
-    520
-  );
-
-  ctx.lineTo(
-    900,
-    900
-  );
-
-  ctx.lineTo(
-    0,
-    900
-  );
-
-  ctx.closePath();
-
-  ctx.fill();
-
-
-  /* SNOW */
-
-  ctx.fillStyle="#f6ffff";
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    170,
-    360
-  );
-
-  ctx.lineTo(
-    130,
-    420
-  );
-
-  ctx.lineTo(
-    170,
-    402
-  );
-
-  ctx.lineTo(
-    200,
-    430
-  );
-
-  ctx.lineTo(
-    220,
-    405
-  );
-
-  ctx.lineTo(
-    250,
-    430
-  );
-
-  ctx.closePath();
-
-  ctx.fill();
-
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    460,
-    330
-  );
-
-  ctx.lineTo(
-    410,
-    400
-  );
-
-  ctx.lineTo(
-    455,
-    382
-  );
-
-  ctx.lineTo(
-    485,
-    410
-  );
-
-  ctx.lineTo(
-    515,
-    382
-  );
-
-  ctx.lineTo(
-    545,
-    420
-  );
-
-  ctx.closePath();
-
-  ctx.fill();
-
-
-  /* GROUND */
-
-  const ground=
-  ctx.createLinearGradient(
-    0,
-    560,
-    0,
-    900
-  );
-
-  ground.addColorStop(
-    0,
-    "#74cb70"
-  );
-
-  ground.addColorStop(
-    1,
-    "#31924e"
-  );
-
-  ctx.fillStyle=ground;
-
-  ctx.beginPath();
-
-  ctx.moveTo(0,610);
-
-  ctx.quadraticCurveTo(
-    220,
-    540,
-    450,
-    625
-  );
-
-  ctx.quadraticCurveTo(
-    690,
-    540,
-    900,
-    620
-  );
-
-  ctx.lineTo(
-    900,
-    900
-  );
-
-  ctx.lineTo(
-    0,
-    900
-  );
-
-  ctx.closePath();
-
-  ctx.fill();
-
-
-  /* BAMBOO */
-
-  bamboo(
-    ctx,
-    105,
-    485,
-    1
-  );
-
-  bamboo(
-    ctx,
-    800,
-    450,
-    .85
-  );
-
-
-  /* =====================
-     PANDA BODY
-  ===================== */
-
-  ctx.fillStyle="#171717";
-
-  /* body */
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    470,
-    610,
-    185,
-    220,
-    0,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* belly */
-
-  ctx.fillStyle="#f6f3eb";
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    470,
-    635,
-    125,
-    155,
-    0,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* arms */
-
-  ctx.fillStyle="#171717";
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    315,
-    610,
-    55,
-    120,
-    -.45,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    625,
-    610,
-    55,
-    120,
-    .45,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* feet */
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    385,
-    800,
-    70,
-    48,
-    -.15,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    555,
-    800,
-    70,
-    48,
-    .15,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* HEAD */
-
-  ctx.beginPath();
-
-  ctx.arc(
-    470,
-    380,
-    190,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* EARS */
-
-  ctx.beginPath();
-
-  ctx.arc(
-    320,
-    245,
-    62,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  ctx.beginPath();
-
-  ctx.arc(
-    620,
-    245,
-    62,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* FACE */
-
-  ctx.fillStyle="#f8f5ec";
-
-  ctx.beginPath();
-
-  ctx.arc(
-    470,
-    400,
-    148,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* EYE PATCHES */
-
-  ctx.fillStyle="#181818";
-
-  ctx.save();
-
-  ctx.translate(
-    405,
-    370
-  );
-
-  ctx.rotate(-.35);
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    0,
-    0,
-    42,
-    62,
-    0,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-  ctx.restore();
-
-
-  ctx.save();
-
-  ctx.translate(
-    535,
-    370
-  );
-
-  ctx.rotate(.35);
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    0,
-    0,
-    42,
-    62,
-    0,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-  ctx.restore();
-
-
-  /* EYES */
-
-  ctx.fillStyle="white";
-
-  ctx.beginPath();
-
-  ctx.arc(
-    414,
-    375,
-    18,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  ctx.beginPath();
-
-  ctx.arc(
-    526,
-    375,
-    18,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  ctx.fillStyle="#111";
-
-  ctx.beginPath();
-
-  ctx.arc(
-    414,
-    377,
-    9,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  ctx.beginPath();
-
-  ctx.arc(
-    526,
-    377,
-    9,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* NOSE */
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    470,
-    445,
-    24,
-    17,
-    0,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* MOUTH */
-
-  ctx.strokeStyle="#111";
-
-  ctx.lineWidth=8;
-
-  ctx.lineCap="round";
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    470,
-    460
-  );
-
-  ctx.quadraticCurveTo(
-    450,
-    485,
-    430,
-    474
-  );
-
-  ctx.stroke();
-
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    470,
-    460
-  );
-
-  ctx.quadraticCurveTo(
-    490,
-    485,
-    510,
-    474
-  );
-
-  ctx.stroke();
-
-
-  /* CHEEKS */
-
-  ctx.fillStyle=
-  "rgba(255,130,130,.55)";
-
-  ctx.beginPath();
-
-  ctx.arc(
-    365,
-    455,
-    22,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  ctx.beginPath();
-
-  ctx.arc(
-    575,
-    455,
-    22,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* BAMBOO IN PAW */
-
-  ctx.strokeStyle="#4b9b39";
-
-  ctx.lineWidth=24;
-
-  ctx.lineCap="round";
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    570,
-    690
-  );
-
-  ctx.lineTo(
-    700,
-    530
-  );
-
-  ctx.stroke();
-
-
-  ctx.strokeStyle="#2f702d";
-
-  ctx.lineWidth=5;
-
-  for(
-    let i=0;
-    i<5;
-    i++
-  ){
-
-    const x=
-    590+i*22;
-
-    const y=
-    665-i*27;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      x-8,
-      y-8
-    );
-
-    ctx.lineTo(
-      x+8,
-      y+8
-    );
-
-    ctx.stroke();
-
-  }
-
-
-  /* GRASS */
-
-  ctx.strokeStyle="#217c3c";
-
-  ctx.lineWidth=5;
-
-  for(
-    let x=20;
-    x<900;
-    x+=45
-  ){
-
-    const y=
-    820+Math.sin(x)*15;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      x,
-      y
-    );
-
-    ctx.lineTo(
-      x-8,
-      y-25
-    );
-
-    ctx.stroke();
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      x,
-      y
-    );
-
-    ctx.lineTo(
-      x+10,
-      y-28
-    );
-
-    ctx.stroke();
-
-  }
 
 }
 
 
-/* =========================================================
-   TARGET GRID
-========================================================= */
+function createPieceCanvas(row,col){
 
-function createTargetGrid(){
+  const c =
+    document.createElement("canvas");
 
-  targetGrid.innerHTML="";
+  c.width=300;
+  c.height=300;
 
-  for(
-    let r=0;
-    r<ROWS;
-    r++
-  ){
+  const ctx=c.getContext("2d");
 
-    for(
-      let c=0;
-      c<COLS;
-      c++
-    ){
+  const sw =
+    sourceCanvas.width/COLS;
 
-      const target=
-      document.createElement("div");
-
-      target.className="target";
-
-      target.style.left=
-      (c*100/COLS)+"%";
-
-      target.style.top=
-      (r*100/ROWS)+"%";
-
-      target.style.width=
-      (100/COLS)+"%";
-
-      target.style.height=
-      (100/ROWS)+"%";
-
-      targetGrid.appendChild(
-        target
-      );
-
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   CREATE PUZZLE PIECES
-========================================================= */
-
-function createPiece(row,col){
-
-  const piece=
-  document.createElement("div");
-
-  piece.className="piece";
-
-  piece.dataset.row=row;
-  piece.dataset.col=col;
-
-
-  const canvas=
-  document.createElement("canvas");
-
-  canvas.width=CELL;
-  canvas.height=CELL;
-
-
-  const ctx=
-  canvas.getContext("2d");
-
-
-  /*
-     Draw EXACTLY the matching
-     part of the original Panda.
-  */
+  const sh =
+    sourceCanvas.height/ROWS;
 
   ctx.drawImage(
     sourceCanvas,
-
-    col*CELL,
-    row*CELL,
-    CELL,
-    CELL,
-
+    col*sw,
+    row*sh,
+    sw,
+    sh,
     0,
     0,
-    CELL,
-    CELL
+    300,
+    300
   );
 
-
-  /*
-     Add a subtle puzzle-style border.
-     The actual image itself remains
-     perfectly aligned.
-  */
-
-  ctx.strokeStyle=
-  "rgba(0,0,0,.65)";
-
-  ctx.lineWidth=5;
-
-  ctx.strokeRect(
-    2,
-    2,
-    CELL-4,
-    CELL-4
-  );
-
-
-  piece.appendChild(canvas);
-
-  return piece;
-
+  return c;
 }
 
 
-/* =========================================================
-   SHUFFLE
-========================================================= */
-
-function shuffle(array){
-
-  for(
-    let i=array.length-1;
-    i>0;
-    i--
-  ){
-
-    const j=
-    Math.floor(
-      Math.random()*(i+1)
-    );
-
-    [
-      array[i],
-      array[j]
-    ]=[
-      array[j],
-      array[i]
-    ];
-
-  }
-
-}
-
-
-/* =========================================================
-   CREATE ALL PIECES
-========================================================= */
+/* =========================================
+   CREATE PIECES
+   ========================================= */
 
 function createPieces(){
 
-  piecesArea.innerHTML="";
+  piecesArea
+    .querySelectorAll(".piece")
+    .forEach(p=>p.remove());
 
   pieces=[];
 
+  let positions=[];
 
-  for(
-    let r=0;
-    r<ROWS;
-    r++
-  ){
+  const areaRect =
+    piecesArea.getBoundingClientRect();
 
-    for(
-      let c=0;
-      c<COLS;
-      c++
-    ){
+  const pieceSize =
+    window.innerWidth <= 500 ? 78 : 100;
 
-      const piece=
-      createPiece(r,c);
+  const maxX =
+    Math.max(
+      5,
+      areaRect.width-pieceSize-10
+    );
 
-      pieces.push(piece);
+  const maxY =
+    Math.max(
+      55,
+      areaRect.height-pieceSize-10
+    );
 
-    }
 
+  for(let i=0;i<9;i++){
+
+    let x,y,tries=0;
+
+    do{
+
+      x =
+        5 + Math.random()*maxX;
+
+      y =
+        42 + Math.random()*
+        Math.max(10,maxY-42);
+
+      tries++;
+
+    }while(
+      positions.some(p =>
+        Math.abs(p.x-x)<pieceSize*.75 &&
+        Math.abs(p.y-y)<pieceSize*.75
+      ) &&
+      tries<100
+    );
+
+    positions.push({x,y});
+
+    const row=Math.floor(i/3);
+    const col=i%3;
+
+    const piece =
+      document.createElement("div");
+
+    piece.className="piece";
+
+    piece.dataset.row=row;
+    piece.dataset.col=col;
+    piece.dataset.index=i;
+
+    piece.style.left=x+"px";
+    piece.style.top=y+"px";
+
+    const pc =
+      createPieceCanvas(row,col);
+
+    piece.appendChild(pc);
+
+    piecesArea.appendChild(piece);
+
+    setupDrag(piece);
+
+    pieces.push(piece);
   }
-
-
-  shuffle(pieces);
-
-
-  pieces.forEach(
-    piece=>{
-
-      piecesArea.appendChild(
-        piece
-      );
-
-      enableDrag(piece);
-
-    }
-  );
 
 }
 
 
-/* =========================================================
-   DRAG SYSTEM
-========================================================= */
+/* =========================================
+   DRAG / TOUCH
+   ========================================= */
 
-function enableDrag(piece){
+function setupDrag(piece){
 
   let dragging=false;
 
   let offsetX=0;
   let offsetY=0;
 
-  let pointerId=null;
+  let startX=0;
+  let startY=0;
+
+  let originalLeft="";
+  let originalTop="";
 
 
   piece.addEventListener(
     "pointerdown",
     function(e){
 
-      if(
-        piece.classList.contains(
-          "locked"
-        )
-      ){
+      if(piece.classList.contains("locked"))
         return;
-      }
-
 
       e.preventDefault();
 
-      startAudio();
-
-
       dragging=true;
 
-      pointerId=e.pointerId;
+      piece.classList.add("dragging");
 
+      piece.setPointerCapture(e.pointerId);
 
-      const rect=
-      piece.getBoundingClientRect();
+      const rect =
+        piece.getBoundingClientRect();
 
+      offsetX=e.clientX-rect.left;
+      offsetY=e.clientY-rect.top;
 
-      offsetX=
-      e.clientX-rect.left;
+      startX=e.clientX;
+      startY=e.clientY;
 
-      offsetY=
-      e.clientY-rect.top;
+      originalLeft=piece.style.left;
+      originalTop=piece.style.top;
 
-
-      /*
-        Important:
-        Change to fixed position
-        ONLY after getting the
-        original position.
-      */
-
-      piece.style.position=
-      "fixed";
-
-      piece.style.margin="0";
-
-      piece.style.left=
-      (e.clientX-offsetX)+"px";
-
-      piece.style.top=
-      (e.clientY-offsetY)+"px";
-
-
-      piece.classList.add(
-        "dragging"
-      );
-
-
-      try{
-
-        piece.setPointerCapture(
-          pointerId
-        );
-
-      }catch(err){}
+      if(!gameStarted){
+        startTimer();
+      }
 
     },
     {passive:false}
@@ -1874,12 +1183,33 @@ function enableDrag(piece){
 
       e.preventDefault();
 
+      const areaRect =
+        piecesArea.getBoundingClientRect();
 
-      piece.style.left=
-      (e.clientX-offsetX)+"px";
+      let left =
+        e.clientX-areaRect.left-offsetX;
 
-      piece.style.top=
-      (e.clientY-offsetY)+"px";
+      let top =
+        e.clientY-areaRect.top-offsetY;
+
+      const maxLeft =
+        areaRect.width-piece.offsetWidth;
+
+      const maxTop =
+        areaRect.height-piece.offsetHeight;
+
+      left=Math.max(
+        -piece.offsetWidth*.25,
+        Math.min(left,maxLeft+piece.offsetWidth*.25)
+      );
+
+      top=Math.max(
+        -piece.offsetHeight*.25,
+        Math.min(top,maxTop+piece.offsetHeight*.25)
+      );
+
+      piece.style.left=left+"px";
+      piece.style.top=top+"px";
 
     },
     {passive:false}
@@ -1896,19 +1226,10 @@ function enableDrag(piece){
 
       dragging=false;
 
-      piece.classList.remove(
-        "dragging"
-      );
+      piece.classList.remove("dragging");
 
-
-      try{
-
-        piece.releasePointerCapture(
-          pointerId
-        );
-
-      }catch(err){}
-
+      moves++;
+      movesEl.textContent=moves;
 
       checkDrop(piece);
 
@@ -1921,15 +1242,11 @@ function enableDrag(piece){
     "pointercancel",
     function(){
 
-      if(!dragging) return;
-
       dragging=false;
+      piece.classList.remove("dragging");
 
-      piece.classList.remove(
-        "dragging"
-      );
-
-      returnPiece(piece);
+      piece.style.left=originalLeft;
+      piece.style.top=originalTop;
 
     }
   );
@@ -1937,607 +1254,482 @@ function enableDrag(piece){
 }
 
 
-/* =========================================================
+/* =========================================
    CHECK DROP
-========================================================= */
+   ========================================= */
 
 function checkDrop(piece){
 
+  const boardRect =
+    boardCanvas.getBoundingClientRect();
+
+  const areaRect =
+    piecesArea.getBoundingClientRect();
+
+  const pieceRect =
+    piece.getBoundingClientRect();
+
+  const centerX =
+    pieceRect.left+
+    pieceRect.width/2;
+
+  const centerY =
+    pieceRect.top+
+    pieceRect.height/2;
+
+
+  const cellW =
+    boardRect.width/COLS;
+
+  const cellH =
+    boardRect.height/ROWS;
+
+
+  let col =
+    Math.floor(
+      (centerX-boardRect.left)/cellW
+    );
+
+  let row =
+    Math.floor(
+      (centerY-boardRect.top)/cellH
+    );
+
+
   if(
-    piece.classList.contains(
-      "locked"
-    )
+    row<0 ||
+    row>=ROWS ||
+    col<0 ||
+    col>=COLS
   ){
+
+    wrongPlacement(piece);
     return;
   }
 
 
-  const row=
-  Number(piece.dataset.row);
+  const correctRow =
+    Number(piece.dataset.row);
 
-  const col=
-  Number(piece.dataset.col);
-
-
-  const boardRect=
-  board.getBoundingClientRect();
-
-  const pieceRect=
-  piece.getBoundingClientRect();
+  const correctCol =
+    Number(piece.dataset.col);
 
 
-  const centerX=
-  pieceRect.left+
-  pieceRect.width/2;
+  const targetCenterX =
+    boardRect.left+
+    (correctCol+.5)*cellW;
 
-  const centerY=
-  pieceRect.top+
-  pieceRect.height/2;
-
-
-  const cellW=
-  boardRect.width/COLS;
-
-  const cellH=
-  boardRect.height/ROWS;
+  const targetCenterY =
+    boardRect.top+
+    (correctRow+.5)*cellH;
 
 
-  /*
-     Find the nearest cell.
-  */
-
-  let nearestCol=
-  Math.floor(
-    (centerX-boardRect.left)/
-    cellW
-  );
-
-  let nearestRow=
-  Math.floor(
-    (centerY-boardRect.top)/
-    cellH
-  );
+  const distance =
+    Math.hypot(
+      centerX-targetCenterX,
+      centerY-targetCenterY
+    );
 
 
-  /*
-     Keep values inside board.
-  */
-
-  nearestCol=
-  Math.max(
-    0,
-    Math.min(
-      COLS-1,
-      nearestCol
-    )
-  );
-
-
-  nearestRow=
-  Math.max(
-    0,
-    Math.min(
-      ROWS-1,
-      nearestRow
-    )
-  );
-
-
-  const targetCenterX=
-  boardRect.left+
-  (nearestCol+.5)*cellW;
-
-  const targetCenterY=
-  boardRect.top+
-  (nearestRow+.5)*cellH;
-
-
-  const dx=
-  centerX-targetCenterX;
-
-  const dy=
-  centerY-targetCenterY;
-
-
-  const distance=
-  Math.sqrt(
-    dx*dx+
-    dy*dy
-  );
-
-
-  /*
-     V1.7 uses a large,
-     forgiving snap area.
-  */
-
-  const snapDistance=
-  Math.min(
-    cellW,
-    cellH
-  )*.62;
-
-
-  moves++;
-
-  updateStats();
+  const tolerance =
+    Math.min(cellW,cellH)*.62;
 
 
   if(
-    nearestRow===row &&
-    nearestCol===col &&
-    distance<=snapDistance
+    row===correctRow &&
+    col===correctCol &&
+    distance<=tolerance
   ){
 
     lockPiece(
       piece,
-      row,
-      col
+      correctRow,
+      correctCol,
+      boardRect,
+      cellW,
+      cellH
     );
 
   }else{
 
-    wrongPiece(piece);
+    wrongPlacement(piece);
 
   }
 
 }
 
 
-/* =========================================================
+/* =========================================
    LOCK CORRECT PIECE
-========================================================= */
+   ========================================= */
 
 function lockPiece(
   piece,
   row,
-  col
+  col,
+  boardRect,
+  cellW,
+  cellH
 ){
 
-  const boardRect=
-  board.getBoundingClientRect();
+  piece.classList.add("locked");
 
+  document.body.appendChild(piece);
 
-  const cellW=
-  boardRect.width/COLS;
+  piece.style.position="fixed";
 
-  const cellH=
-  boardRect.height/ROWS;
+  piece.style.left =
+    (boardRect.left+col*cellW)+"px";
 
+  piece.style.top =
+    (boardRect.top+row*cellH)+"px";
 
-  /*
-     Position piece exactly
-     over its target cell.
-  */
+  piece.style.width =
+    cellW+"px";
 
-  piece.style.position=
-  "fixed";
+  piece.style.height =
+    cellH+"px";
 
-  piece.style.width=
-  cellW+"px";
-
-  piece.style.height=
-  cellH+"px";
-
-
-  piece.style.left=
-  (
-    boardRect.left+
-    col*cellW
-  )+"px";
-
-
-  piece.style.top=
-  (
-    boardRect.top+
-    row*cellH
-  )+"px";
-
-
-  piece.classList.add(
-    "locked"
-  );
-
-
-  completed++;
-
+  piece.style.zIndex="100";
 
   correctSound();
 
+  if(navigator.vibrate){
+    navigator.vibrate(45);
+  }
 
   showMessage(
-    "🎉 Correct!",
-    true
+    "🎉 Great! Correct piece!",
+    "good"
   );
 
-
-  if(
-    completed===
-    ROWS*COLS
-  ){
-
-    setTimeout(
-      finishGame,
-      400
-    );
-
-  }
+  checkWin();
 
 }
 
 
-/* =========================================================
-   WRONG PIECE
-========================================================= */
+/* =========================================
+   WRONG
+   ========================================= */
 
-function wrongPiece(piece){
+function wrongPlacement(piece){
 
   wrongSound();
 
+  piece.classList.add("shake");
 
   showMessage(
-    "❌ Wrong place!",
-    false
+    "❌ Wrong position. Try again!",
+    "bad"
   );
 
+  if(navigator.vibrate){
+    navigator.vibrate([40,30,40]);
+  }
 
-  piece.classList.add(
-    "shake"
-  );
+  setTimeout(()=>{
 
+    piece.classList.remove("shake");
 
-  setTimeout(
-    function(){
+    returnPiece(piece);
 
-      piece.classList.remove(
-        "shake"
-      );
-
-      returnPiece(
-        piece
-      );
-
-    },
-    350
-  );
+  },400);
 
 }
 
-
-/* =========================================================
-   RETURN PIECE
-========================================================= */
 
 function returnPiece(piece){
 
-  piece.style.position="";
-  piece.style.left="";
-  piece.style.top="";
-  piece.style.width="";
-  piece.style.height="";
-  piece.style.margin="";
+  const areaRect =
+    piecesArea.getBoundingClientRect();
 
+  const pieceSize =
+    window.innerWidth<=500 ? 78 : 100;
 
-  piecesArea.appendChild(
-    piece
-  );
+  const left =
+    5+
+    Math.random()*
+    Math.max(
+      5,
+      areaRect.width-pieceSize-10
+    );
 
-}
+  const top =
+    42+
+    Math.random()*
+    Math.max(
+      10,
+      areaRect.height-pieceSize-52
+    );
 
+  piece.style.position="absolute";
 
-/* =========================================================
-   MESSAGE
-========================================================= */
+  piece.style.left=left+"px";
+  piece.style.top=top+"px";
 
-function showMessage(
-  text,
-  good
-){
+  piece.style.width=pieceSize+"px";
+  piece.style.height=pieceSize+"px";
 
-  const message=
-  document.getElementById(
-    "message"
-  );
-
-  message.textContent=text;
-
-  message.className=
-  good ? "good" : "bad";
-
-
-  setTimeout(
-    function(){
-
-      if(running){
-
-        message.textContent=
-        "Drag a piece into the picture.";
-
-        message.className="";
-
-      }
-
-    },
-    1000
-  );
+  piece.style.zIndex="5";
 
 }
 
 
-/* =========================================================
-   SCORE
-========================================================= */
-
-function getScore(){
-
-  return Math.max(
-    0,
-    100-
-    moves*2-
-    Math.floor(seconds/5)
-  );
-
-}
-
-
-function updateStats(){
-
-  document.getElementById(
-    "moves"
-  ).textContent=moves;
-
-
-  document.getElementById(
-    "score"
-  ).textContent=getScore();
-
-}
-
-
-/* =========================================================
+/* =========================================
    TIMER
-========================================================= */
+   ========================================= */
 
 function startTimer(){
 
-  clearInterval(timer);
+  if(gameStarted || gameFinished)
+    return;
 
-  timer=
-  setInterval(
-    function(){
+  gameStarted=true;
 
-      if(!running) return;
+  timer=setInterval(()=>{
 
-      seconds++;
+    seconds++;
 
-      document.getElementById(
-        "time"
-      ).textContent=seconds;
+    timerEl.textContent=seconds;
 
-      updateStats();
+    updateScore();
 
-    },
-    1000
-  );
+  },1000);
 
 }
 
 
-/* =========================================================
-   BEST SCORE
-========================================================= */
+function stopTimer(){
 
-function updateBest(){
+  if(timer){
 
-  const bestScore=
-  localStorage.getItem(
-    "completePic_v17_bestScore"
-  );
+    clearInterval(timer);
+    timer=null;
 
-  const bestTime=
-  localStorage.getItem(
-    "completePic_v17_bestTime"
-  );
-
-
-  document.getElementById(
-    "bestScore"
-  ).textContent=
-  bestScore===null
-  ? "—"
-  : bestScore;
-
-
-  document.getElementById(
-    "bestTime"
-  ).textContent=
-  bestTime===null
-  ? "—"
-  : bestTime;
+  }
 
 }
 
 
-/* =========================================================
-   FINISH GAME
-========================================================= */
+function updateScore(){
 
-function finishGame(){
+  let score =
+    Math.max(
+      0,
+      100 -
+      moves*2 -
+      Math.floor(seconds/5)
+    );
 
-  if(!running) return;
+  scoreEl.textContent=score;
 
+  return score;
 
-  running=false;
-
-  clearInterval(timer);
-
-
-  const finalScore=
-  getScore();
-
-
-  document.getElementById(
-    "finalTime"
-  ).textContent=seconds;
+}
 
 
-  document.getElementById(
-    "finalMoves"
-  ).textContent=moves;
+/* =========================================
+   MESSAGE
+   ========================================= */
+
+function showMessage(text,type){
+
+  messageEl.textContent=text;
+
+  messageEl.className=type;
+
+}
 
 
-  document.getElementById(
-    "finalScore"
-  ).textContent=finalScore;
+/* =========================================
+   WIN
+   ========================================= */
 
+function checkWin(){
 
-  const oldScore=
-  localStorage.getItem(
-    "completePic_v17_bestScore"
-  );
+  const locked =
+    document.querySelectorAll(".piece.locked").length;
 
-  const oldTime=
-  localStorage.getItem(
-    "completePic_v17_bestTime"
-  );
+  if(locked!==9)
+    return;
 
+  gameFinished=true;
+
+  stopTimer();
+
+  const finalScore =
+    updateScore();
 
   if(
-    oldScore===null ||
-    finalScore>Number(oldScore)
+    finalScore>bestScore
   ){
 
+    bestScore=finalScore;
+
     localStorage.setItem(
-      "completePic_v17_bestScore",
-      finalScore
+      "completePic_v19_bestScore",
+      bestScore
     );
 
   }
 
 
   if(
-    oldTime===null ||
-    seconds<Number(oldTime)
+    bestTime===0 ||
+    seconds<bestTime
   ){
 
+    bestTime=seconds;
+
     localStorage.setItem(
-      "completePic_v17_bestTime",
-      seconds
+      "completePic_v19_bestTime",
+      bestTime
     );
 
   }
 
 
-  updateBest();
+  bestScoreEl.textContent=bestScore;
 
-  winSound();
+  document.getElementById("finalTime")
+    .textContent=seconds;
+
+  document.getElementById("finalMoves")
+    .textContent=moves;
+
+  document.getElementById("finalScore")
+    .textContent=finalScore;
+
+  document.getElementById("finalBest")
+    .textContent=bestScore;
 
 
-  document.getElementById(
-    "winScreen"
-  ).style.display="flex";
+  showMessage(
+    "🏆 Picture Complete!",
+    "win"
+  );
+
+  winBox.style.display="flex";
+
+  correctSound();
+
+  setTimeout(()=>{
+    sound(1100,.25,"sine");
+  },180);
+
+  setTimeout(()=>{
+    sound(1400,.3,"sine");
+  },350);
+
+  createConfetti();
 
 }
 
 
-/* =========================================================
+/* =========================================
+   CONFETTI
+   ========================================= */
+
+function createConfetti(){
+
+  for(let i=0;i<80;i++){
+
+    const c =
+      document.createElement("div");
+
+    c.className="confetti";
+
+    c.style.left =
+      Math.random()*100+"vw";
+
+    c.style.animationDelay =
+      Math.random()*1.2+"s";
+
+    c.style.transform =
+      "rotate("+Math.random()*360+"deg)";
+
+    c.style.background =
+      [
+        "#ff4d6d",
+        "#ffd166",
+        "#06d6a0",
+        "#118ab2",
+        "#8338ec",
+        "#ff9f1c"
+      ][Math.floor(Math.random()*6)];
+
+    document.body.appendChild(c);
+
+    setTimeout(()=>{
+      c.remove();
+    },4000);
+
+  }
+
+}
+
+
+/* =========================================
    NEW GAME
-========================================================= */
+   ========================================= */
 
 function newGame(){
 
-  startAudio();
+  stopTimer();
 
+  gameStarted=false;
+  gameFinished=false;
 
-  clearInterval(timer);
-
-
-  moves=0;
   seconds=0;
-  completed=0;
+  moves=0;
 
-  running=true;
+  timerEl.textContent="0";
+  movesEl.textContent="0";
+  scoreEl.textContent="100";
 
+  messageEl.textContent="";
+  messageEl.className="";
 
-  document.getElementById(
-    "time"
-  ).textContent="0";
-
-
-  document.getElementById(
-    "moves"
-  ).textContent="0";
+  winBox.style.display="none";
 
 
-  document.getElementById(
-    "score"
-  ).textContent="100";
+  document
+    .querySelectorAll(".piece.locked")
+    .forEach(p=>p.remove());
 
 
-  document.getElementById(
-    "message"
-  ).textContent=
-  "Drag a piece into the picture.";
+  createPanda();
 
-
-  document.getElementById(
-    "message"
-  ).className="";
-
-
-  document.getElementById(
-    "winScreen"
-  ).style.display="none";
-
-
-  /*
-     Create the Panda again.
-  */
-
-  drawPanda();
-
-
-  /*
-     Show the complete picture
-     inside the black frame.
-  */
-
-  boardCtx.clearRect(
-    0,
-    0,
-    SIZE,
-    SIZE
-  );
-
-
-  boardCtx.drawImage(
-    sourceCanvas,
-    0,
-    0
-  );
-
-
-  createTargetGrid();
-
+  resizeBoardCanvas();
 
   createPieces();
-
-
-  updateBest();
-
-
-  startTimer();
 
 }
 
 
-/* =========================================================
-   START GAME
-========================================================= */
+window.addEventListener(
+  "resize",
+  function(){
 
-updateBest();
+    if(sourceCanvas){
 
-newGame();
+      resizeBoardCanvas();
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   START
+   ========================================= */
+
+createPanda();
+
+resizeBoardCanvas();
+
+createPieces();
 
 </script>
 
