@@ -1572,27 +1572,31 @@ function newGame(){
   stopTimer();
 
   seconds = 0;
-
   moves = 0;
-
   lockedCount = 0;
-
   gameStarted = false;
-
   draggingPiece = null;
 
-  updateTimer();
+  /* Remove EVERY old puzzle piece */
+  document.querySelectorAll(".piece").forEach(piece => {
+    piece.remove();
+  });
 
+  /* Clear the pieces array */
+  pieces = [];
+
+  /* Hide win screen */
+  winScreen.style.display = "none";
+
+  /* Reset statistics */
+  updateTimer();
   updateStats();
 
-  winScreen.style.display =
-    "none";
-
-
+  /* Redraw clean Panda frame */
   drawBoard();
 
+  /* Create completely new pieces */
   createPieces();
-
 }
 
 
