@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
-<title>Complete the Pic V2.5</title>
+<title>Complete the Pic V2.6</title>
 
 <style>
 *{
@@ -16,38 +16,34 @@
 html,body{
     margin:0;
     padding:0;
-    min-height:100%;
     font-family:Arial,sans-serif;
-    background:linear-gradient(#f8fbff,#eef4f8);
+    background:#f4f7f9;
     color:#222;
-}
-
-body{
     overflow-x:hidden;
 }
 
 header{
     text-align:center;
-    padding:14px 10px 8px;
+    padding:14px 8px 6px;
 }
 
 h1{
     margin:0;
-    font-size:30px;
+    font-size:29px;
 }
 
 .subtitle{
-    margin-top:5px;
-    color:#666;
+    color:#777;
     font-size:14px;
+    margin-top:4px;
 }
 
 .stats{
     display:flex;
     justify-content:center;
-    gap:8px;
     flex-wrap:wrap;
-    margin:10px auto;
+    gap:7px;
+    margin:10px 5px;
 }
 
 .stat{
@@ -55,9 +51,8 @@ h1{
     border:1px solid #ddd;
     border-radius:12px;
     padding:7px 12px;
-    min-width:78px;
+    min-width:75px;
     box-shadow:0 2px 7px rgba(0,0,0,.07);
-    text-align:center;
 }
 
 .stat b{
@@ -66,7 +61,7 @@ h1{
 }
 
 .stat span{
-    font-size:11px;
+    font-size:10px;
     color:#777;
 }
 
@@ -74,25 +69,30 @@ h1{
     width:100%;
     max-width:650px;
     margin:auto;
-    padding:5px 12px 30px;
+    padding:0 10px 30px;
 }
+
+/* FRAME */
 
 #frameWrap{
     display:flex;
     justify-content:center;
-    margin:10px auto 20px;
+    margin:8px auto 18px;
 }
 
 #frame{
     position:relative;
     width:min(88vw,420px);
     aspect-ratio:1/1;
+
     background:white;
-    border:3px solid #bfc7ce;
-    border-radius:10px;
+
+    border:2px solid #d5dadd;
+    border-radius:9px;
+
     box-shadow:
-        0 5px 18px rgba(0,0,0,.10),
-        inset 0 0 0 1px #fff;
+        0 4px 16px rgba(0,0,0,.08);
+
     overflow:visible;
 }
 
@@ -111,131 +111,452 @@ h1{
     overflow:visible;
 }
 
+/* PIECES */
+
 #piecesTitle{
     text-align:center;
-    font-size:14px;
     color:#777;
-    margin:5px 0 8px;
+    font-size:14px;
+    margin-bottom:8px;
 }
 
 #piecesArea{
-    min-height:240px;
+    min-height:230px;
+
     display:flex;
-    flex-wrap:wrap;
     justify-content:center;
     align-items:center;
+    flex-wrap:wrap;
+
     gap:8px;
-    padding:12px 5px 20px;
+
+    padding:10px 4px 20px;
 }
+
+/*
+   Pieces are deliberately larger than before.
+*/
 
 .piece{
     position:relative;
+
     width:92px;
     height:92px;
+
     touch-action:none;
     user-select:none;
     -webkit-user-select:none;
+
     cursor:grab;
+
     z-index:20;
+
+    background:transparent;
 }
 
 .piece.dragging{
     cursor:grabbing;
-    z-index:9999;
-    filter:drop-shadow(0 8px 13px rgba(0,0,0,.25));
+    z-index:10000;
+
+    filter:
+        drop-shadow(0 7px 10px rgba(0,0,0,.28));
+
+    transform:scale(1.04);
 }
 
-.piece svg{
+.pieceCanvas{
     width:100%;
     height:100%;
     display:block;
-    overflow:visible;
+    pointer-events:none;
+
+    border-radius:4px;
 }
+
+/*
+   Different visual silhouettes.
+*/
+
+.shape0{
+    clip-path:polygon(
+        0 0,
+        35% 0,
+        42% 8%,
+        50% 14%,
+        58% 8%,
+        65% 0,
+        100% 0,
+        100% 35%,
+        92% 42%,
+        86% 50%,
+        92% 58%,
+        100% 65%,
+        100% 100%,
+        65% 100%,
+        58% 92%,
+        50% 86%,
+        42% 92%,
+        35% 100%,
+        0 100%,
+        0 65%,
+        8% 58%,
+        14% 50%,
+        8% 42%,
+        0 35%
+    );
+}
+
+.shape1{
+    clip-path:polygon(
+        0 0,
+        32% 0,
+        39% 6%,
+        48% 12%,
+        57% 6%,
+        68% 0,
+        100% 0,
+        100% 38%,
+        94% 45%,
+        86% 51%,
+        94% 59%,
+        100% 67%,
+        100% 100%,
+        62% 100%,
+        56% 94%,
+        49% 86%,
+        42% 94%,
+        35% 100%,
+        0 100%,
+        0 62%,
+        6% 56%,
+        14% 49%,
+        6% 41%,
+        0 34%
+    );
+}
+
+.shape2{
+    clip-path:polygon(
+        0 0,
+        38% 0,
+        45% 10%,
+        53% 17%,
+        61% 10%,
+        70% 0,
+        100% 0,
+        100% 30%,
+        91% 38%,
+        83% 49%,
+        91% 60%,
+        100% 68%,
+        100% 100%,
+        70% 100%,
+        61% 91%,
+        50% 84%,
+        40% 91%,
+        30% 100%,
+        0 100%,
+        0 70%,
+        10% 61%,
+        17% 50%,
+        10% 40%,
+        0 30%
+    );
+}
+
+.shape3{
+    clip-path:polygon(
+        0 0,
+        29% 0,
+        37% 8%,
+        50% 18%,
+        63% 8%,
+        72% 0,
+        100% 0,
+        100% 28%,
+        91% 37%,
+        82% 50%,
+        91% 63%,
+        100% 72%,
+        100% 100%,
+        72% 100%,
+        63% 91%,
+        50% 82%,
+        37% 91%,
+        28% 100%,
+        0 100%,
+        0 72%,
+        9% 63%,
+        18% 50%,
+        9% 37%,
+        0 28%
+    );
+}
+
+.shape4{
+    clip-path:polygon(
+        0 0,
+        34% 0,
+        43% 7%,
+        50% 11%,
+        57% 7%,
+        66% 0,
+        100% 0,
+        100% 34%,
+        93% 43%,
+        89% 50%,
+        93% 57%,
+        100% 66%,
+        100% 100%,
+        66% 100%,
+        57% 93%,
+        50% 89%,
+        43% 93%,
+        34% 100%,
+        0 100%,
+        0 66%,
+        7% 57%,
+        11% 50%,
+        7% 43%,
+        0 34%
+    );
+}
+
+.shape5{
+    clip-path:polygon(
+        0 0,
+        31% 0,
+        40% 9%,
+        51% 15%,
+        60% 9%,
+        69% 0,
+        100% 0,
+        100% 31%,
+        90% 40%,
+        84% 51%,
+        90% 60%,
+        100% 69%,
+        100% 100%,
+        69% 100%,
+        60% 91%,
+        49% 84%,
+        40% 91%,
+        31% 100%,
+        0 100%,
+        0 69%,
+        10% 60%,
+        16% 49%,
+        10% 40%,
+        0 31%
+    );
+}
+
+.shape6{
+    clip-path:polygon(
+        0 0,
+        36% 0,
+        44% 6%,
+        52% 15%,
+        61% 6%,
+        70% 0,
+        100% 0,
+        100% 36%,
+        94% 44%,
+        84% 52%,
+        94% 61%,
+        100% 70%,
+        100% 100%,
+        64% 100%,
+        56% 94%,
+        49% 84%,
+        41% 94%,
+        31% 100%,
+        0 100%,
+        0 64%,
+        6% 56%,
+        16% 49%,
+        6% 41%,
+        0 31%
+    );
+}
+
+.shape7{
+    clip-path:polygon(
+        0 0,
+        33% 0,
+        41% 8%,
+        50% 16%,
+        59% 8%,
+        67% 0,
+        100% 0,
+        100% 33%,
+        92% 41%,
+        84% 50%,
+        92% 59%,
+        100% 67%,
+        100% 100%,
+        67% 100%,
+        59% 92%,
+        50% 84%,
+        41% 92%,
+        33% 100%,
+        0 100%,
+        0 67%,
+        8% 59%,
+        16% 50%,
+        8% 41%,
+        0 33%
+    );
+}
+
+.shape8{
+    clip-path:polygon(
+        0 0,
+        30% 0,
+        39% 10%,
+        50% 13%,
+        62% 10%,
+        70% 0,
+        100% 0,
+        100% 31%,
+        90% 40%,
+        87% 50%,
+        90% 61%,
+        100% 70%,
+        100% 100%,
+        70% 100%,
+        61% 90%,
+        50% 87%,
+        40% 90%,
+        30% 100%,
+        0 100%,
+        0 70%,
+        10% 61%,
+        13% 50%,
+        10% 40%,
+        0 31%
+    );
+}
+
+/* LOCKED */
 
 .piece.locked{
     position:absolute !important;
+
     margin:0 !important;
+
     cursor:default;
-    z-index:5;
+
     pointer-events:none;
+
+    z-index:5;
+
+    transform:none !important;
+
     filter:none;
 }
+
+/* MESSAGE */
+
+#message{
+    text-align:center;
+    min-height:28px;
+    font-weight:bold;
+    margin:3px 0 8px;
+}
+
+/* BUTTON */
 
 .buttons{
     display:flex;
     justify-content:center;
-    gap:10px;
-    flex-wrap:wrap;
     margin-top:5px;
 }
 
 button{
     border:0;
     border-radius:12px;
-    padding:12px 22px;
+    padding:12px 24px;
+
     font-size:16px;
     font-weight:bold;
+
     background:#222;
     color:white;
-    cursor:pointer;
-    box-shadow:0 3px 8px rgba(0,0,0,.15);
+
+    box-shadow:0 3px 8px rgba(0,0,0,.16);
 }
 
 button:active{
     transform:scale(.97);
 }
 
-#message{
-    min-height:28px;
-    text-align:center;
-    margin:8px;
-    font-weight:bold;
-}
+/* WIN */
 
 #winScreen{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.55);
+
     display:none;
     align-items:center;
     justify-content:center;
-    z-index:20000;
+
+    background:rgba(0,0,0,.55);
+
+    z-index:30000;
+
     padding:20px;
 }
 
 .winBox{
-    background:white;
-    border-radius:20px;
-    padding:28px;
     width:min(90vw,380px);
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:28px;
+
     text-align:center;
-    box-shadow:0 15px 45px rgba(0,0,0,.3);
+
+    box-shadow:
+        0 15px 45px rgba(0,0,0,.3);
 }
 
 .winBox h2{
     margin-top:0;
-    font-size:28px;
+    font-size:27px;
 }
 
-.winBox p{
-    color:#555;
-    line-height:1.6;
+/* SHAKE */
+
+.shake{
+    animation:shake .35s ease;
 }
+
+@keyframes shake{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-9px)}
+    50%{transform:translateX(9px)}
+    75%{transform:translateX(-6px)}
+}
+
+/* CONFETTI */
 
 #confetti{
     position:fixed;
     inset:0;
     pointer-events:none;
-    z-index:19999;
+    z-index:29999;
     overflow:hidden;
 }
 
-.confettiPiece{
+.confetti{
     position:absolute;
+    top:-20px;
     width:9px;
     height:14px;
-    top:-20px;
-    animation:fall 2.8s linear forwards;
+    animation:fall 2.7s linear forwards;
 }
 
 @keyframes fall{
@@ -245,18 +566,8 @@ button:active{
     }
 }
 
-.shake{
-    animation:shake .35s ease;
-}
-
-@keyframes shake{
-    0%,100%{transform:translateX(0)}
-    25%{transform:translateX(-10px)}
-    50%{transform:translateX(10px)}
-    75%{transform:translateX(-7px)}
-}
-
 @media(max-width:400px){
+
     h1{
         font-size:25px;
     }
@@ -267,8 +578,8 @@ button:active{
     }
 
     #piecesArea{
-        min-height:220px;
         gap:5px;
+        min-height:220px;
     }
 }
 </style>
@@ -277,150 +588,251 @@ button:active{
 <body>
 
 <header>
-    <h1>🧩 Complete the Pic</h1>
-    <div class="subtitle">Pick the pieces. Complete the picture!</div>
 
-    <div class="stats">
-        <div class="stat">
-            <b id="time">00:00</b>
-            <span>TIME</span>
-        </div>
+<h1>🧩 Complete the Pic</h1>
 
-        <div class="stat">
-            <b id="moves">0</b>
-            <span>MOVES</span>
-        </div>
+<div class="subtitle">
+Pick the pieces. Complete the picture!
+</div>
 
-        <div class="stat">
-            <b id="score">100</b>
-            <span>SCORE</span>
-        </div>
+<div class="stats">
 
-        <div class="stat">
-            <b id="best">—</b>
-            <span>BEST</span>
-        </div>
-    </div>
+<div class="stat">
+<b id="time">00:00</b>
+<span>TIME</span>
+</div>
+
+<div class="stat">
+<b id="moves">0</b>
+<span>MOVES</span>
+</div>
+
+<div class="stat">
+<b id="score">100</b>
+<span>SCORE</span>
+</div>
+
+<div class="stat">
+<b id="best">—</b>
+<span>BEST</span>
+</div>
+
+</div>
+
 </header>
+
 
 <div id="game">
 
-    <div id="frameWrap">
-        <div id="frame">
+<div id="frameWrap">
 
-            <canvas id="board"></canvas>
+<div id="frame">
 
-            <div id="lockedPieces"></div>
+<canvas id="board"></canvas>
 
-        </div>
-    </div>
-
-    <div id="piecesTitle">
-        Drag each piece into the correct position
-    </div>
-
-    <div id="piecesArea"></div>
-
-    <div id="message"></div>
-
-    <div class="buttons">
-        <button onclick="newGame()">🔄 New Game</button>
-    </div>
+<div id="lockedPieces"></div>
 
 </div>
+
+</div>
+
+
+<div id="piecesTitle">
+🧩 Drag the pieces into the Panda picture
+</div>
+
+<div id="piecesArea"></div>
+
+<div id="message"></div>
+
+<div class="buttons">
+<button onclick="newGame()">🔄 New Game</button>
+</div>
+
+</div>
+
 
 <div id="winScreen">
-    <div class="winBox">
-        <h2>🎉 Picture Complete!</h2>
 
-        <p>
-            Excellent work!<br>
-            You completed the Panda picture.
-        </p>
+<div class="winBox">
 
-        <p>
-            <b>Time:</b> <span id="finalTime">00:00</span><br>
-            <b>Moves:</b> <span id="finalMoves">0</span><br>
-            <b>Score:</b> <span id="finalScore">100</span>
-        </p>
+<h2>🎉 Picture Complete!</h2>
 
-        <button onclick="newGame()">▶ Play Again</button>
-    </div>
+<p>
+You completed the Panda picture!
+</p>
+
+<p>
+<b>Time:</b>
+<span id="finalTime">00:00</span>
+<br>
+
+<b>Moves:</b>
+<span id="finalMoves">0</span>
+<br>
+
+<b>Score:</b>
+<span id="finalScore">100</span>
+</p>
+
+<button onclick="newGame()">
+▶ Play Again
+</button>
+
 </div>
+
+</div>
+
 
 <div id="confetti"></div>
 
+
 <script>
+
+/* ==================================
+   GAME SETTINGS
+================================== */
 
 const ROWS = 3;
 const COLS = 3;
 
-const pandaImage = new Image();
-pandaImage.src = "panda.png";
 
-const board = document.getElementById("board");
-const boardCtx = board.getContext("2d");
+/* ==================================
+   ELEMENTS
+================================== */
 
-const frame = document.getElementById("frame");
-const piecesArea = document.getElementById("piecesArea");
-const lockedPieces = document.getElementById("lockedPieces");
+const frame =
+    document.getElementById("frame");
 
-const timeEl = document.getElementById("time");
-const movesEl = document.getElementById("moves");
-const scoreEl = document.getElementById("score");
-const bestEl = document.getElementById("best");
-const messageEl = document.getElementById("message");
+const board =
+    document.getElementById("board");
+
+const ctx =
+    board.getContext("2d");
+
+const piecesArea =
+    document.getElementById("piecesArea");
+
+const lockedPieces =
+    document.getElementById("lockedPieces");
+
+const message =
+    document.getElementById("message");
+
+const timeEl =
+    document.getElementById("time");
+
+const movesEl =
+    document.getElementById("moves");
+
+const scoreEl =
+    document.getElementById("score");
+
+const bestEl =
+    document.getElementById("best");
+
+
+/* ==================================
+   IMAGE
+================================== */
+
+const pandaImage =
+    new Image();
+
+let imageReady = false;
+
+
+/*
+   IMPORTANT:
+   Game starts ONLY after image loads.
+*/
+
+pandaImage.onload = function(){
+
+    imageReady = true;
+
+    resizeBoard();
+
+    newGame();
+};
+
+pandaImage.onerror = function(){
+
+    imageReady = false;
+
+    message.innerHTML =
+        "⚠️ <b>panda.png not found.</b><br>" +
+        "Put panda.png in the same folder as index.html.";
+};
+
+
+/*
+   Cache-busting prevents an old broken
+   image from being used by browser cache.
+*/
+
+pandaImage.src =
+    "panda.png?v=26";
+
+
+/* ==================================
+   GAME VARIABLES
+================================== */
 
 let seconds = 0;
 let moves = 0;
 let score = 100;
+
 let timer = null;
 let gameStarted = false;
+
 let lockedCount = 0;
 
-let horizontalEdges = [];
-let verticalEdges = [];
-
 let draggingPiece = null;
-let dragOffsetX = 0;
-let dragOffsetY = 0;
 
-let audioContext = null;
+let offsetX = 0;
+let offsetY = 0;
 
 
-/* =========================
+/* ==================================
    BEST SCORE
-========================= */
-
-function getBestScore(){
-    return localStorage.getItem("completePic_v25_bestScore");
-}
-
-function getBestTime(){
-    return localStorage.getItem("completePic_v25_bestTime");
-}
+================================== */
 
 function showBest(){
 
-    const bestScore = getBestScore();
+    const best =
+        localStorage.getItem(
+            "completePic_v26_bestScore"
+        );
 
-    if(bestScore){
-        bestEl.textContent = bestScore;
-    }else{
-        bestEl.textContent = "—";
-    }
+    bestEl.textContent =
+        best ? best : "—";
 }
 
 
-/* =========================
-   TIMER
-========================= */
+/* ==================================
+   TIME
+================================== */
+
+function formatTime(value){
+
+    const minutes =
+        Math.floor(value / 60);
+
+    const secondsPart =
+        value % 60;
+
+    return String(minutes).padStart(2,"0")
+        + ":" +
+        String(secondsPart).padStart(2,"0");
+}
+
 
 function startTimer(){
 
     if(timer) return;
 
-    timer = setInterval(()=>{
+    timer = setInterval(function(){
 
         if(!gameStarted) return;
 
@@ -431,114 +843,74 @@ function startTimer(){
     },1000);
 }
 
+
 function stopTimer(){
 
     if(timer){
+
         clearInterval(timer);
+
         timer = null;
     }
 }
 
-function formatTime(sec){
 
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-
-    return String(m).padStart(2,"0") + ":" +
-           String(s).padStart(2,"0");
-}
-
-
-/* =========================
+/* ==================================
    STATS
-========================= */
+================================== */
 
 function updateStats(){
 
-    timeEl.textContent = formatTime(seconds);
-    movesEl.textContent = moves;
+    timeEl.textContent =
+        formatTime(seconds);
 
-    score = Math.max(
-        0,
-        100 - moves * 2 - Math.floor(seconds / 5)
-    );
+    movesEl.textContent =
+        moves;
 
-    scoreEl.textContent = score;
-}
-
-
-/* =========================
-   SOUND
-========================= */
-
-function sound(type){
-
-    try{
-
-        if(!audioContext){
-            audioContext =
-                new (window.AudioContext ||
-                     window.webkitAudioContext)();
-        }
-
-        const osc = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-
-        osc.connect(gain);
-        gain.connect(audioContext.destination);
-
-        if(type === "correct"){
-            osc.frequency.value = 720;
-        }
-        else if(type === "wrong"){
-            osc.frequency.value = 180;
-        }
-        else{
-            osc.frequency.value = 950;
-        }
-
-        gain.gain.value = 0.06;
-
-        osc.start();
-
-        osc.stop(
-            audioContext.currentTime + 0.12
+    score =
+        Math.max(
+            0,
+            100 -
+            moves * 2 -
+            Math.floor(seconds / 5)
         );
 
-    }catch(e){}
+    scoreEl.textContent =
+        score;
 }
 
 
-/* =========================
-   VIBRATION
-========================= */
-
-function vibrate(pattern){
-
-    if(navigator.vibrate){
-        navigator.vibrate(pattern);
-    }
-}
-
-
-/* =========================
-   BOARD
-========================= */
+/* ==================================
+   BOARD SIZE
+================================== */
 
 function resizeBoard(){
 
-    const rect = frame.getBoundingClientRect();
+    const rect =
+        frame.getBoundingClientRect();
 
-    const dpr = window.devicePixelRatio || 1;
+    const dpr =
+        window.devicePixelRatio || 1;
 
-    board.width = rect.width * dpr;
-    board.height = rect.height * dpr;
+    board.width =
+        Math.round(rect.width * dpr);
 
-    board.style.width = rect.width + "px";
-    board.style.height = rect.height + "px";
+    board.height =
+        Math.round(rect.height * dpr);
 
-    boardCtx.setTransform(
-        dpr,0,0,dpr,0,0
+    board.style.width =
+        rect.width + "px";
+
+    board.style.height =
+        rect.height + "px";
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
     );
 
     drawBoard();
@@ -547,28 +919,49 @@ function resizeBoard(){
 }
 
 
-/* =========================
-   DRAW PANDA GUIDE
-========================= */
+/* ==================================
+   DRAW FRAME PICTURE
+================================== */
 
 function drawBoard(){
 
-    const w = frame.clientWidth;
-    const h = frame.clientHeight;
+    if(!imageReady) return;
 
-    boardCtx.clearRect(0,0,w,h);
+    const w =
+        frame.clientWidth;
 
-    boardCtx.fillStyle = "#ffffff";
-    boardCtx.fillRect(0,0,w,h);
+    const h =
+        frame.clientHeight;
 
-    if(!pandaImage.complete ||
-       !pandaImage.naturalWidth){
-        return;
-    }
+    ctx.clearRect(
+        0,
+        0,
+        w,
+        h
+    );
 
-    boardCtx.globalAlpha = 0.09;
+    /*
+       White frame
+    */
 
-    boardCtx.drawImage(
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.fillRect(
+        0,
+        0,
+        w,
+        h
+    );
+
+    /*
+       Very faint Panda guide
+    */
+
+    ctx.globalAlpha =
+        0.11;
+
+    ctx.drawImage(
         pandaImage,
         0,
         0,
@@ -576,747 +969,227 @@ function drawBoard(){
         h
     );
 
-    boardCtx.globalAlpha = 1;
+    ctx.globalAlpha =
+        1;
 
     /*
-       Very light 3×3 guide lines
+       Very light puzzle grid
     */
 
-    boardCtx.strokeStyle =
-        "rgba(120,130,140,.18)";
+    ctx.strokeStyle =
+        "rgba(100,110,120,.16)";
 
-    boardCtx.lineWidth = 1;
+    ctx.lineWidth = 1;
 
     for(let i=1;i<3;i++){
 
-        const x = w * i / 3;
+        const x =
+            w * i / 3;
 
-        boardCtx.beginPath();
-        boardCtx.moveTo(x,0);
-        boardCtx.lineTo(x,h);
-        boardCtx.stroke();
+        ctx.beginPath();
+
+        ctx.moveTo(x,0);
+        ctx.lineTo(x,h);
+
+        ctx.stroke();
     }
 
     for(let i=1;i<3;i++){
 
-        const y = h * i / 3;
+        const y =
+            h * i / 3;
 
-        boardCtx.beginPath();
-        boardCtx.moveTo(0,y);
-        boardCtx.lineTo(w,y);
-        boardCtx.stroke();
+        ctx.beginPath();
+
+        ctx.moveTo(0,y);
+        ctx.lineTo(w,y);
+
+        ctx.stroke();
     }
 }
 
 
-/* =========================
-   INTERESTING EDGE TYPES
-=========================
+/* ==================================
+   CREATE ONE PIECE
+================================== */
 
-   Each internal edge has:
-   - direction
-   - shape type
-
-   1  = outward
-  -1  = inward
-*/
-
-function randomSign(){
-
-    return Math.random() < .5 ? 1 : -1;
-}
-
-function createEdges(){
-
-    horizontalEdges = [];
-    verticalEdges = [];
-
-    /*
-       Horizontal boundaries
-       2 rows × 3 columns
-    */
-
-    for(let r=0;r<ROWS-1;r++){
-
-        horizontalEdges[r] = [];
-
-        for(let c=0;c<COLS;c++){
-
-            horizontalEdges[r][c] = {
-                sign: randomSign(),
-                style: Math.floor(Math.random()*4)
-            };
-        }
-    }
-
-    /*
-       Vertical boundaries
-       3 rows × 2 columns
-    */
-
-    for(let r=0;r<ROWS;r++){
-
-        verticalEdges[r] = [];
-
-        for(let c=0;c<COLS-1;c++){
-
-            verticalEdges[r][c] = {
-                sign: randomSign(),
-                style: Math.floor(Math.random()*4)
-            };
-        }
-    }
-}
-
-
-/* =========================
-   JIGSAW EDGE
-========================= */
-
-function edgePath(
-    type,
-    sign,
-    style,
-    S
+function createPiece(
+    row,
+    col,
+    number
 ){
 
-    const P = 17;
+    const piece =
+        document.createElement("div");
 
-    let d = sign * P;
+    piece.className =
+        "piece";
 
-    let path = "";
+    piece.dataset.row =
+        row;
 
-    /*
-       style 0:
-       large round bulb
-    */
+    piece.dataset.col =
+        col;
 
-    if(style === 0){
-
-        path +=
-        `L ${S*.30} 0
-         C ${S*.36} ${d*.15},
-           ${S*.38} ${d},
-           ${S*.50} ${d}
-         C ${S*.62} ${d},
-           ${S*.64} ${d*.15},
-           ${S*.70} 0
-         L ${S} 0`;
-    }
+    piece.dataset.number =
+        number;
 
     /*
-       style 1:
-       narrow rounded tab
+       Every piece gets a different
+       interesting silhouette.
     */
 
-    else if(style === 1){
+    const canvas =
+        document.createElement("canvas");
 
-        path +=
-        `L ${S*.38} 0
-         C ${S*.42} ${d*.15},
-           ${S*.43} ${d*.85},
-           ${S*.50} ${d*.85}
-         C ${S*.57} ${d*.85},
-           ${S*.58} ${d*.15},
-           ${S*.62} 0
-         L ${S} 0`;
-    }
+    canvas.className =
+        "pieceCanvas shape" + number;
+
+    const size = 200;
+
+    canvas.width = size;
+    canvas.height = size;
+
+    const pctx =
+        canvas.getContext("2d");
 
     /*
-       style 2:
-       asymmetric bulb
+       Draw the exact corresponding
+       part of the Panda image.
     */
 
-    else if(style === 2){
+    const sw =
+        pandaImage.naturalWidth / 3;
 
-        path +=
-        `L ${S*.25} 0
-         C ${S*.34} ${d*.10},
-           ${S*.38} ${d*.95},
-           ${S*.53} ${d}
-         C ${S*.65} ${d*.95},
-           ${S*.63} ${d*.20},
-           ${S*.74} 0
-         L ${S} 0`;
-    }
+    const sh =
+        pandaImage.naturalHeight / 3;
 
-    /*
-       style 3:
-       double curve
-    */
+    pctx.drawImage(
+        pandaImage,
 
-    else{
+        col * sw,
+        row * sh,
+        sw,
+        sh,
 
-        path +=
-        `L ${S*.30} 0
-         C ${S*.39} ${d*.05},
-           ${S*.40} ${d*.75},
-           ${S*.47} ${d*.75}
-         C ${S*.54} ${d*.75},
-           ${S*.54} ${d*.10},
-           ${S*.61} ${d}
-         C ${S*.69} ${d*.80},
-           ${S*.67} ${d*.10},
-           ${S*.76} 0
-         L ${S} 0`;
-    }
+        0,
+        0,
+        size,
+        size
+    );
 
-    return path;
+    piece.appendChild(canvas);
+
+    piecesArea.appendChild(piece);
+
+    setupDrag(piece);
 }
 
 
-/* =========================
-   MAKE PIECE PATH
-========================= */
-
-function makePiecePath(row,col){
-
-    const S = 100;
-
-    let path = `M 0 0`;
-
-    /*
-       TOP
-    */
-
-    if(row === 0){
-
-        path += `L ${S} 0`;
-    }
-    else{
-
-        const e = horizontalEdges[row-1][col];
-
-        path += edgePath(
-            "top",
-            -e.sign,
-            e.style,
-            S
-        );
-    }
-
-    /*
-       RIGHT
-    */
-
-    if(col === COLS-1){
-
-        path += `L ${S} ${S}`;
-    }
-    else{
-
-        const e = verticalEdges[row][col];
-
-        path += edgePath(
-            "right",
-            e.sign,
-            e.style,
-            S
-        );
-
-        /*
-           rotate right-edge geometry
-           by using transformed SVG group
-           handled below
-        */
-
-    }
-
-    /*
-       Instead of relying on a single
-       path orientation, build with
-       SVG path using four transformed
-       edge segments.
-    */
-
-    return createFullSVG(row,col);
-}
-
-
-/* =========================
-   CREATE FULL SVG
-========================= */
-
-function createFullSVG(row,col){
-
-    const S = 100;
-
-    const svgNS =
-        "http://www.w3.org/2000/svg";
-
-    const svg =
-        document.createElementNS(svgNS,"svg");
-
-    svg.setAttribute(
-        "viewBox",
-        "-20 -20 140 140"
-    );
-
-    svg.setAttribute(
-        "preserveAspectRatio",
-        "none"
-    );
-
-    /*
-       Different slight rotations make
-       the pieces visually less repetitive.
-    */
-
-    const path =
-        document.createElementNS(
-            svgNS,
-            "path"
-        );
-
-    let d = "M 0 0";
-
-    /* TOP */
-
-    if(row === 0){
-
-        d += " L 100 0";
-
-    }else{
-
-        const e =
-            horizontalEdges[row-1][col];
-
-        d += horizontalSegment(
-            e.sign,
-            e.style,
-            false
-        );
-    }
-
-    /* RIGHT */
-
-    if(col === COLS-1){
-
-        d += " L 100 100";
-
-    }else{
-
-        const e =
-            verticalEdges[row][col];
-
-        d += verticalSegment(
-            e.sign,
-            e.style,
-            true
-        );
-    }
-
-    /* BOTTOM */
-
-    if(row === ROWS-1){
-
-        d += " L 0 100";
-
-    }else{
-
-        const e =
-            horizontalEdges[row][col];
-
-        d += horizontalSegment(
-            e.sign,
-            e.style,
-            true
-        );
-    }
-
-    /* LEFT */
-
-    if(col === 0){
-
-        d += " L 0 0";
-
-    }else{
-
-        const e =
-            verticalEdges[row][col-1];
-
-        d += verticalSegment(
-            e.sign,
-            e.style,
-            false
-        );
-    }
-
-    d += " Z";
-
-    path.setAttribute("d",d);
-
-    path.setAttribute(
-        "fill",
-        "white"
-    );
-
-    path.setAttribute(
-        "stroke",
-        "rgba(50,50,50,.55)"
-    );
-
-    path.setAttribute(
-        "stroke-width",
-        "1.8"
-    );
-
-    path.setAttribute(
-        "stroke-linejoin",
-        "round"
-    );
-
-    svg.appendChild(path);
-
-    return svg;
-}
-
-
-/* =========================
-   HORIZONTAL SEGMENT
-========================= */
-
-function horizontalSegment(
-    sign,
-    style,
-    reverse
-){
-
-    let result = "";
-
-    const s = reverse ? -1 : 1;
-
-    const start =
-        reverse ? " L 100 100" : "";
-
-    /*
-       Build from left to right.
-       For bottom edge we transform
-       the coordinate system logically.
-    */
-
-    if(!reverse){
-
-        const d = sign * 17;
-
-        if(style===0){
-
-            result =
-            ` L 30 0
-              C 36 ${d*.15},38 ${d},50 ${d}
-              C 62 ${d},64 ${d*.15},70 0
-              L 100 0`;
-
-        }else if(style===1){
-
-            result =
-            ` L 38 0
-              C 42 ${d*.15},43 ${d*.85},50 ${d*.85}
-              C 57 ${d*.85},58 ${d*.15},62 0
-              L 100 0`;
-
-        }else if(style===2){
-
-            result =
-            ` L 25 0
-              C 34 ${d*.1},38 ${d*.95},53 ${d}
-              C 65 ${d*.95},63 ${d*.2},74 0
-              L 100 0`;
-
-        }else{
-
-            result =
-            ` L 30 0
-              C 39 ${d*.05},40 ${d*.75},47 ${d*.75}
-              C 54 ${d*.75},54 ${d*.1},61 ${d}
-              C 69 ${d*.8},67 ${d*.1},76 0
-              L 100 0`;
-        }
-
-    }else{
-
-        /*
-           Bottom edge is generated
-           from right to left.
-        */
-
-        const d = -sign * 17;
-
-        if(style===0){
-
-            result =
-            ` L 70 100
-              C 64 ${100+d*.15},62 ${100+d},50 ${100+d}
-              C 38 ${100+d},36 ${100+d*.15},30 100
-              L 0 100`;
-
-        }else if(style===1){
-
-            result =
-            ` L 62 100
-              C 58 ${100+d*.15},57 ${100+d*.85},50 ${100+d*.85}
-              C 43 ${100+d*.85},42 ${100+d*.15},38 100
-              L 0 100`;
-
-        }else if(style===2){
-
-            result =
-            ` L 75 100
-              C 66 ${100+d*.1},62 ${100+d*.95},47 ${100+d}
-              C 35 ${100+d*.95},37 ${100+d*.2},26 100
-              L 0 100`;
-
-        }else{
-
-            result =
-            ` L 70 100
-              C 61 ${100+d*.05},60 ${100+d*.75},53 ${100+d*.75}
-              C 46 ${100+d*.75},46 ${100+d*.1},39 ${100+d}
-              C 31 ${100+d*.8},33 ${100+d*.1},24 100
-              L 0 100`;
-        }
-    }
-
-    return result;
-}
-
-
-/* =========================
-   VERTICAL SEGMENT
-========================= */
-
-function verticalSegment(
-    sign,
-    style,
-    rightSide
-){
-
-    const d = sign * 17;
-
-    let result = "";
-
-    if(rightSide){
-
-        if(style===0){
-
-            result =
-            ` L 100 30
-              C ${100+d*.15} 36,
-                ${100+d} 38,
-                ${100+d} 50
-              C ${100+d} 62,
-                ${100+d*.15} 64,
-                100 70
-              L 100 100`;
-
-        }else if(style===1){
-
-            result =
-            ` L 100 38
-              C ${100+d*.15} 42,
-                ${100+d*.85} 43,
-                ${100+d*.85} 50
-              C ${100+d*.85} 57,
-                ${100+d*.15} 58,
-                100 62
-              L 100 100`;
-
-        }else if(style===2){
-
-            result =
-            ` L 100 25
-              C ${100+d*.1} 34,
-                ${100+d*.95} 38,
-                ${100+d} 53
-              C ${100+d*.95} 65,
-                ${100+d*.2} 63,
-                100 74
-              L 100 100`;
-
-        }else{
-
-            result =
-            ` L 100 30
-              C ${100+d*.05} 39,
-                ${100+d*.75} 40,
-                ${100+d*.75} 47
-              C ${100+d*.75} 54,
-                ${100+d*.1} 54,
-                ${100+d} 61
-              C ${100+d*.8} 69,
-                ${100+d*.1} 67,
-                100 76
-              L 100 100`;
-        }
-
-    }else{
-
-        /*
-           Left side bottom-to-top
-        */
-
-        const d2 = -sign * 17;
-
-        if(style===0){
-
-            result =
-            ` L 0 70
-              C ${d2*.15} 64,
-                ${d2} 62,
-                ${d2} 50
-              C ${d2} 38,
-                ${d2*.15} 36,
-                0 30
-              L 0 0`;
-
-        }else if(style===1){
-
-            result =
-            ` L 0 62
-              C ${d2*.15} 58,
-                ${d2*.85} 57,
-                ${d2*.85} 50
-              C ${d2*.85} 43,
-                ${d2*.15} 42,
-                0 38
-              L 0 0`;
-
-        }else if(style===2){
-
-            result =
-            ` L 0 75
-              C ${d2*.1} 66,
-                ${d2*.95} 62,
-                ${d2} 47
-              C ${d2*.95} 35,
-                ${d2*.2} 37,
-                0 26
-              L 0 0`;
-
-        }else{
-
-            result =
-            ` L 0 70
-              C ${d2*.05} 61,
-                ${d2*.75} 60,
-                ${d2*.75} 53
-              C ${d2*.75} 46,
-                ${d2*.1} 46,
-                ${d2} 39
-              C ${d2*.8} 31,
-                ${d2*.1} 33,
-                0 24
-              L 0 0`;
-        }
-    }
-
-    return result;
-}
-
-
-/* =========================
-   CREATE PUZZLE PIECES
-========================= */
+/* ==================================
+   CREATE ALL PIECES
+================================== */
 
 function createPieces(){
 
     piecesArea.innerHTML = "";
 
-    const positions = [];
+    let list = [];
 
-    for(let r=0;r<ROWS;r++){
+    for(let row=0;row<3;row++){
 
-        for(let c=0;c<COLS;c++){
+        for(let col=0;col<3;col++){
 
-            positions.push({
-                row:r,
-                col:c
+            list.push({
+                row:row,
+                col:col
             });
         }
     }
 
     /*
-       Shuffle pieces
+       Shuffle
     */
 
-    positions.sort(
-        ()=>Math.random()-.5
+    list.sort(
+        () => Math.random() - 0.5
     );
 
-    positions.forEach(pos=>{
+    list.forEach(
+        (item,index)=>{
 
-        const piece =
-            document.createElement("div");
+            createPiece(
+                item.row,
+                item.col,
+                index
+            );
 
-        piece.className = "piece";
-
-        piece.dataset.row = pos.row;
-        piece.dataset.col = pos.col;
-
-        piece.appendChild(
-            createFullSVG(
-                pos.row,
-                pos.col
-            )
-        );
-
-        piecesArea.appendChild(piece);
-
-        setupDrag(piece);
-    });
+        }
+    );
 }
 
 
-/* =========================
-   DRAG SETUP
-========================= */
+/* ==================================
+   DRAG
+================================== */
 
 function setupDrag(piece){
 
     piece.addEventListener(
         "pointerdown",
-        startDrag
+        function(e){
+
+            startDrag(
+                piece,
+                e
+            );
+
+        }
     );
 }
 
 
-/* =========================
-   START DRAG
-========================= */
+function startDrag(piece,e){
 
-function startDrag(e){
-
-    if(this.classList.contains("locked")){
+    if(piece.classList.contains("locked")){
         return;
     }
 
     e.preventDefault();
 
-    draggingPiece = this;
+    draggingPiece =
+        piece;
 
     const rect =
-        this.getBoundingClientRect();
+        piece.getBoundingClientRect();
 
-    dragOffsetX =
+    offsetX =
         e.clientX - rect.left;
 
-    dragOffsetY =
+    offsetY =
         e.clientY - rect.top;
 
     /*
-       Move to body so it can cross
-       the frame freely.
+       IMPORTANT:
+       Move piece to BODY.
+       This allows it to cross
+       the frame.
     */
 
-    document.body.appendChild(this);
+    document.body.appendChild(piece);
 
-    this.style.position = "fixed";
-    this.style.left = rect.left + "px";
-    this.style.top = rect.top + "px";
+    piece.style.position =
+        "fixed";
 
-    this.classList.add("dragging");
+    piece.style.left =
+        rect.left + "px";
 
-    this.setPointerCapture?.(e.pointerId);
+    piece.style.top =
+        rect.top + "px";
+
+    piece.classList.add(
+        "dragging"
+    );
 
     if(!gameStarted){
 
@@ -1325,17 +1198,17 @@ function startDrag(e){
         startTimer();
     }
 
-    sound("pickup");
+    vibrate(15);
 }
 
 
-/* =========================
-   POINTER MOVE
-========================= */
+/* ==================================
+   MOVE
+================================== */
 
 document.addEventListener(
     "pointermove",
-    e=>{
+    function(e){
 
         if(!draggingPiece){
             return;
@@ -1344,22 +1217,31 @@ document.addEventListener(
         e.preventDefault();
 
         draggingPiece.style.left =
-            (e.clientX - dragOffsetX) + "px";
+            (
+                e.clientX -
+                offsetX
+            ) + "px";
 
         draggingPiece.style.top =
-            (e.clientY - dragOffsetY) + "px";
+            (
+                e.clientY -
+                offsetY
+            ) + "px";
+
     },
-    {passive:false}
+    {
+        passive:false
+    }
 );
 
 
-/* =========================
-   POINTER UP
-========================= */
+/* ==================================
+   DROP
+================================== */
 
 document.addEventListener(
     "pointerup",
-    e=>{
+    function(){
 
         if(!draggingPiece){
             return;
@@ -1375,14 +1257,13 @@ document.addEventListener(
         );
 
         checkDrop(piece);
-
     }
 );
 
 
-/* =========================
+/* ==================================
    CHECK DROP
-========================= */
+================================== */
 
 function checkDrop(piece){
 
@@ -1392,47 +1273,19 @@ function checkDrop(piece){
     const pieceRect =
         piece.getBoundingClientRect();
 
-    const pieceCenterX =
+    const centerX =
         pieceRect.left +
-        pieceRect.width/2;
+        pieceRect.width / 2;
 
-    const pieceCenterY =
+    const centerY =
         pieceRect.top +
-        pieceRect.height/2;
+        pieceRect.height / 2;
 
     const cellW =
-        frameRect.width / COLS;
+        frameRect.width / 3;
 
     const cellH =
-        frameRect.height / ROWS;
-
-    let col =
-        Math.floor(
-            (pieceCenterX -
-             frameRect.left) /
-            cellW
-        );
-
-    let row =
-        Math.floor(
-            (pieceCenterY -
-             frameRect.top) /
-            cellH
-        );
-
-    /*
-       Keep within board
-    */
-
-    col = Math.max(
-        0,
-        Math.min(COLS-1,col)
-    );
-
-    row = Math.max(
-        0,
-        Math.min(ROWS-1,row)
-    );
+        frameRect.height / 3;
 
     const correctRow =
         Number(piece.dataset.row);
@@ -1443,34 +1296,36 @@ function checkDrop(piece){
     const targetX =
         frameRect.left +
         correctCol * cellW +
-        cellW/2;
+        cellW / 2;
 
     const targetY =
         frameRect.top +
         correctRow * cellH +
-        cellH/2;
+        cellH / 2;
 
     const dx =
-        pieceCenterX - targetX;
+        centerX - targetX;
 
     const dy =
-        pieceCenterY - targetY;
+        centerY - targetY;
 
     const distance =
-        Math.sqrt(dx*dx + dy*dy);
+        Math.sqrt(
+            dx*dx + dy*dy
+        );
 
     /*
-       Very generous tolerance.
+       Large tolerance makes
+       Android placement easy.
     */
 
     const tolerance =
-        Math.min(cellW,cellH) * 0.70;
+        Math.min(
+            cellW,
+            cellH
+        ) * 0.72;
 
-    if(
-        row === correctRow &&
-        col === correctCol &&
-        distance <= tolerance
-    ){
+    if(distance <= tolerance){
 
         lockPiece(
             piece,
@@ -1480,14 +1335,14 @@ function checkDrop(piece){
 
     }else{
 
-        wrongPlacement(piece);
+        wrongPiece(piece);
     }
 }
 
 
-/* =========================
-   LOCK PIECE
-========================= */
+/* ==================================
+   LOCK
+================================== */
 
 function lockPiece(
     piece,
@@ -1495,22 +1350,24 @@ function lockPiece(
     col
 ){
 
-    const frameRect =
-        frame.getBoundingClientRect();
-
     const cellW =
-        frame.clientWidth / COLS;
+        frame.clientWidth / 3;
 
     const cellH =
-        frame.clientHeight / ROWS;
+        frame.clientHeight / 3;
 
     /*
-       Move inside frame overlay.
+       Put completed piece INSIDE
+       the frame.
+
+       This fixes the scrolling problem.
     */
 
     lockedPieces.appendChild(piece);
 
-    piece.classList.add("locked");
+    piece.classList.add(
+        "locked"
+    );
 
     piece.style.width =
         cellW + "px";
@@ -1527,63 +1384,74 @@ function lockPiece(
     piece.style.position =
         "absolute";
 
-    piece.dataset.locked = "true";
+    piece.dataset.locked =
+        "true";
 
     lockedCount++;
+
     moves++;
 
     updateStats();
 
-    sound("correct");
-    vibrate(35);
-
-    messageEl.textContent =
+    message.textContent =
         "🎉 Great! Correct piece!";
 
-    if(lockedCount === ROWS * COLS){
+    vibrate(40);
+
+    if(lockedCount === 9){
 
         finishGame();
     }
 }
 
 
-/* =========================
-   WRONG PIECE
-========================= */
+/* ==================================
+   WRONG
+================================== */
 
-function wrongPlacement(piece){
+function wrongPiece(piece){
 
     moves++;
 
     updateStats();
 
-    sound("wrong");
-    vibrate([40,30,40]);
+    message.textContent =
+        "❌ Try another position!";
 
-    messageEl.textContent =
-        "❌ Not there. Try again!";
+    piece.classList.add(
+        "shake"
+    );
 
-    piece.classList.add("shake");
+    vibrate([
+        35,
+        25,
+        35
+    ]);
 
-    setTimeout(()=>{
+    setTimeout(
+        function(){
 
-        piece.classList.remove(
-            "shake"
-        );
+            piece.classList.remove(
+                "shake"
+            );
 
-        returnPiece(piece);
+            returnPiece(piece);
 
-    },350);
+        },
+        350
+    );
 }
 
 
-/* =========================
+/* ==================================
    RETURN PIECE
-========================= */
+================================== */
 
 function returnPiece(piece){
 
-    piecesArea.appendChild(piece);
+    piecesArea.appendChild(
+        piece
+    );
 
     piece.style.position =
         "relative";
@@ -1594,15 +1462,14 @@ function returnPiece(piece){
     piece.style.width = "";
     piece.style.height = "";
 
-    piece.style.margin = "";
-
-    piece.dataset.locked = "false";
+    piece.dataset.locked =
+        "false";
 }
 
 
-/* =========================
-   REPOSITION LOCKED PIECES
-========================= */
+/* ==================================
+   KEEP LOCKED PIECES WITH FRAME
+================================== */
 
 function repositionLockedPieces(){
 
@@ -1611,16 +1478,18 @@ function repositionLockedPieces(){
     }
 
     const cellW =
-        frame.clientWidth / COLS;
+        frame.clientWidth / 3;
 
     const cellH =
-        frame.clientHeight / ROWS;
+        frame.clientHeight / 3;
 
-    document
-        .querySelectorAll(
-            "#lockedPieces .piece"
-        )
-        .forEach(piece=>{
+    const pieces =
+        lockedPieces.querySelectorAll(
+            ".piece"
+        );
+
+    pieces.forEach(
+        function(piece){
 
             const row =
                 Number(piece.dataset.row);
@@ -1635,17 +1504,18 @@ function repositionLockedPieces(){
                 cellH + "px";
 
             piece.style.left =
-                col * cellW + "px";
+                (col * cellW) + "px";
 
             piece.style.top =
-                row * cellH + "px";
-        });
+                (row * cellH) + "px";
+        }
+    );
 }
 
 
-/* =========================
-   FINISH GAME
-========================= */
+/* ==================================
+   FINISH
+================================== */
 
 function finishGame(){
 
@@ -1658,46 +1528,19 @@ function finishGame(){
     const oldBest =
         Number(
             localStorage.getItem(
-                "completePic_v25_bestScore"
+                "completePic_v26_bestScore"
             ) || 0
         );
 
     if(score > oldBest){
 
         localStorage.setItem(
-            "completePic_v25_bestScore",
+            "completePic_v26_bestScore",
             score
         );
     }
 
-    const oldTime =
-        Number(
-            localStorage.getItem(
-                "completePic_v25_bestTime"
-            ) || 999999
-        );
-
-    if(seconds < oldTime){
-
-        localStorage.setItem(
-            "completePic_v25_bestTime",
-            seconds
-        );
-    }
-
     showBest();
-
-    sound("win");
-
-    vibrate([
-        100,
-        60,
-        100,
-        60,
-        200
-    ]);
-
-    createConfetti();
 
     document.getElementById(
         "finalTime"
@@ -1714,19 +1557,25 @@ function finishGame(){
     ).textContent =
         score;
 
-    setTimeout(()=>{
+    createConfetti();
 
-        document.getElementById(
-            "winScreen"
-        ).style.display = "flex";
+    setTimeout(
+        function(){
 
-    },500);
+            document.getElementById(
+                "winScreen"
+            ).style.display =
+                "flex";
+
+        },
+        500
+    );
 }
 
 
-/* =========================
+/* ==================================
    CONFETTI
-========================= */
+================================== */
 
 function createConfetti(){
 
@@ -1743,49 +1592,54 @@ function createConfetti(){
             document.createElement("div");
 
         c.className =
-            "confettiPiece";
+            "confetti";
 
         c.style.left =
             Math.random()*100 + "%";
 
+        c.style.background =
+            `hsl(${Math.random()*360},80%,55%)`;
+
         c.style.animationDelay =
             Math.random()*1.2 + "s";
-
-        c.style.transform =
-            `rotate(${Math.random()*360}deg)`;
-
-        /*
-           Let browser choose default
-           rendering without hard-coded
-           palette.
-        */
-
-        c.style.background =
-            `hsl(${Math.random()*360},
-                 80%,
-                 55%)`;
 
         area.appendChild(c);
     }
 
-    setTimeout(()=>{
-        area.innerHTML = "";
-    },4000);
+    setTimeout(
+        function(){
+            area.innerHTML = "";
+        },
+        4000
+    );
 }
 
 
-/* =========================
+/* ==================================
+   VIBRATION
+================================== */
+
+function vibrate(pattern){
+
+    if(
+        navigator.vibrate &&
+        typeof navigator.vibrate === "function"
+    ){
+
+        navigator.vibrate(pattern);
+    }
+}
+
+
+/* ==================================
    NEW GAME
-========================= */
+================================== */
 
 function newGame(){
 
     /*
-       IMPORTANT:
-       No puzzle progress is saved.
-
-       Refreshing the page also reaches
-       this same initialization path.
+       Refresh / New Game ALWAYS
+       starts completely from zero.
     */
 
     stopTimer();
@@ -1795,22 +1649,25 @@ function newGame(){
     score = 100;
 
     gameStarted = false;
+
     lockedCount = 0;
+
     draggingPiece = null;
 
     /*
-       Remove every old piece,
-       including pieces locked inside
-       the frame.
+       Remove every old piece.
     */
 
     document
         .querySelectorAll(".piece")
-        .forEach(piece=>{
-            piece.remove();
-        });
+        .forEach(
+            function(piece){
+                piece.remove();
+            }
+        );
 
     piecesArea.innerHTML = "";
+
     lockedPieces.innerHTML = "";
 
     document.getElementById(
@@ -1821,68 +1678,47 @@ function newGame(){
         "confetti"
     ).innerHTML = "";
 
-    messageEl.textContent = "";
+    message.textContent = "";
 
     updateStats();
 
-    createEdges();
-
     drawBoard();
 
-    createPieces();
+    /*
+       Only create pieces if
+       image is ready.
+    */
+
+    if(imageReady){
+
+        createPieces();
+    }
 
     showBest();
 }
 
 
-/* =========================
-   IMAGE LOAD
-========================= */
-
-pandaImage.onload = ()=>{
-
-    resizeBoard();
-
-    newGame();
-};
-
-
-/* =========================
-   IMAGE ERROR
-========================= */
-
-pandaImage.onerror = ()=>{
-
-    messageEl.textContent =
-        "⚠️ panda.png was not found. Put panda.png beside index.html.";
-
-};
-
-
-/* =========================
+/* ==================================
    WINDOW RESIZE
-========================= */
+================================== */
 
 window.addEventListener(
     "resize",
-    ()=>{
-        resizeBoard();
+    function(){
+
+        if(imageReady){
+
+            resizeBoard();
+        }
     }
 );
 
 
-/* =========================
-   START
-========================= */
+/* ==================================
+   INITIAL
+================================== */
 
 showBest();
-
-if(pandaImage.complete &&
-   pandaImage.naturalWidth){
-
-    resizeBoard();
-    newGame();
-}
 
 </script>
 
