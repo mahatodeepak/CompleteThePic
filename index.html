@@ -2,346 +2,330 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0,user-scalable=no">
 
 <title>Complete the Pic - Panda Puzzle</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #dff7ff, #fff4d6);
-  text-align: center;
-  color: #222;
-  overflow-x: hidden;
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  text-align:center;
+  background:linear-gradient(135deg,#dff7ff,#fff1cc);
+  color:#222;
+  overflow-x:hidden;
 }
 
-h1 {
-  margin: 14px 0 2px;
-  font-size: 30px;
+h1{
+  margin:12px 0 2px;
+  font-size:30px;
 }
 
-.subtitle {
-  margin: 0 0 12px;
-  color: #555;
-  font-size: 15px;
+.subtitle{
+  color:#555;
+  margin-bottom:10px;
 }
 
-.info {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  font-weight: bold;
-  margin-bottom: 12px;
+.info{
+  display:flex;
+  justify-content:center;
+  gap:25px;
+  font-weight:bold;
+  margin-bottom:10px;
 }
 
-#gameArea {
-  width: 100%;
-  max-width: 520px;
-  margin: auto;
-  padding: 8px;
+#game{
+  width:100%;
+  max-width:560px;
+  margin:auto;
+  padding:8px;
 }
 
-/* Puzzle board */
-#board {
-  position: relative;
-  width: min(92vw, 450px);
-  height: min(92vw, 450px);
-  margin: auto;
-  background: white;
-  border: 9px solid black;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,.25);
+/* =========================
+   PUZZLE FRAME
+========================= */
+
+#board{
+  position:relative;
+  width:min(92vw,450px);
+  height:min(92vw,450px);
+  margin:auto;
+  background:#fff;
+  border:9px solid #000;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,.28);
 }
 
-/* Panda artwork */
-#panda {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(#bdeeff 0 58%, #8bd36e 58%);
+/* Panda background */
+#panda{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(#bcecff 0 58%,#8bd36d 58%);
 }
 
 /* Panda ears */
-.panda-ear {
-  position: absolute;
-  width: 17%;
-  height: 17%;
-  background: #111;
-  border-radius: 50%;
-  top: 19%;
+.ear{
+  position:absolute;
+  width:17%;
+  height:17%;
+  background:#111;
+  border-radius:50%;
+  top:18%;
 }
 
-.ear-left {
-  left: 27%;
+.ear.left{left:27%}
+.ear.right{right:27%}
+
+/* Head */
+.head{
+  position:absolute;
+  width:48%;
+  height:43%;
+  left:26%;
+  top:20%;
+  background:white;
+  border:5px solid #111;
+  border-radius:48%;
 }
 
-.ear-right {
-  right: 27%;
+/* Eye patches */
+.eyePatch{
+  position:absolute;
+  width:20%;
+  height:30%;
+  background:#111;
+  border-radius:50%;
+  top:30%;
 }
 
-/* Panda head */
-.panda-head {
-  position: absolute;
-  width: 48%;
-  height: 43%;
-  background: white;
-  border: 5px solid #111;
-  border-radius: 48%;
-  left: 26%;
-  top: 20%;
+.eyePatch.left{
+  left:20%;
+  transform:rotate(25deg);
 }
 
-/* Eyes */
-.eye {
-  position: absolute;
-  width: 19%;
-  height: 25%;
-  background: #111;
-  border-radius: 50%;
-  top: 34%;
+.eyePatch.right{
+  right:20%;
+  transform:rotate(-25deg);
 }
 
-.eye-left {
-  left: 22%;
-  transform: rotate(25deg);
+.eye{
+  position:absolute;
+  width:34%;
+  height:34%;
+  background:white;
+  border-radius:50%;
+  left:33%;
+  top:18%;
 }
 
-.eye-right {
-  right: 22%;
-  transform: rotate(-25deg);
-}
-
-.eye::after {
-  content: "";
-  position: absolute;
-  width: 30%;
-  height: 30%;
-  background: white;
-  border-radius: 50%;
-  left: 20%;
-  top: 12%;
+.pupil{
+  position:absolute;
+  width:48%;
+  height:48%;
+  background:#111;
+  border-radius:50%;
+  left:26%;
+  top:26%;
 }
 
 /* Nose */
-.nose {
-  position: absolute;
-  width: 13%;
-  height: 9%;
-  background: #111;
-  border-radius: 50%;
-  left: 43.5%;
-  top: 61%;
+.nose{
+  position:absolute;
+  width:13%;
+  height:9%;
+  background:#111;
+  border-radius:50%;
+  left:43.5%;
+  top:61%;
 }
 
 /* Mouth */
-.mouth {
-  position: absolute;
-  width: 20%;
-  height: 12%;
-  left: 40%;
-  top: 68%;
-  border-bottom: 4px solid #111;
-  border-radius: 50%;
+.mouth{
+  position:absolute;
+  width:20%;
+  height:13%;
+  left:40%;
+  top:68%;
+  border-bottom:4px solid #111;
+  border-radius:50%;
 }
 
 /* Body */
-.panda-body {
-  position: absolute;
-  width: 39%;
-  height: 39%;
-  background: #111;
-  border-radius: 45% 45% 35% 35%;
-  left: 30.5%;
-  top: 57%;
+.body{
+  position:absolute;
+  width:39%;
+  height:39%;
+  left:30.5%;
+  top:57%;
+  background:#111;
+  border-radius:45% 45% 35% 35%;
 }
 
-/* Belly */
-.belly {
-  position: absolute;
-  width: 58%;
-  height: 58%;
-  background: white;
-  border-radius: 50%;
-  left: 21%;
-  top: 22%;
+.belly{
+  position:absolute;
+  width:58%;
+  height:58%;
+  left:21%;
+  top:22%;
+  background:white;
+  border-radius:50%;
 }
 
 /* Arms */
-.arm {
-  position: absolute;
-  width: 22%;
-  height: 38%;
-  background: #111;
-  border-radius: 50%;
-  top: 60%;
+.arm{
+  position:absolute;
+  width:22%;
+  height:38%;
+  top:59%;
+  background:#111;
+  border-radius:50%;
 }
 
-.arm-left {
-  left: 18%;
-  transform: rotate(35deg);
+.arm.left{
+  left:18%;
+  transform:rotate(35deg);
 }
 
-.arm-right {
-  right: 18%;
-  transform: rotate(-35deg);
+.arm.right{
+  right:18%;
+  transform:rotate(-35deg);
 }
 
-/* Puzzle covering */
-#piecesArea {
-  margin: 18px auto 10px;
-  width: min(95vw, 500px);
-  min-height: 210px;
-  padding: 10px;
-  border: 3px dashed #555;
-  border-radius: 15px;
-  background: rgba(255,255,255,.75);
+
+/* =========================
+   JIGSAW PIECES AREA
+========================= */
+
+#message{
+  min-height:30px;
+  margin:8px;
+  font-size:17px;
+  font-weight:bold;
 }
 
-#piecesTitle {
-  font-weight: bold;
-  margin-bottom: 8px;
+#piecesArea{
+  width:min(96vw,520px);
+  margin:10px auto;
+  padding:12px;
+  background:rgba(255,255,255,.8);
+  border:3px dashed #555;
+  border-radius:15px;
 }
 
-#pieces {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  justify-items: center;
+#piecesTitle{
+  font-weight:bold;
+  margin-bottom:10px;
 }
 
-/* Pieces */
-.piece {
-  position: relative;
-  width: min(27vw, 125px);
-  height: min(27vw, 125px);
-  border: 3px solid #111;
-  border-radius: 8px;
-  background: white;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-  overflow: hidden;
-  box-shadow: 0 3px 8px rgba(0,0,0,.25);
+#pieces{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  justify-items:center;
 }
 
-.piece:active {
-  cursor: grabbing;
-  transform: scale(1.04);
-  z-index: 50;
+/* =========================
+   JIGSAW PIECE
+========================= */
+
+.piece{
+  position:relative;
+  width:min(28vw,135px);
+  height:min(28vw,135px);
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
+  z-index:10;
+  filter:drop-shadow(0 3px 4px rgba(0,0,0,.25));
 }
 
-/* Each piece contains a copy of the panda */
-.piecePanda {
-  position: absolute;
-  width: 300%;
-  height: 300%;
+.piece:active{
+  cursor:grabbing;
+  transform:scale(1.05);
+  z-index:100;
 }
 
-/*
-  The panda is positioned differently inside every piece.
-  This creates the visual effect of a cut-up picture.
-*/
-.piece:nth-child(1) .piecePanda { left: 0; top: 0; }
-.piece:nth-child(2) .piecePanda { left: -100%; top: 0; }
-.piece:nth-child(3) .piecePanda { left: -200%; top: 0; }
-
-.piece:nth-child(4) .piecePanda { left: 0; top: -100%; }
-.piece:nth-child(5) .piecePanda { left: -100%; top: -100%; }
-.piece:nth-child(6) .piecePanda { left: -200%; top: -100%; }
-
-.piece:nth-child(7) .piecePanda { left: 0; top: -200%; }
-.piece:nth-child(8) .piecePanda { left: -100%; top: -200%; }
-.piece:nth-child(9) .piecePanda { left: -200%; top: -200%; }
-
-/* Drop slots */
-.slot {
-  position: absolute;
-  width: 33.3333%;
-  height: 33.3333%;
-  border: 2px dashed rgba(0,0,0,.35);
-  z-index: 2;
+.pieceCanvas{
+  position:absolute;
+  width:100%;
+  height:100%;
 }
 
-.slot.correct {
-  border: 3px solid #19a83b;
-  background: rgba(60,220,80,.12);
+
+/* =========================
+   BUTTON
+========================= */
+
+button{
+  border:none;
+  border-radius:12px;
+  padding:12px 24px;
+  margin:6px;
+  background:#222;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
 }
 
-#slot0 { left:0; top:0; }
-#slot1 { left:33.333%; top:0; }
-#slot2 { left:66.666%; top:0; }
-
-#slot3 { left:0; top:33.333%; }
-#slot4 { left:33.333%; top:33.333%; }
-#slot5 { left:66.666%; top:33.333%; }
-
-#slot6 { left:0; top:66.666%; }
-#slot7 { left:33.333%; top:66.666%; }
-#slot8 { left:66.666%; top:66.666%; }
-
-/* When completed, hide panda underneath */
-.hidePanda {
-  opacity: 0;
+button:active{
+  transform:scale(.95);
 }
 
-/* Buttons */
-button {
-  border: none;
-  border-radius: 12px;
-  padding: 12px 22px;
-  margin: 6px;
-  font-size: 16px;
-  font-weight: bold;
-  background: #222;
-  color: white;
-  cursor: pointer;
+
+/* =========================
+   WIN
+========================= */
+
+.win{
+  color:#0b942d;
+  font-size:23px!important;
 }
 
-button:active {
-  transform: scale(.96);
+@keyframes celebrate{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.08) rotate(2deg)}
+  100%{transform:scale(1)}
 }
 
-#message {
-  min-height: 28px;
-  font-size: 18px;
-  font-weight: bold;
-  margin: 5px;
+.celebrate{
+  animation:celebrate .6s infinite;
 }
 
-.win {
-  color: #12952e;
-  font-size: 24px !important;
+
+/* =========================
+   WRONG PIECE
+========================= */
+
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-8px)}
+  50%{transform:translateX(8px)}
+  75%{transform:translateX(-8px)}
+  100%{transform:translateX(0)}
 }
 
-/* Win animation */
-@keyframes celebrate {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.08) rotate(2deg); }
-  100% { transform: scale(1); }
+.shake{
+  animation:shake .3s;
 }
 
-.celebrate {
-  animation: celebrate .6s infinite;
-}
 
 /* Mobile */
-@media(max-width:420px) {
-  h1 {
-    font-size: 25px;
+@media(max-width:420px){
+
+  h1{
+    font-size:25px;
   }
 
-  .info {
-    gap: 15px;
-    font-size: 14px;
-  }
-
-  #piecesArea {
-    min-height: 190px;
+  .info{
+    gap:15px;
+    font-size:14px;
   }
 }
 </style>
@@ -350,458 +334,755 @@ button:active {
 <body>
 
 <h1>🐼 Complete the Pic</h1>
-<div class="subtitle">Pick the pieces. Complete the picture!</div>
 
-<div class="info">
-  <div>⏱️ Time: <span id="timer">0</span>s</div>
-  <div>🎯 Moves: <span id="moves">0</span></div>
+<div class="subtitle">
+Pick the pieces. Complete the picture!
 </div>
 
-<div id="gameArea">
+<div class="info">
+  <div>⏱️ <span id="timer">0</span>s</div>
+  <div>🎯 Moves: <span id="moves">0</span></div>
+  <div>🏆 <span id="score">100</span></div>
+</div>
 
-  <!-- BLACK PUZZLE FRAME -->
+<div id="game">
+
+  <!-- =====================
+       BLACK FRAME
+  ====================== -->
+
   <div id="board">
 
-    <!-- PANDA IMAGE -->
     <div id="panda">
 
-      <div class="panda-ear ear-left"></div>
-      <div class="panda-ear ear-right"></div>
+      <div class="ear left"></div>
+      <div class="ear right"></div>
 
-      <div class="panda-head">
-        <div class="eye eye-left"></div>
-        <div class="eye eye-right"></div>
+      <div class="head">
+
+        <div class="eyePatch left">
+          <div class="eye">
+            <div class="pupil"></div>
+          </div>
+        </div>
+
+        <div class="eyePatch right">
+          <div class="eye">
+            <div class="pupil"></div>
+          </div>
+        </div>
+
         <div class="nose"></div>
         <div class="mouth"></div>
+
       </div>
 
-      <div class="panda-body">
+      <div class="body">
         <div class="belly"></div>
       </div>
 
-      <div class="arm arm-left"></div>
-      <div class="arm arm-right"></div>
+      <div class="arm left"></div>
+      <div class="arm right"></div>
 
     </div>
 
-    <!-- PUZZLE SLOTS -->
-    <div class="slot" id="slot0" data-slot="0"></div>
-    <div class="slot" id="slot1" data-slot="1"></div>
-    <div class="slot" id="slot2" data-slot="2"></div>
-
-    <div class="slot" id="slot3" data-slot="3"></div>
-    <div class="slot" id="slot4" data-slot="4"></div>
-    <div class="slot" id="slot5" data-slot="5"></div>
-
-    <div class="slot" id="slot6" data-slot="6"></div>
-    <div class="slot" id="slot7" data-slot="7"></div>
-    <div class="slot" id="slot8" data-slot="8"></div>
-
   </div>
 
-  <div id="message">Drag each piece into the black frame.</div>
+
+  <div id="message">
+    Drag a puzzle piece into the black frame.
+  </div>
+
+
+  <!-- =====================
+       PIECES
+  ====================== -->
 
   <div id="piecesArea">
-    <div id="piecesTitle">🧩 Puzzle Pieces</div>
+
+    <div id="piecesTitle">
+      🧩 Puzzle Pieces
+    </div>
+
     <div id="pieces"></div>
+
   </div>
 
-  <button onclick="newGame()">🔄 New Game</button>
+
+  <button onclick="newGame()">
+    🔄 New Game
+  </button>
 
 </div>
 
+
 <script>
 
-/* =========================
-   GAME VARIABLES
-========================= */
+/* ==================================================
+   COMPLETE THE PIC V1.2
+   ================================================== */
 
-let moves = 0;
-let seconds = 0;
-let completed = 0;
-let timerInterval = null;
-let gameStarted = false;
+const board =
+document.getElementById("board");
 
-const piecesContainer = document.getElementById("pieces");
-const message = document.getElementById("message");
-const timerDisplay = document.getElementById("timer");
-const movesDisplay = document.getElementById("moves");
+const piecesContainer =
+document.getElementById("pieces");
 
-/* Correct location of each piece */
-const correctPositions = [
-  0,1,2,
-  3,4,5,
-  6,7,8
-];
+const message =
+document.getElementById("message");
 
+const timerText =
+document.getElementById("timer");
 
-/* =========================
-   CREATE PANDA FOR PIECES
-========================= */
+const movesText =
+document.getElementById("moves");
 
-function createPiecePanda() {
-
-  const panda = document.createElement("div");
-  panda.className = "piecePanda";
-
-  panda.innerHTML = `
-    <div style="
-      position:absolute;
-      inset:0;
-      background:linear-gradient(#bdeeff 0 58%,#8bd36e 58%);
-    ">
-
-      <div style="
-        position:absolute;
-        width:17%;
-        height:17%;
-        background:#111;
-        border-radius:50%;
-        top:19%;
-        left:27%;
-      "></div>
-
-      <div style="
-        position:absolute;
-        width:17%;
-        height:17%;
-        background:#111;
-        border-radius:50%;
-        top:19%;
-        right:27%;
-      "></div>
-
-      <div style="
-        position:absolute;
-        width:48%;
-        height:43%;
-        background:white;
-        border:5px solid #111;
-        border-radius:48%;
-        left:26%;
-        top:20%;
-      ">
-
-        <div style="
-          position:absolute;
-          width:19%;
-          height:25%;
-          background:#111;
-          border-radius:50%;
-          top:34%;
-          left:22%;
-          transform:rotate(25deg);
-        "></div>
-
-        <div style="
-          position:absolute;
-          width:19%;
-          height:25%;
-          background:#111;
-          border-radius:50%;
-          top:34%;
-          right:22%;
-          transform:rotate(-25deg);
-        "></div>
-
-        <div style="
-          position:absolute;
-          width:13%;
-          height:9%;
-          background:#111;
-          border-radius:50%;
-          left:43.5%;
-          top:61%;
-        "></div>
-
-        <div style="
-          position:absolute;
-          width:20%;
-          height:12%;
-          left:40%;
-          top:68%;
-          border-bottom:4px solid #111;
-          border-radius:50%;
-        "></div>
-
-      </div>
-
-      <div style="
-        position:absolute;
-        width:39%;
-        height:39%;
-        background:#111;
-        border-radius:45% 45% 35% 35%;
-        left:30.5%;
-        top:57%;
-      ">
-
-        <div style="
-          position:absolute;
-          width:58%;
-          height:58%;
-          background:white;
-          border-radius:50%;
-          left:21%;
-          top:22%;
-        "></div>
-
-      </div>
-
-      <div style="
-        position:absolute;
-        width:22%;
-        height:38%;
-        background:#111;
-        border-radius:50%;
-        top:60%;
-        left:18%;
-        transform:rotate(35deg);
-      "></div>
-
-      <div style="
-        position:absolute;
-        width:22%;
-        height:38%;
-        background:#111;
-        border-radius:50%;
-        top:60%;
-        right:18%;
-        transform:rotate(-35deg);
-      "></div>
-
-    </div>
-  `;
-
-  return panda;
-}
+const scoreText =
+document.getElementById("score");
 
 
-/* =========================
-   SHUFFLE
-========================= */
-
-function shuffle(array) {
-
-  for (let i = array.length - 1; i > 0; i--) {
-
-    const j = Math.floor(Math.random() * (i + 1));
-
-    [array[i], array[j]] =
-    [array[j], array[i]];
-  }
-
-  return array;
-}
+let moves=0;
+let seconds=0;
+let completed=0;
+let timer=null;
+let started=false;
 
 
-/* =========================
-   CREATE PUZZLE
-========================= */
+/* ==================================================
+   SIMPLE SOUND SYSTEM
+================================================== */
 
-function createPuzzle() {
+let audioContext=null;
 
-  piecesContainer.innerHTML = "";
+function sound(type){
 
-  let order = shuffle([...correctPositions]);
+  try{
 
-  order.forEach(correct => {
-
-    const piece = document.createElement("div");
-
-    piece.className = "piece";
-
-    piece.dataset.correct = correct;
-
-    piece.appendChild(createPiecePanda());
-
-    addDragEvents(piece);
-
-    piecesContainer.appendChild(piece);
-  });
-}
-
-
-/* =========================
-   DRAG / TOUCH
-========================= */
-
-function addDragEvents(piece) {
-
-  let startX = 0;
-  let startY = 0;
-  let dragging = false;
-
-  piece.addEventListener("pointerdown", function(e) {
-
-    if (piece.dataset.locked === "true") return;
-
-    e.preventDefault();
-
-    dragging = true;
-
-    startX = e.clientX;
-    startY = e.clientY;
-
-    piece.setPointerCapture(e.pointerId);
-
-    piece.style.zIndex = 100;
-
-    if (!gameStarted) {
-      startTimer();
-      gameStarted = true;
+    if(!audioContext){
+      audioContext=
+        new (window.AudioContext ||
+        window.webkitAudioContext)();
     }
 
-  });
+    const oscillator=
+      audioContext.createOscillator();
 
+    const gain=
+      audioContext.createGain();
 
-  piece.addEventListener("pointermove", function(e) {
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
 
-    if (!dragging) return;
+    if(type==="correct"){
+      oscillator.frequency.value=700;
+    }
 
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
+    if(type==="wrong"){
+      oscillator.frequency.value=180;
+    }
 
-    piece.style.transform =
-      `translate(${dx}px,${dy}px) scale(1.05)`;
-  });
+    if(type==="win"){
+      oscillator.frequency.value=900;
+    }
 
+    gain.gain.setValueAtTime(
+      .08,
+      audioContext.currentTime
+    );
 
-  piece.addEventListener("pointerup", function(e) {
+    gain.gain.exponentialRampToValueAtTime(
+      .001,
+      audioContext.currentTime+.25
+    );
 
-    if (!dragging) return;
+    oscillator.start();
 
-    dragging = false;
+    oscillator.stop(
+      audioContext.currentTime+.25
+    );
 
-    piece.style.transform = "";
-
-    piece.style.zIndex = "";
-
-    moves++;
-
-    movesDisplay.textContent = moves;
-
-    checkDrop(piece);
-  });
-
+  }catch(e){}
 }
 
 
-/* =========================
-   CHECK DROP
-========================= */
+/* ==================================================
+   CREATE SVG JIGSAW PIECE
+================================================== */
 
-function checkDrop(piece) {
+function createPieceSVG(index){
 
-  const board =
-    document.getElementById("board");
+  const svg=
+  document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
 
-  const boardRect =
+  svg.setAttribute("viewBox","0 0 100 100");
+  svg.classList.add("pieceCanvas");
+
+  /*
+    Different edge shapes make the pieces
+    look like jigsaw pieces.
+  */
+
+  let top =
+    index<3
+    ? "M0 0 H100 V18 C82 8 78 35 62 23 C45 10 55 0 38 0 Z"
+    : "M0 0 H38 C55 0 45 10 62 23 C78 35 82 8 100 18 V0 Z";
+
+  let path="";
+
+  /*
+    Main jigsaw outline.
+    Each piece remains square visually but
+    has curved tabs/holes.
+  */
+
+  const paths=[
+
+`M5 5 H95 V32
+ C82 18 72 35 60 25
+ C48 15 40 38 30 30
+ C20 22 17 35 5 32 Z`,
+
+`M5 5 H32
+ C18 18 35 28 25 40
+ C15 52 38 58 30 70
+ C22 82 35 88 5 95 Z`,
+
+`M95 5 V32
+ C82 18 72 35 60 25
+ C48 15 40 38 30 30
+ C20 22 17 35 5 32 V5 Z`
+
+  ];
+
+  /*
+    Use SVG clip path so the panda artwork
+    appears inside a jigsaw shape.
+  */
+
+  const clipId="clip"+index;
+
+  const defs=
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "defs"
+    );
+
+  const clip=
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "clipPath"
+    );
+
+  clip.setAttribute("id",clipId);
+
+  const shape=
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+
+  /*
+    Slightly different tabs depending
+    on the piece position.
+  */
+
+  let d=
+`M5 5
+H35
+C25 20 48 20 45 35
+C42 48 60 45 65 35
+C70 25 88 28 95 18
+V95
+H70
+C80 82 58 78 60 65
+C62 52 42 55 40 68
+C38 80 20 75 5 85
+Z`;
+
+  shape.setAttribute("d",d);
+
+  clip.appendChild(shape);
+  defs.appendChild(clip);
+  svg.appendChild(defs);
+
+  /*
+    Panda miniature
+  */
+
+  const background=
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "rect"
+    );
+
+  background.setAttribute("x","0");
+  background.setAttribute("y","0");
+  background.setAttribute("width","100");
+  background.setAttribute("height","100");
+  background.setAttribute(
+    "fill","#bcecff"
+  );
+
+  background.setAttribute(
+    "clip-path",
+    `url(#${clipId})`
+  );
+
+  svg.appendChild(background);
+
+
+  /*
+    Green ground
+  */
+
+  const ground=
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "rect"
+    );
+
+  ground.setAttribute("x","0");
+  ground.setAttribute("y","58");
+  ground.setAttribute("width","100");
+  ground.setAttribute("height","42");
+  ground.setAttribute(
+    "fill","#8bd36d"
+  );
+
+  ground.setAttribute(
+    "clip-path",
+    `url(#${clipId})`
+  );
+
+  svg.appendChild(ground);
+
+
+  /*
+    Panda head
+  */
+
+  const head=
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "ellipse"
+    );
+
+  head.setAttribute("cx","50");
+  head.setAttribute("cy","38");
+  head.setAttribute("rx","24");
+  head.setAttribute("ry","21");
+  head.setAttribute("fill","white");
+  head.setAttribute("stroke","#111");
+  head.setAttribute("stroke-width","2");
+
+  svg.appendChild(head);
+
+
+  /*
+    Ears
+  */
+
+  function circle(cx,cy,r,fill){
+
+    const c=
+      document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle"
+      );
+
+    c.setAttribute("cx",cx);
+    c.setAttribute("cy",cy);
+    c.setAttribute("r",r);
+    c.setAttribute("fill",fill);
+
+    svg.appendChild(c);
+  }
+
+  circle(31,22,9,"#111");
+  circle(69,22,9,"#111");
+
+
+  /*
+    Eyes
+  */
+
+  circle(41,36,5,"#111");
+  circle(59,36,5,"#111");
+
+  circle(40,34,1.7,"white");
+  circle(58,34,1.7,"white");
+
+
+  /*
+    Nose
+  */
+
+  const nose=
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "ellipse"
+    );
+
+  nose.setAttribute("cx","50");
+  nose.setAttribute("cy","47");
+  nose.setAttribute("rx","5");
+  nose.setAttribute("ry","3.5");
+  nose.setAttribute("fill","#111");
+
+  svg.appendChild(nose);
+
+
+  /*
+    Body
+  */
+
+  const body=
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "ellipse"
+    );
+
+  body.setAttribute("cx","50");
+  body.setAttribute("cy","76");
+  body.setAttribute("rx","20");
+  body.setAttribute("ry","20");
+  body.setAttribute("fill","#111");
+
+  svg.appendChild(body);
+
+
+  /*
+    Belly
+  */
+
+  const belly=
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "ellipse"
+    );
+
+  belly.setAttribute("cx","50");
+  belly.setAttribute("cy","78");
+  belly.setAttribute("rx","11");
+  belly.setAttribute("ry","13");
+  belly.setAttribute("fill","white");
+
+  svg.appendChild(belly);
+
+
+  /*
+    Border
+  */
+
+  const outline=
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+
+  outline.setAttribute("d",d);
+  outline.setAttribute(
+    "fill","none"
+  );
+  outline.setAttribute(
+    "stroke","#111"
+  );
+  outline.setAttribute(
+    "stroke-width","2"
+  );
+
+  svg.appendChild(outline);
+
+  return svg;
+}
+
+
+/* ==================================================
+   CREATE PIECES
+================================================== */
+
+function createPieces(){
+
+  piecesContainer.innerHTML="";
+
+  let order=[
+    0,1,2,
+    3,4,5,
+    6,7,8
+  ];
+
+  /*
+    Shuffle
+  */
+
+  for(let i=order.length-1;i>0;i--){
+
+    let j=
+      Math.floor(
+        Math.random()*(i+1)
+      );
+
+    [
+      order[i],
+      order[j]
+    ]=[
+      order[j],
+      order[i]
+    ];
+  }
+
+
+  order.forEach(correctPosition=>{
+
+    const piece=
+      document.createElement("div");
+
+    piece.className="piece";
+
+    piece.dataset.correct=
+      correctPosition;
+
+    piece.appendChild(
+      createPieceSVG(
+        correctPosition
+      )
+    );
+
+    addDrag(piece);
+
+    piecesContainer.appendChild(piece);
+
+  });
+}
+
+
+/* ==================================================
+   DRAG SYSTEM
+================================================== */
+
+function addDrag(piece){
+
+  let dragging=false;
+
+  let startX=0;
+  let startY=0;
+
+  piece.addEventListener(
+    "pointerdown",
+    e=>{
+
+      if(
+        piece.dataset.locked==="true"
+      ) return;
+
+      e.preventDefault();
+
+      dragging=true;
+
+      startX=e.clientX;
+      startY=e.clientY;
+
+      piece.setPointerCapture(
+        e.pointerId
+      );
+
+      piece.style.zIndex=200;
+
+      if(!started){
+
+        started=true;
+
+        startTimer();
+
+      }
+
+      sound("click");
+
+    }
+  );
+
+
+  piece.addEventListener(
+    "pointermove",
+    e=>{
+
+      if(!dragging)return;
+
+      let dx=
+        e.clientX-startX;
+
+      let dy=
+        e.clientY-startY;
+
+      piece.style.transform=
+        `translate(${dx}px,${dy}px)
+         scale(1.08)`;
+
+    }
+  );
+
+
+  piece.addEventListener(
+    "pointerup",
+    e=>{
+
+      if(!dragging)return;
+
+      dragging=false;
+
+      piece.style.transform="";
+
+      piece.style.zIndex=10;
+
+      moves++;
+
+      movesText.textContent=moves;
+
+      checkPosition(piece);
+
+    }
+  );
+}
+
+
+/* ==================================================
+   CHECK POSITION
+================================================== */
+
+function checkPosition(piece){
+
+  const boardRect=
     board.getBoundingClientRect();
 
-  const pieceRect =
+  const pieceRect=
     piece.getBoundingClientRect();
 
-  const pieceCenterX =
-    pieceRect.left + pieceRect.width / 2;
+  const centerX=
+    pieceRect.left+
+    pieceRect.width/2;
 
-  const pieceCenterY =
-    pieceRect.top + pieceRect.height / 2;
+  const centerY=
+    pieceRect.top+
+    pieceRect.height/2;
 
-  const x =
-    pieceCenterX - boardRect.left;
+  const x=
+    centerX-boardRect.left;
 
-  const y =
-    pieceCenterY - boardRect.top;
+  const y=
+    centerY-boardRect.top;
 
-  const column =
-    Math.floor(x / (boardRect.width / 3));
+  const cellW=
+    boardRect.width/3;
 
-  const row =
-    Math.floor(y / (boardRect.height / 3));
+  const cellH=
+    boardRect.height/3;
 
-  if (
-    column < 0 ||
-    column > 2 ||
-    row < 0 ||
-    row > 2
-  ) {
+  const col=
+    Math.floor(x/cellW);
 
-    wrongPiece(piece);
+  const row=
+    Math.floor(y/cellH);
+
+  if(
+    col<0 ||
+    col>2 ||
+    row<0 ||
+    row>2
+  ){
+
+    wrong(piece);
     return;
   }
 
-  const target =
-    row * 3 + column;
+  const target=
+    row*3+col;
 
-  const correct =
+  const correct=
     Number(piece.dataset.correct);
 
-  if (target === correct) {
+  if(target===correct){
 
-    correctPiece(piece, target);
+    placePiece(
+      piece,
+      target
+    );
 
-  } else {
+  }else{
 
-    wrongPiece(piece);
+    wrong(piece);
 
   }
 }
 
 
-/* =========================
-   CORRECT PIECE
-========================= */
+/* ==================================================
+   PLACE CORRECT PIECE
+================================================== */
 
-function correctPiece(piece, target) {
+function placePiece(piece,target){
 
-  const slot =
-    document.getElementById("slot" + target);
-
-  piece.dataset.locked = "true";
-
-  piece.style.position = "absolute";
-
-  piece.style.width =
-    "33.3333%";
-
-  piece.style.height =
-    "33.3333%";
-
-  piece.style.margin = "0";
-
-  piece.style.padding = "0";
-
-  piece.style.border =
-    "2px solid #19a83b";
-
-  piece.style.borderRadius = "0";
-
-  piece.style.boxShadow = "none";
-
-  piece.style.left =
-    (target % 3) * 33.3333 + "%";
-
-  piece.style.top =
-    Math.floor(target / 3) * 33.3333 + "%";
-
-  piece.style.transform = "";
-
-  piece.style.zIndex = 5;
+  const boardRect=
+    board.getBoundingClientRect();
 
   /*
-    Move the piece directly onto the board.
+    Move piece to board.
   */
-  board.appendChild(piece);
 
-  slot.classList.add("correct");
+  piece.dataset.locked="true";
+
+  piece.style.position="absolute";
+
+  piece.style.width=
+    (100/3)+"%";
+
+  piece.style.height=
+    (100/3)+"%";
+
+  piece.style.left=
+    ((target%3)*100/3)+"%";
+
+  piece.style.top=
+    (Math.floor(target/3)*100/3)+"%";
+
+  piece.style.margin="0";
+
+  piece.style.transform="";
+
+  piece.style.zIndex=5;
+
+  piece.style.cursor="default";
+
+  board.appendChild(piece);
 
   completed++;
 
-  message.textContent =
+  sound("correct");
+
+  message.textContent=
     "✅ Correct!";
 
-  if (completed === 9) {
+  /*
+    Update score.
+  */
+
+  let score=
+    Math.max(
+      10,
+      100-
+      moves*2-
+      Math.floor(seconds/5)
+    );
+
+  scoreText.textContent=score;
+
+  /*
+    Finished?
+  */
+
+  if(completed===9){
 
     finishGame();
 
@@ -810,127 +1091,150 @@ function correctPiece(piece, target) {
 }
 
 
-/* =========================
-   WRONG PIECE
-========================= */
+/* ==================================================
+   WRONG
+================================================== */
 
-function wrongPiece(piece) {
+function wrong(piece){
 
-  piece.style.animation =
-    "none";
+  piece.classList.remove("shake");
 
   void piece.offsetWidth;
 
-  piece.style.animation =
-    "shake .3s";
+  piece.classList.add("shake");
 
-  message.textContent =
-    "❌ Try another place!";
+  sound("wrong");
+
+  message.textContent=
+    "❌ Wrong place — try again!";
+
 }
 
 
-/* =========================
+/* ==================================================
    TIMER
-========================= */
+================================================== */
 
-function startTimer() {
+function startTimer(){
 
-  if (timerInterval) return;
+  if(timer)return;
 
-  timerInterval =
-    setInterval(() => {
+  timer=
+    setInterval(()=>{
 
       seconds++;
 
-      timerDisplay.textContent =
+      timerText.textContent=
         seconds;
 
-    }, 1000);
+      /*
+        Slowly reduce score.
+      */
+
+      let score=
+        Math.max(
+          10,
+          100-
+          moves*2-
+          Math.floor(seconds/5)
+        );
+
+      scoreText.textContent=
+        score;
+
+    },1000);
 }
 
 
-/* =========================
-   FINISH
-========================= */
+/* ==================================================
+   WIN
+================================================== */
 
-function finishGame() {
+function finishGame(){
 
-  clearInterval(timerInterval);
+  clearInterval(timer);
 
-  timerInterval = null;
+  timer=null;
 
-  message.innerHTML =
-    `🎉 Amazing! Picture Complete!<br>
+  started=false;
+
+  let finalScore=
+    Math.max(
+      10,
+      100-
+      moves*2-
+      Math.floor(seconds/5)
+    );
+
+  scoreText.textContent=
+    finalScore;
+
+  message.innerHTML=
+    `🎉 AMAZING!<br>
+     🐼 Picture Complete!<br>
      <span style="font-size:16px">
-     Time: ${seconds}s &nbsp; | &nbsp;
-     Moves: ${moves}
+     Time: ${seconds}s |
+     Moves: ${moves} |
+     Score: ${finalScore}
      </span>`;
 
   message.classList.add("win");
 
-  document
-    .getElementById("board")
-    .classList.add("celebrate");
+  board.classList.add("celebrate");
+
+  sound("win");
 
 }
 
 
-/* =========================
+/* ==================================================
    NEW GAME
-========================= */
+================================================== */
 
-function newGame() {
+function newGame(){
 
-  clearInterval(timerInterval);
+  clearInterval(timer);
 
-  timerInterval = null;
+  timer=null;
 
-  moves = 0;
-  seconds = 0;
-  completed = 0;
-  gameStarted = false;
+  moves=0;
+  seconds=0;
+  completed=0;
+  started=false;
 
-  timerDisplay.textContent = "0";
+  timerText.textContent="0";
+  movesText.textContent="0";
+  scoreText.textContent="100";
 
-  movesDisplay.textContent = "0";
+  message.className="";
+  message.textContent=
+    "Drag a puzzle piece into the black frame.";
 
-  message.textContent =
-    "Drag each piece into the black frame.";
-
-  message.classList.remove("win");
-
-  document
-    .getElementById("board")
-    .classList.remove("celebrate");
-
-  /*
-    Remove old pieces accidentally
-    placed on board.
-  */
-  document
-    .querySelectorAll("#board .piece")
-    .forEach(p => p.remove());
+  board.classList.remove(
+    "celebrate"
+  );
 
   /*
-    Reset slots.
+    Remove pieces currently
+    inside the board.
   */
+
   document
-    .querySelectorAll(".slot")
-    .forEach(slot => {
+    .querySelectorAll(
+      "#board .piece"
+    )
+    .forEach(p=>p.remove());
 
-      slot.classList.remove("correct");
+  createPieces();
 
-    });
-
-  createPuzzle();
 }
 
 
-/* =========================
-   START GAME
-========================= */
+/* ==================================================
+   START
+================================================== */
 
-createPuzzle();
+createPieces();
 
 </script>
 
