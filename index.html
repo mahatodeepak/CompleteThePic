@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Complete the Pic - Panda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+<title>Complete the Pic - Panda Puzzle</title>
 
 <style>
 * {
@@ -14,110 +15,105 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #dff6ff, #ffffff);
+  background: linear-gradient(135deg, #dff7ff, #fff4d6);
   text-align: center;
   color: #222;
-  user-select: none;
   overflow-x: hidden;
 }
 
 h1 {
-  margin: 15px 0 4px;
+  margin: 14px 0 2px;
   font-size: 30px;
 }
 
 .subtitle {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   color: #555;
+  font-size: 15px;
 }
 
 .info {
   display: flex;
   justify-content: center;
   gap: 25px;
-  font-size: 18px;
   font-weight: bold;
-  margin: 10px;
+  margin-bottom: 12px;
 }
 
-#game {
-  width: 95%;
-  max-width: 700px;
+#gameArea {
+  width: 100%;
+  max-width: 520px;
   margin: auto;
+  padding: 8px;
 }
 
+/* Puzzle board */
 #board {
   position: relative;
-  width: min(90vw, 450px);
-  aspect-ratio: 1 / 1;
-  margin: 15px auto;
-  border: 8px solid #111;
-  background: #222;
+  width: min(92vw, 450px);
+  height: min(92vw, 450px);
+  margin: auto;
+  background: white;
+  border: 9px solid black;
   overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,.25);
 }
 
-/* The panda is behind the empty puzzle spaces.
-   The 9 pieces show different cropped sections. */
-#pandaPicture {
+/* Panda artwork */
+#panda {
   position: absolute;
   inset: 0;
-  background: white;
+  background: linear-gradient(#bdeeff 0 58%, #8bd36e 58%);
 }
 
-/* Panda drawing */
-.panda {
+/* Panda ears */
+.panda-ear {
   position: absolute;
-  width: 62%;
-  height: 72%;
-  left: 19%;
-  top: 14%;
-}
-
-.head {
-  position: absolute;
-  width: 68%;
-  height: 48%;
-  left: 16%;
-  top: 0;
-  background: white;
-  border: 5px solid #111;
-  border-radius: 50%;
-}
-
-.ear {
-  position: absolute;
-  width: 25%;
-  height: 25%;
+  width: 17%;
+  height: 17%;
   background: #111;
   border-radius: 50%;
-  top: -4%;
+  top: 19%;
 }
 
-.ear.left {
-  left: 7%;
+.ear-left {
+  left: 27%;
 }
 
-.ear.right {
-  right: 7%;
+.ear-right {
+  right: 27%;
 }
 
+/* Panda head */
+.panda-head {
+  position: absolute;
+  width: 48%;
+  height: 43%;
+  background: white;
+  border: 5px solid #111;
+  border-radius: 48%;
+  left: 26%;
+  top: 20%;
+}
+
+/* Eyes */
 .eye {
   position: absolute;
-  width: 23%;
-  height: 31%;
+  width: 19%;
+  height: 25%;
   background: #111;
   border-radius: 50%;
   top: 34%;
 }
 
-.eye.left {
-  left: 19%;
-  transform: rotate(30deg);
+.eye-left {
+  left: 22%;
+  transform: rotate(25deg);
 }
 
-.eye.right {
-  right: 19%;
-  transform: rotate(-30deg);
+.eye-right {
+  right: 22%;
+  transform: rotate(-25deg);
 }
 
 .eye::after {
@@ -128,173 +124,224 @@ h1 {
   background: white;
   border-radius: 50%;
   left: 20%;
-  top: 15%;
+  top: 12%;
 }
 
+/* Nose */
 .nose {
   position: absolute;
   width: 13%;
-  height: 10%;
+  height: 9%;
   background: #111;
   border-radius: 50%;
   left: 43.5%;
-  top: 60%;
+  top: 61%;
 }
 
+/* Mouth */
 .mouth {
   position: absolute;
   width: 20%;
-  height: 15%;
+  height: 12%;
   left: 40%;
-  top: 66%;
+  top: 68%;
   border-bottom: 4px solid #111;
   border-radius: 50%;
 }
 
-.body {
+/* Body */
+.panda-body {
   position: absolute;
-  width: 58%;
-  height: 50%;
-  left: 21%;
-  bottom: 0;
+  width: 39%;
+  height: 39%;
   background: #111;
-  border-radius: 48% 48% 35% 35%;
+  border-radius: 45% 45% 35% 35%;
+  left: 30.5%;
+  top: 57%;
 }
 
+/* Belly */
 .belly {
   position: absolute;
   width: 58%;
-  height: 62%;
-  left: 21%;
-  top: 18%;
+  height: 58%;
   background: white;
   border-radius: 50%;
+  left: 21%;
+  top: 22%;
 }
 
+/* Arms */
 .arm {
   position: absolute;
   width: 22%;
-  height: 45%;
+  height: 38%;
   background: #111;
   border-radius: 50%;
-  top: 20%;
+  top: 60%;
 }
 
-.arm.left {
-  left: 7%;
-  transform: rotate(25deg);
+.arm-left {
+  left: 18%;
+  transform: rotate(35deg);
 }
 
-.arm.right {
-  right: 7%;
-  transform: rotate(-25deg);
+.arm-right {
+  right: 18%;
+  transform: rotate(-35deg);
 }
 
-/* Puzzle pieces area */
+/* Puzzle covering */
+#piecesArea {
+  margin: 18px auto 10px;
+  width: min(95vw, 500px);
+  min-height: 210px;
+  padding: 10px;
+  border: 3px dashed #555;
+  border-radius: 15px;
+  background: rgba(255,255,255,.75);
+}
 
 #piecesTitle {
-  font-size: 20px;
   font-weight: bold;
-  margin-top: 15px;
+  margin-bottom: 8px;
 }
 
 #pieces {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  max-width: 650px;
-  margin: 12px auto 20px;
-  padding: 10px;
+  justify-items: center;
 }
 
+/* Pieces */
 .piece {
-  width: 105px;
-  height: 105px;
-  border: 3px solid #111;
-  background-color: white;
   position: relative;
+  width: min(27vw, 125px);
+  height: min(27vw, 125px);
+  border: 3px solid #111;
+  border-radius: 8px;
+  background: white;
   cursor: grab;
   touch-action: none;
+  user-select: none;
   overflow: hidden;
-  border-radius: 6px;
+  box-shadow: 0 3px 8px rgba(0,0,0,.25);
 }
 
-.piece.dragging {
-  opacity: 0.65;
-  transform: scale(1.05);
-  z-index: 100;
+.piece:active {
+  cursor: grabbing;
+  transform: scale(1.04);
+  z-index: 50;
 }
 
-.pieceCanvas {
+/* Each piece contains a copy of the panda */
+.piecePanda {
   position: absolute;
-  width: 315px;
-  height: 315px;
-  left: 0;
-  top: 0;
+  width: 300%;
+  height: 300%;
 }
 
-/* Destination cells */
+/*
+  The panda is positioned differently inside every piece.
+  This creates the visual effect of a cut-up picture.
+*/
+.piece:nth-child(1) .piecePanda { left: 0; top: 0; }
+.piece:nth-child(2) .piecePanda { left: -100%; top: 0; }
+.piece:nth-child(3) .piecePanda { left: -200%; top: 0; }
+
+.piece:nth-child(4) .piecePanda { left: 0; top: -100%; }
+.piece:nth-child(5) .piecePanda { left: -100%; top: -100%; }
+.piece:nth-child(6) .piecePanda { left: -200%; top: -100%; }
+
+.piece:nth-child(7) .piecePanda { left: 0; top: -200%; }
+.piece:nth-child(8) .piecePanda { left: -100%; top: -200%; }
+.piece:nth-child(9) .piecePanda { left: -200%; top: -200%; }
+
+/* Drop slots */
 .slot {
   position: absolute;
   width: 33.3333%;
   height: 33.3333%;
-  border: 2px dashed #777;
-  background: rgba(255,255,255,0.08);
-  z-index: 5;
+  border: 2px dashed rgba(0,0,0,.35);
+  z-index: 2;
 }
 
 .slot.correct {
-  border: 2px solid #16a34a;
-  background: rgba(22,163,74,0.12);
+  border: 3px solid #19a83b;
+  background: rgba(60,220,80,.12);
 }
 
 #slot0 { left:0; top:0; }
 #slot1 { left:33.333%; top:0; }
 #slot2 { left:66.666%; top:0; }
+
 #slot3 { left:0; top:33.333%; }
 #slot4 { left:33.333%; top:33.333%; }
 #slot5 { left:66.666%; top:33.333%; }
+
 #slot6 { left:0; top:66.666%; }
 #slot7 { left:33.333%; top:66.666%; }
 #slot8 { left:66.666%; top:66.666%; }
 
+/* When completed, hide panda underneath */
+.hidePanda {
+  opacity: 0;
+}
+
+/* Buttons */
 button {
   border: none;
   border-radius: 12px;
-  padding: 13px 25px;
-  font-size: 17px;
+  padding: 12px 22px;
+  margin: 6px;
+  font-size: 16px;
   font-weight: bold;
-  background: #111;
+  background: #222;
   color: white;
   cursor: pointer;
-  margin-bottom: 20px;
 }
 
 button:active {
-  transform: scale(0.96);
+  transform: scale(.96);
 }
 
 #message {
-  min-height: 30px;
-  font-size: 20px;
+  min-height: 28px;
+  font-size: 18px;
   font-weight: bold;
   margin: 5px;
 }
 
-@media(max-width:500px) {
-  .piece {
-    width: 88px;
-    height: 88px;
-  }
+.win {
+  color: #12952e;
+  font-size: 24px !important;
+}
 
-  .pieceCanvas {
-    width: 264px;
-    height: 264px;
-  }
+/* Win animation */
+@keyframes celebrate {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08) rotate(2deg); }
+  100% { transform: scale(1); }
+}
 
+.celebrate {
+  animation: celebrate .6s infinite;
+}
+
+/* Mobile */
+@media(max-width:420px) {
   h1 {
-    font-size: 26px;
+    font-size: 25px;
+  }
+
+  .info {
+    gap: 15px;
+    font-size: 14px;
+  }
+
+  #piecesArea {
+    min-height: 190px;
   }
 }
 </style>
@@ -302,291 +349,589 @@ button:active {
 
 <body>
 
-<h1>🧩 Complete the Pic</h1>
-<p class="subtitle">🐼 Complete the Panda!</p>
+<h1>🐼 Complete the Pic</h1>
+<div class="subtitle">Pick the pieces. Complete the picture!</div>
 
 <div class="info">
-  <div>Moves: <span id="moves">0</span></div>
-  <div>Time: <span id="time">0</span>s</div>
+  <div>⏱️ Time: <span id="timer">0</span>s</div>
+  <div>🎯 Moves: <span id="moves">0</span></div>
 </div>
 
-<div id="game">
+<div id="gameArea">
 
+  <!-- BLACK PUZZLE FRAME -->
   <div id="board">
 
-    <div id="pandaPicture">
-      <div class="panda">
+    <!-- PANDA IMAGE -->
+    <div id="panda">
 
-        <div class="ear left"></div>
-        <div class="ear right"></div>
+      <div class="panda-ear ear-left"></div>
+      <div class="panda-ear ear-right"></div>
 
-        <div class="head">
-          <div class="eye left"></div>
-          <div class="eye right"></div>
-          <div class="nose"></div>
-          <div class="mouth"></div>
-        </div>
-
-        <div class="body">
-          <div class="belly"></div>
-          <div class="arm left"></div>
-          <div class="arm right"></div>
-        </div>
-
+      <div class="panda-head">
+        <div class="eye eye-left"></div>
+        <div class="eye eye-right"></div>
+        <div class="nose"></div>
+        <div class="mouth"></div>
       </div>
+
+      <div class="panda-body">
+        <div class="belly"></div>
+      </div>
+
+      <div class="arm arm-left"></div>
+      <div class="arm arm-right"></div>
+
     </div>
 
-    <div class="slot" id="slot0"></div>
-    <div class="slot" id="slot1"></div>
-    <div class="slot" id="slot2"></div>
-    <div class="slot" id="slot3"></div>
-    <div class="slot" id="slot4"></div>
-    <div class="slot" id="slot5"></div>
-    <div class="slot" id="slot6"></div>
-    <div class="slot" id="slot7"></div>
-    <div class="slot" id="slot8"></div>
+    <!-- PUZZLE SLOTS -->
+    <div class="slot" id="slot0" data-slot="0"></div>
+    <div class="slot" id="slot1" data-slot="1"></div>
+    <div class="slot" id="slot2" data-slot="2"></div>
+
+    <div class="slot" id="slot3" data-slot="3"></div>
+    <div class="slot" id="slot4" data-slot="4"></div>
+    <div class="slot" id="slot5" data-slot="5"></div>
+
+    <div class="slot" id="slot6" data-slot="6"></div>
+    <div class="slot" id="slot7" data-slot="7"></div>
+    <div class="slot" id="slot8" data-slot="8"></div>
 
   </div>
 
-  <div id="message">Drag the pieces into the black frame.</div>
+  <div id="message">Drag each piece into the black frame.</div>
 
-  <div id="piecesTitle">🐼 Picture Pieces</div>
-
-  <div id="pieces"></div>
+  <div id="piecesArea">
+    <div id="piecesTitle">🧩 Puzzle Pieces</div>
+    <div id="pieces"></div>
+  </div>
 
   <button onclick="newGame()">🔄 New Game</button>
 
 </div>
 
 <script>
-const piecesContainer = document.getElementById("pieces");
-const board = document.getElementById("board");
-const movesEl = document.getElementById("moves");
-const timeEl = document.getElementById("time");
-const messageEl = document.getElementById("message");
+
+/* =========================
+   GAME VARIABLES
+========================= */
 
 let moves = 0;
 let seconds = 0;
 let completed = 0;
-let timer = null;
-let draggedPiece = null;
+let timerInterval = null;
+let gameStarted = false;
 
-/* Create pieces */
-function createPieces() {
+const piecesContainer = document.getElementById("pieces");
+const message = document.getElementById("message");
+const timerDisplay = document.getElementById("timer");
+const movesDisplay = document.getElementById("moves");
+
+/* Correct location of each piece */
+const correctPositions = [
+  0,1,2,
+  3,4,5,
+  6,7,8
+];
+
+
+/* =========================
+   CREATE PANDA FOR PIECES
+========================= */
+
+function createPiecePanda() {
+
+  const panda = document.createElement("div");
+  panda.className = "piecePanda";
+
+  panda.innerHTML = `
+    <div style="
+      position:absolute;
+      inset:0;
+      background:linear-gradient(#bdeeff 0 58%,#8bd36e 58%);
+    ">
+
+      <div style="
+        position:absolute;
+        width:17%;
+        height:17%;
+        background:#111;
+        border-radius:50%;
+        top:19%;
+        left:27%;
+      "></div>
+
+      <div style="
+        position:absolute;
+        width:17%;
+        height:17%;
+        background:#111;
+        border-radius:50%;
+        top:19%;
+        right:27%;
+      "></div>
+
+      <div style="
+        position:absolute;
+        width:48%;
+        height:43%;
+        background:white;
+        border:5px solid #111;
+        border-radius:48%;
+        left:26%;
+        top:20%;
+      ">
+
+        <div style="
+          position:absolute;
+          width:19%;
+          height:25%;
+          background:#111;
+          border-radius:50%;
+          top:34%;
+          left:22%;
+          transform:rotate(25deg);
+        "></div>
+
+        <div style="
+          position:absolute;
+          width:19%;
+          height:25%;
+          background:#111;
+          border-radius:50%;
+          top:34%;
+          right:22%;
+          transform:rotate(-25deg);
+        "></div>
+
+        <div style="
+          position:absolute;
+          width:13%;
+          height:9%;
+          background:#111;
+          border-radius:50%;
+          left:43.5%;
+          top:61%;
+        "></div>
+
+        <div style="
+          position:absolute;
+          width:20%;
+          height:12%;
+          left:40%;
+          top:68%;
+          border-bottom:4px solid #111;
+          border-radius:50%;
+        "></div>
+
+      </div>
+
+      <div style="
+        position:absolute;
+        width:39%;
+        height:39%;
+        background:#111;
+        border-radius:45% 45% 35% 35%;
+        left:30.5%;
+        top:57%;
+      ">
+
+        <div style="
+          position:absolute;
+          width:58%;
+          height:58%;
+          background:white;
+          border-radius:50%;
+          left:21%;
+          top:22%;
+        "></div>
+
+      </div>
+
+      <div style="
+        position:absolute;
+        width:22%;
+        height:38%;
+        background:#111;
+        border-radius:50%;
+        top:60%;
+        left:18%;
+        transform:rotate(35deg);
+      "></div>
+
+      <div style="
+        position:absolute;
+        width:22%;
+        height:38%;
+        background:#111;
+        border-radius:50%;
+        top:60%;
+        right:18%;
+        transform:rotate(-35deg);
+      "></div>
+
+    </div>
+  `;
+
+  return panda;
+}
+
+
+/* =========================
+   SHUFFLE
+========================= */
+
+function shuffle(array) {
+
+  for (let i = array.length - 1; i > 0; i--) {
+
+    const j = Math.floor(Math.random() * (i + 1));
+
+    [array[i], array[j]] =
+    [array[j], array[i]];
+  }
+
+  return array;
+}
+
+
+/* =========================
+   CREATE PUZZLE
+========================= */
+
+function createPuzzle() {
 
   piecesContainer.innerHTML = "";
 
-  let numbers = [0,1,2,3,4,5,6,7,8];
+  let order = shuffle([...correctPositions]);
 
-  /* Shuffle */
-  numbers.sort(() => Math.random() - 0.5);
-
-  numbers.forEach(number => {
+  order.forEach(correct => {
 
     const piece = document.createElement("div");
+
     piece.className = "piece";
 
-    piece.dataset.correct = number;
+    piece.dataset.correct = correct;
 
-    const canvas = document.createElement("div");
-    canvas.className = "pieceCanvas";
+    piece.appendChild(createPiecePanda());
 
-    /*
-      Each piece shows the corresponding part
-      of the panda picture.
-    */
-    canvas.innerHTML = `
-      <div style="
-        position:absolute;
-        width:315px;
-        height:315px;
-        background:white;
-      ">
-
-        <div class="panda" style="
-          position:absolute;
-          width:195px;
-          height:227px;
-          left:60px;
-          top:44px;
-        ">
-
-          <div class="ear left"></div>
-          <div class="ear right"></div>
-
-          <div class="head">
-            <div class="eye left"></div>
-            <div class="eye right"></div>
-            <div class="nose"></div>
-            <div class="mouth"></div>
-          </div>
-
-          <div class="body">
-            <div class="belly"></div>
-            <div class="arm left"></div>
-            <div class="arm right"></div>
-          </div>
-
-        </div>
-      </div>
-    `;
-
-    /* Move the large picture so the selected section appears */
-    const row = Math.floor(number / 3);
-    const col = number % 3;
-
-    canvas.style.left = (-col * 105) + "px";
-    canvas.style.top = (-row * 105) + "px";
-
-    piece.appendChild(canvas);
-
-    piece.addEventListener("pointerdown", startDrag);
+    addDragEvents(piece);
 
     piecesContainer.appendChild(piece);
   });
 }
 
-/* Drag system */
-function startDrag(e) {
 
-  draggedPiece = e.currentTarget;
+/* =========================
+   DRAG / TOUCH
+========================= */
 
-  draggedPiece.classList.add("dragging");
+function addDragEvents(piece) {
 
-  draggedPiece.setPointerCapture(e.pointerId);
+  let startX = 0;
+  let startY = 0;
+  let dragging = false;
 
-  draggedPiece.addEventListener("pointermove", dragMove);
-  draggedPiece.addEventListener("pointerup", endDrag);
-  draggedPiece.addEventListener("pointercancel", endDrag);
-}
+  piece.addEventListener("pointerdown", function(e) {
 
-function dragMove(e) {
+    if (piece.dataset.locked === "true") return;
 
-  if (!draggedPiece) return;
+    e.preventDefault();
 
-  const rect = piecesContainer.getBoundingClientRect();
+    dragging = true;
 
-  draggedPiece.style.position = "fixed";
-  draggedPiece.style.left = (e.clientX - draggedPiece.offsetWidth / 2) + "px";
-  draggedPiece.style.top = (e.clientY - draggedPiece.offsetHeight / 2) + "px";
-  draggedPiece.style.zIndex = "999";
-}
+    startX = e.clientX;
+    startY = e.clientY;
 
-function endDrag(e) {
+    piece.setPointerCapture(e.pointerId);
 
-  if (!draggedPiece) return;
+    piece.style.zIndex = 100;
 
-  const piece = draggedPiece;
-
-  piece.removeEventListener("pointermove", dragMove);
-  piece.removeEventListener("pointerup", endDrag);
-
-  const boardRect = board.getBoundingClientRect();
-
-  const x = e.clientX - boardRect.left;
-  const y = e.clientY - boardRect.top;
-
-  const col = Math.floor(x / (boardRect.width / 3));
-  const row = Math.floor(y / (boardRect.height / 3));
-
-  const target = row * 3 + col;
-
-  moves++;
-  movesEl.textContent = moves;
-
-  if (target == piece.dataset.correct &&
-      target >= 0 &&
-      target < 9) {
-
-    const slot = document.getElementById("slot" + target);
-
-    /* Move the piece into the board */
-    piece.style.position = "absolute";
-    piece.style.left = "0";
-    piece.style.top = "0";
-    piece.style.width = "100%";
-    piece.style.height = "100%";
-    piece.style.margin = "0";
-    piece.style.border = "none";
-    piece.style.borderRadius = "0";
-    piece.style.zIndex = "20";
-
-    slot.appendChild(piece);
-
-    slot.classList.add("correct");
-
-    piece.classList.remove("dragging");
-
-    completed++;
-
-    messageEl.textContent = "✅ Correct!";
-
-    if (completed === 9) {
-      clearInterval(timer);
-
-      messageEl.textContent =
-        "🎉 Amazing! You completed the Panda!";
-
-      setTimeout(() => {
-        alert(
-          "🐼 Picture Complete!\n\n" +
-          "Moves: " + moves +
-          "\nTime: " + seconds + " seconds"
-        );
-      }, 300);
+    if (!gameStarted) {
+      startTimer();
+      gameStarted = true;
     }
+
+  });
+
+
+  piece.addEventListener("pointermove", function(e) {
+
+    if (!dragging) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    piece.style.transform =
+      `translate(${dx}px,${dy}px) scale(1.05)`;
+  });
+
+
+  piece.addEventListener("pointerup", function(e) {
+
+    if (!dragging) return;
+
+    dragging = false;
+
+    piece.style.transform = "";
+
+    piece.style.zIndex = "";
+
+    moves++;
+
+    movesDisplay.textContent = moves;
+
+    checkDrop(piece);
+  });
+
+}
+
+
+/* =========================
+   CHECK DROP
+========================= */
+
+function checkDrop(piece) {
+
+  const board =
+    document.getElementById("board");
+
+  const boardRect =
+    board.getBoundingClientRect();
+
+  const pieceRect =
+    piece.getBoundingClientRect();
+
+  const pieceCenterX =
+    pieceRect.left + pieceRect.width / 2;
+
+  const pieceCenterY =
+    pieceRect.top + pieceRect.height / 2;
+
+  const x =
+    pieceCenterX - boardRect.left;
+
+  const y =
+    pieceCenterY - boardRect.top;
+
+  const column =
+    Math.floor(x / (boardRect.width / 3));
+
+  const row =
+    Math.floor(y / (boardRect.height / 3));
+
+  if (
+    column < 0 ||
+    column > 2 ||
+    row < 0 ||
+    row > 2
+  ) {
+
+    wrongPiece(piece);
+    return;
+  }
+
+  const target =
+    row * 3 + column;
+
+  const correct =
+    Number(piece.dataset.correct);
+
+  if (target === correct) {
+
+    correctPiece(piece, target);
 
   } else {
 
-    piece.style.position = "relative";
-    piece.style.left = "";
-    piece.style.top = "";
-    piece.style.zIndex = "";
-    piece.classList.remove("dragging");
+    wrongPiece(piece);
 
-    messageEl.textContent = "❌ Try another place!";
+  }
+}
+
+
+/* =========================
+   CORRECT PIECE
+========================= */
+
+function correctPiece(piece, target) {
+
+  const slot =
+    document.getElementById("slot" + target);
+
+  piece.dataset.locked = "true";
+
+  piece.style.position = "absolute";
+
+  piece.style.width =
+    "33.3333%";
+
+  piece.style.height =
+    "33.3333%";
+
+  piece.style.margin = "0";
+
+  piece.style.padding = "0";
+
+  piece.style.border =
+    "2px solid #19a83b";
+
+  piece.style.borderRadius = "0";
+
+  piece.style.boxShadow = "none";
+
+  piece.style.left =
+    (target % 3) * 33.3333 + "%";
+
+  piece.style.top =
+    Math.floor(target / 3) * 33.3333 + "%";
+
+  piece.style.transform = "";
+
+  piece.style.zIndex = 5;
+
+  /*
+    Move the piece directly onto the board.
+  */
+  board.appendChild(piece);
+
+  slot.classList.add("correct");
+
+  completed++;
+
+  message.textContent =
+    "✅ Correct!";
+
+  if (completed === 9) {
+
+    finishGame();
+
   }
 
-  draggedPiece = null;
 }
 
-/* Timer */
+
+/* =========================
+   WRONG PIECE
+========================= */
+
+function wrongPiece(piece) {
+
+  piece.style.animation =
+    "none";
+
+  void piece.offsetWidth;
+
+  piece.style.animation =
+    "shake .3s";
+
+  message.textContent =
+    "❌ Try another place!";
+}
+
+
+/* =========================
+   TIMER
+========================= */
+
 function startTimer() {
 
-  clearInterval(timer);
+  if (timerInterval) return;
 
-  timer = setInterval(() => {
+  timerInterval =
+    setInterval(() => {
 
-    seconds++;
+      seconds++;
 
-    timeEl.textContent = seconds;
+      timerDisplay.textContent =
+        seconds;
 
-  }, 1000);
+    }, 1000);
 }
 
-/* New game */
+
+/* =========================
+   FINISH
+========================= */
+
+function finishGame() {
+
+  clearInterval(timerInterval);
+
+  timerInterval = null;
+
+  message.innerHTML =
+    `🎉 Amazing! Picture Complete!<br>
+     <span style="font-size:16px">
+     Time: ${seconds}s &nbsp; | &nbsp;
+     Moves: ${moves}
+     </span>`;
+
+  message.classList.add("win");
+
+  document
+    .getElementById("board")
+    .classList.add("celebrate");
+
+}
+
+
+/* =========================
+   NEW GAME
+========================= */
+
 function newGame() {
+
+  clearInterval(timerInterval);
+
+  timerInterval = null;
 
   moves = 0;
   seconds = 0;
   completed = 0;
+  gameStarted = false;
 
-  movesEl.textContent = "0";
-  timeEl.textContent = "0";
+  timerDisplay.textContent = "0";
 
-  messageEl.textContent =
-    "Drag the pieces into the black frame.";
+  movesDisplay.textContent = "0";
 
-  document.querySelectorAll(".slot").forEach(slot => {
-    slot.classList.remove("correct");
-  });
+  message.textContent =
+    "Drag each piece into the black frame.";
 
-  createPieces();
-  startTimer();
+  message.classList.remove("win");
+
+  document
+    .getElementById("board")
+    .classList.remove("celebrate");
+
+  /*
+    Remove old pieces accidentally
+    placed on board.
+  */
+  document
+    .querySelectorAll("#board .piece")
+    .forEach(p => p.remove());
+
+  /*
+    Reset slots.
+  */
+  document
+    .querySelectorAll(".slot")
+    .forEach(slot => {
+
+      slot.classList.remove("correct");
+
+    });
+
+  createPuzzle();
 }
 
-/* Start */
-newGame();
+
+/* =========================
+   START GAME
+========================= */
+
+createPuzzle();
+
 </script>
 
 </body>
